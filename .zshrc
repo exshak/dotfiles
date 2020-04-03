@@ -101,3 +101,8 @@ source $ZSH/oh-my-zsh.sh
 # Pretty, minimal and fast ZSH prompt
 autoload -U promptinit; promptinit
 prompt pure
+
+# Path to source your nvm installation
+export NVM_DIR="$HOME/.nvm"
+    [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh" # This loads nvm
+    [ -s "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" ] && . "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion

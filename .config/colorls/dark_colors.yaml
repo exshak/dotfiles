@@ -1,7 +1,7 @@
 # Main Colors
-unrecognized_file: gold
-recognized_file: lime
-dir: dodgerblue
+unrecognized_file: slateblue
+recognized_file: snow
+dir: magenta
 
 # Link
 dead_link: red
@@ -13,28 +13,28 @@ blockdev: green
 chardev: green
 
 # Access Modes
-write: darkkhaki
-read: limegreen
-exec: red
+write: cyan
+read: magenta
+exec: aqua
 no_access: indianred
 
 # Age
-day_old: mediumspringgreen
-hour_old: lime
-no_modifier: seagreen
+hour_old: snow
+day_old: lightgray
+no_modifier: dimgray
 
 # File Size
-file_large: orange
-file_medium: gold
-file_small: peachpuff
+file_large: snow
+file_medium: lightgray
+file_small: dimgray
 
 # Random
 report: white
-user: moccasin
+user: cyan
 tree: cyan
-empty: yellow
+empty: aqua
 error: red
-normal: darkkhaki
+normal: aqua
 
 # Git
 addition: chartreuse

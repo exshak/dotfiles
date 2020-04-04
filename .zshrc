@@ -102,6 +102,9 @@ source $ZSH/oh-my-zsh.sh
 autoload -U promptinit; promptinit
 prompt pure
 
+# Source plugin completion
+source $(dirname $(gem which colorls))/tab_complete.sh
+
 # Path to source your nvm installation
 export NVM_DIR="$HOME/.nvm"
     [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh" # This loads nvm

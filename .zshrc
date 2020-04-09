@@ -103,6 +103,7 @@ autoload -U promptinit; promptinit
 prompt pure
 
 # Source plugin completion
+eval $(thefuck --alias)
 source $HOME/.aliases
 source $(dirname $(gem which colorls))/tab_complete.sh
 

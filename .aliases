@@ -5,3 +5,6 @@ alias l="colorls -l --gs --sd"
 alias la="colorls -lA --gs --sd"
 alias lsd="colorls -ld --gs --sd"
 alias lsf="colorls -lf --gs --sd"
+
+# Shortcuts
+alias b='brew update && brew upgrade && brew cleanup && brew doctor'

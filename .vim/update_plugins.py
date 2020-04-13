@@ -58,6 +58,8 @@ vim-ruby https://github.com/vim-ruby/vim-ruby
 typescript-vim https://github.com/leafgarland/typescript-vim
 vim-javascript https://github.com/pangloss/vim-javascript
 vim-python-pep8-indent https://github.com/Vimjas/vim-python-pep8-indent
+vim-devicons https://github.com/ryanoasis/vim-devicons
+vim-nerdtree-syntax-highlight https://github.com/tiagofumo/vim-nerdtree-syntax-highlight
 """.strip()
 
 GITHUB_ZIP = '%s/archive/master.zip'

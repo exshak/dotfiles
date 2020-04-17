@@ -14,6 +14,8 @@
 	old = red bold
 	new = green bold
 	whitespace = red reverse
+[help]
+	autocorrect = 1
 [user]
 	name = exshak
 	email = sbijabhai@gmail.com

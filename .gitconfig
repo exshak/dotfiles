@@ -16,6 +16,8 @@
 	old = red bold
 	new = green bold
 	whitespace = red reverse
+[diff]
+	renames = copies
 [help]
 	autocorrect = 1
 [user]

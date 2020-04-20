@@ -20,6 +20,8 @@
 	renames = copies
 [help]
 	autocorrect = 1
+[merge]
+	log = true
 [user]
 	name = exshak
 	email = sbijabhai@gmail.com

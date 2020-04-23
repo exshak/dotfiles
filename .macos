@@ -685,7 +685,7 @@ defaults write com.apple.terminal StringEncodings -array 4
 # defaults write com.apple.Terminal ShowLineMarks -int 0
 
 # Install the Solarized Dark theme for iTerm
-# open "${HOME}/mac-setup/Dracula.itermcolors"
+# open "${HOME}/.iterm2/Dracula.itermcolors"
 
 # Don’t display the annoying prompt when quitting iTerm
 defaults write com.googlecode.iterm2 PromptOnQuit -bool false

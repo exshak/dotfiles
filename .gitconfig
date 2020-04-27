@@ -1,3 +1,5 @@
+[alias]
+	s = status -s
 [apply]
 	whitespace = fix
 [core]

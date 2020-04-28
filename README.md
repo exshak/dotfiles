@@ -1,1 +1,5 @@
 # dotfiles
+
+## License
+
+[MIT](./LICENSE)

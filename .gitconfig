@@ -1,5 +1,6 @@
 [alias]
 	s = status -s
+	whoami = config user.email
 [apply]
 	whitespace = fix
 [core]

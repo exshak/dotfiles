@@ -1,4 +1,5 @@
 [alias]
+	aliases = config --get-regexp alias
 	s = status -s
 	whoami = config user.email
 [apply]

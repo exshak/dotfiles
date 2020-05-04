@@ -5,7 +5,7 @@
 [apply]
 	whitespace = fix
 [core]
-	excludesfile = ~/.gitignore
+	excludesFile = ~/.gitignore
 	pager = diff-so-fancy | less --tabs=4 -RFX
 [color]
 	ui = true
@@ -29,6 +29,8 @@
 	autocorrect = 1
 [merge]
 	log = true
+[push]
+	followTags = true
 [user]
 	name = exshak
 	email = sbijabhai@gmail.com

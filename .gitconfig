@@ -1,5 +1,6 @@
 [alias]
 	aliases = config --get-regexp alias
+	l = log --oneline --graph -n 20
 	s = status -s
 	whoami = config user.email
 [apply]

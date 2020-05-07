@@ -4,6 +4,7 @@
 	branches = branch -a
 	c = clone --recursive
 	l = log --oneline --graph -n 20
+	p = pull --recurse-submodules
 	remotes = remote -v
 	s = status -s
 	tags = tag -l

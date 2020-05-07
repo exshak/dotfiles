@@ -1,7 +1,10 @@
 [alias]
 	aliases = config --get-regexp alias
+	branches = branch -a
 	l = log --oneline --graph -n 20
+	remotes = remote -v
 	s = status -s
+	tags = tag -l
 	whoami = config user.email
 [apply]
 	whitespace = fix

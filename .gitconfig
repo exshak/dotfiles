@@ -2,6 +2,7 @@
 	aliases = config --get-regexp alias
 	amend = commit --amend --reuse-message=HEAD
 	branches = branch -a
+	c = clone --recursive
 	l = log --oneline --graph -n 20
 	remotes = remote -v
 	s = status -s

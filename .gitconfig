@@ -15,6 +15,7 @@
 	excludesFile = ~/.gitignore
 	pager = diff-so-fancy | less --tabs=4 -RFX
 	trustctime = false
+	untrackedCache = true
 [color]
 	ui = true
 [color "diff-highlight"]

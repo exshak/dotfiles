@@ -9,3 +9,4 @@ alias lsf='colorls -lf --gs --sd'
 # Shortcuts
 alias brewup='brew update && brew upgrade && brew cleanup && brew doctor'
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias speeds='speedtest --simple --server'

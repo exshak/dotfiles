@@ -3,6 +3,7 @@
 	amend = commit --amend --reuse-message=HEAD
 	branches = branch -a
 	c = clone --recursive
+	contributors = shortlog --summary --numbered
 	l = log --oneline --graph -n 20
 	p = pull --recurse-submodules
 	remotes = remote -v

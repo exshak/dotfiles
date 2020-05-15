@@ -105,6 +105,7 @@ prompt pure
 # Source plugin files
 source $HOME/.aliases
 source $(dirname $(gem which colorls))/tab_complete.sh
+source <(navi widget zsh)
 eval $(thefuck --alias)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 

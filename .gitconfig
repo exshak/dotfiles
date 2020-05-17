@@ -14,7 +14,6 @@
 	whitespace = fix
 [core]
 	excludesFile = ~/.gitignore
-	attributesFile = ~/.gitattributes
 	pager = diff-so-fancy | less --tabs=4 -RFX
 	trustctime = false
 	untrackedCache = true

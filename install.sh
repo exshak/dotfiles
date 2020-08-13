@@ -35,6 +35,6 @@
     config config status.showUntrackedFiles no
   fi
 
-  . setup.sh -t build
+  ./setup.sh -t build
 
 } # This ensures the entire script is downloaded.

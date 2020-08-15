@@ -15,15 +15,17 @@ brew 'vim'
 
 # Binaries
 brew 'bat'
-brew 'git'
-brew 'hub'
+brew 'ctags'
+brew 'fd'
 brew 'fzf'
+brew 'git'
+brew 'gh'
+brew 'hub'
 brew 'mas'
 brew 'navi'
 brew 'ripgrep'
-brew 'tldr'
-brew 'tree'
 brew 'thefuck'
+brew 'tldr'
 
 # Pen Test
 brew 'nmap'
@@ -46,12 +48,15 @@ brew 'neovim'
 brew 'awscli'
 
 # Cli Tools
+brew 'broot'
 brew 'cmatrix'
 brew 'gotop'
 brew 'imagemagick'
 brew 'neofetch'
+brew 'nnn'
 brew 'speedtest-cli'
 brew 'task'
+brew 'tree'
 
 # Applications
 cask 'alfred'

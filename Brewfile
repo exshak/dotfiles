@@ -93,6 +93,7 @@ cask 'transmission'
 cask 'virtualbox'
 cask 'virtualbox-extension-pack'
 cask 'visual-studio-code'
+cask 'vlc'
 
 # Fonts
 cask 'font-fira-code'

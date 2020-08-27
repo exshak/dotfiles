@@ -62,6 +62,7 @@ brew 'nnn'
 brew 'speedtest-cli'
 brew 'task'
 brew 'tree'
+brew 'youtube-dl'
 
 # Applications
 cask 'alfred'

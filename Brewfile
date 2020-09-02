@@ -28,6 +28,7 @@ brew 'navi'
 brew 'ripgrep'
 brew 'thefuck'
 brew 'tldr'
+brew 'z'
 
 # Pen Test
 brew 'hydra'

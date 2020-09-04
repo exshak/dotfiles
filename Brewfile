@@ -29,6 +29,7 @@ brew 'navi'
 brew 'ripgrep'
 brew 'thefuck'
 brew 'tldr'
+brew 'wget'
 brew 'z'
 
 # Pen Test

@@ -9,7 +9,6 @@ let $v = $HOME.(s:darwin ? '/.vim' : '\vim')
 set runtimepath+=$v
 
 " Plug {{{1
-
 if empty(glob($v.'/autoload/plug.vim'))
   silent !curl -fLo $v/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -93,7 +92,13 @@ Plug 'junegunn/goyo.vim'
 Plug 'vimwiki/vimwiki'
 
 call plug#end()
+" }}}
 
+" Local {{{1
+let $local = glob('~/.vimrc.local')
+if filereadable($local)
+  source $local
+endif
 " }}}
 
 " vim: fdm=marker sw=2 ts=2 tw=0

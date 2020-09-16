@@ -94,6 +94,12 @@ Plug 'vimwiki/vimwiki'
 call plug#end()
 " }}}
 
+" Options {{{1
+augroup vimrc
+  autocmd!
+augroup END
+" }}}
+
 " Local {{{1
 let $local = glob('~/.vimrc.local')
 if filereadable($local)

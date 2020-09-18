@@ -1,3 +1,4 @@
+
 " ╔══════════════════════════════════════════╗
 " ║           ⎋ .vimrc by exshak ⎋           ║
 " ╚══════════════════════════════════════════╝
@@ -195,6 +196,9 @@ if has('persistent_undo')
   if !isdirectory(&undodir) | call mkdir(&undodir) | endif
   set undofile
 endif
+
+" Mappings {{{1
+let mapleader = ' '
 " }}}
 
 " Local {{{1

@@ -159,7 +159,7 @@ set history=1000 " Define maximum command history size.
 set mouse+=a " Enable the use of the mouse.
 set scrolloff=8 " Minimum number of screen lines to keep above and below the cursor.
 set shortmess+=ac " Use abbreviations and short messages in command-line menu.
-set viminfo+='1000 " Saves buffers, marks, registers, command-line and search history.
+set viminfo=!,%,'1000,<50,s10,h " Saves buffers, marks, registers and search history.
 set whichwrap+=h,l,<,> " Allow keys that move left/right to move to the prev/next line.
 
 " Indent
@@ -167,7 +167,9 @@ set autoindent " Copy indent from current line when starting a new line.
 set smartindent " Automatically inserts one extra level of indentation in some cases.
 set expandtab " Use the appropriate number of spaces instead of tab characters.
 set smarttab " Make <Tab>, <BS> indent and remove indent in leading whitespaces.
+set shiftround " Round indent to multiple of 'shiftwidth'. Applies to > and < commands.
 set shiftwidth=2 " Number of spaces to use for each step of auto indent operators.
+set softtabstop=2 " Number of spaces that a <Tab> counts.
 set tabstop=2 " Length of a <Tab> character.
 
 " Search
@@ -176,6 +178,7 @@ set hlsearch " Highlight the matched search results by default.
 set incsearch " Instantly show results when you start searching.
 set ignorecase " Makes sure default search is not case sensitive.
 set smartcase " If a uppercase character is entered, the search will be case sensitive.
+set shortmess-=S " Show search count message when searching, e.g. '[1/5]'.
 set magic " Regex special characters can be used in search patterns.
 
 " Wild

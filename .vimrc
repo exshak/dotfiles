@@ -200,8 +200,113 @@ if has('persistent_undo')
   set undofile
 endif
 
+" Format the status line
+" set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+
 " Mappings {{{1
 let mapleader = ' '
+
+" Edit
+
+" Override Ex mode with run @q.
+nnoremap Q @q
+
+" Yank from cursor to end of line.
+nnoremap Y y$
+
+" Stay in visual mode when indenting.
+xnoremap < <gv
+xnoremap > >gv
+
+" File
+
+" Quick close current window.
+nnoremap <leader>q :q<cr>
+
+" Quick save the current file.
+nnoremap <leader>w :w<cr>
+
+" Quick editing of the ~/.vimrc.
+nnoremap <leader>e :e! ~/.vimrc<cr>
+
+" Move
+
+" Jump to start and end of line using the home row keys.
+noremap H ^
+noremap L $
+
+" Save movements larger than 5 lines to the jumplist, if no count use g[jk].
+nnoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
+nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
+
+" Move lines/blocks of text using Alt+[jk].
+execute "set <M-j>=\ej"
+execute "set <M-k>=\ek"
+nnoremap <M-j> mz:m+<cr>`z
+nnoremap <M-k> mz:m-2<cr>`z
+xnoremap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
+xnoremap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
+
+" On mac Command+[jk].
+if s:darwin
+  nnoremap <D-j> <M-j>
+  nnoremap <D-k> <M-k>
+  xnoremap <D-j> <M-j>
+  xnoremap <D-k> <M-k>
+endif
+
+" Search
+
+" Visual mode pressing * or # searches for the current selection.
+vnoremap <silent> * :<C-u>call VisualSelection('', '')<cr>/<C-r>=@/<cr><cr>
+vnoremap <silent> # :<C-u>call VisualSelection('', '')<cr>?<C-r>=@/<cr><cr>
+
+" When you press <leader>r you can search and replace the selected text.
+vnoremap <silent> <leader>r :call VisualSelection('replace', '')<cr>
+
+" Toggle
+
+call ToggleOption('a', 'autowrite')
+call ToggleOption('b', 'background',
+    \ 'let &background = &background == "dark" ? "light" : "dark"<bar>redraw')
+call ToggleOption('c', 'cursorline')
+call ToggleOption('h', 'hlsearch')
+call ToggleOption('l', 'list')
+call ToggleOption('m', 'mouse', 'let &mouse = &mouse == "" ? "a" : ""')
+call ToggleOption('n', 'number')
+call ToggleOption('o', 'startofline')
+call ToggleOption('p', 'paste')
+call ToggleOption('q', 'belloff', 'let &belloff = &belloff == "" ? "all" : ""')
+call ToggleOption('r', 'relativenumber')
+call ToggleOption('s', 'spell')
+call ToggleOption('t', 'textwidth',
+    \ 'let &textwidth = input("textwidth (". &textwidth ."): ")<bar>redraw')
+call ToggleOption('v', 'visualbell')
+call ToggleOption('w', 'wrap')
+
+" Window
+
+" Window navigation.
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" Window resizing.
+nnoremap <S-Up> <C-w>+
+nnoremap <S-Down> <C-w>-
+nnoremap <S-Left> <C-w>>
+nnoremap <S-Right> <C-w><
+
+" Window switching.
+nnoremap <C-H> <C-w>H
+nnoremap <C-J> <C-w>J
+nnoremap <C-K> <C-w>K
+nnoremap <C-L> <C-w>L
+
+" Split `h`orizontal or `v`ertical
+nnoremap <leader>h :split<cr>
+nnoremap <leader>v :vsplit<cr>
 " }}}
 
 " Local {{{1

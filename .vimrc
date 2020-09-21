@@ -183,7 +183,7 @@ set magic " Regex special characters can be used in search patterns.
 
 " Wild
 set wildmenu " Command-line completion operates in an enhanced mode.
-set wildignore=*.o,*~,*.pyc " Ignore compiled files
+set wildignore=*.o,*~,*.pyc " Ignore compiled files.
 if s:windows
   set wildignore+=.git\*,.hg\*,.svn\*
 else
@@ -200,11 +200,19 @@ if has('persistent_undo')
   set undofile
 endif
 
-" Format the status line
+" Format the status line.
 " set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
 
 " Mappings {{{1
 let mapleader = ' '
+
+" Buffer
+
+" Close all the buffers.
+nnoremap <leader>ba :bufdo bd<cr>
+
+" Close the current buffer.
+nnoremap <leader>bd :bdelete<cr>
 
 " Edit
 
@@ -248,12 +256,12 @@ xnoremap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 xnoremap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " On mac Command+[jk].
-if s:darwin
-  nnoremap <D-j> <M-j>
-  nnoremap <D-k> <M-k>
-  xnoremap <D-j> <M-j>
-  xnoremap <D-k> <M-k>
-endif
+" if s:darwin
+"   nnoremap <D-j> <M-j>
+"   nnoremap <D-k> <M-k>
+"   xnoremap <D-j> <M-j>
+"   xnoremap <D-k> <M-k>
+" endif
 
 " Search
 
@@ -265,6 +273,13 @@ vnoremap <silent> # :<C-u>call VisualSelection('', '')<cr>?<C-r>=@/<cr><cr>
 vnoremap <silent> <leader>r :call VisualSelection('replace', '')<cr>
 
 " Toggle
+
+" co? : Toggle options
+function! ToggleOption(...)
+  let [key, opt] = a:000[0:1]
+  let op = get(a:, 3, 'set '.opt.'!')
+  execute printf("nnoremap <silent> co%s :%s<bar>set %s?<cr>", key, op, opt)
+endfunction
 
 call ToggleOption('a', 'autowrite')
 call ToggleOption('b', 'background',
@@ -299,14 +314,75 @@ nnoremap <S-Left> <C-w>>
 nnoremap <S-Right> <C-w><
 
 " Window switching.
-nnoremap <C-H> <C-w>H
-nnoremap <C-J> <C-w>J
-nnoremap <C-K> <C-w>K
-nnoremap <C-L> <C-w>L
+" nnoremap <C-H> <C-w>H
+" nnoremap <C-J> <C-w>J
+" nnoremap <C-K> <C-w>K
+" nnoremap <C-L> <C-w>L
 
-" Split `h`orizontal or `v`ertical
+" Split `h`orizontal or `v`ertical.
 nnoremap <leader>h :split<cr>
 nnoremap <leader>v :vsplit<cr>
+
+" Plugin
+
+" Commentary
+map  gc  <Plug>Commentary
+nmap gcc <Plug>CommentaryLine
+
+" EasyAlign
+nmap ga <Plug>(EasyAlign)
+xmap ga <Plug>(EasyAlign)
+
+" EasyMotion
+map <leader>h <Plug>(easymotion-linebackward)
+map <leader>j <Plug>(easymotion-j)
+map <leader>k <Plug>(easymotion-k)
+map <leader>l <Plug>(easymotion-lineforward)
+map <leader>f <Plug>(easymotion-bd-f)
+nmap <leader>f <Plug>(easymotion-overwin-f)
+map <leader>s <Plug>(easymotion-f2)
+nmap <leader>s <Plug>(easymotion-overwin-f2)
+" map <leader>t <Plug>(easymotion-t2)
+" nmap <leader>t <Plug>(easymotion-overwin-t2)
+
+" Fugitive
+nnoremap <leader>ga :Gwrite<cr>
+nnoremap <leader>gb :Gblame<cr>
+nnoremap <leader>gc :Gcommit<cr>
+nnoremap <leader>gd :Gvdiff<cr>
+nnoremap <leader>gg :Gwrite<cr>:Gcommit -m 'updated'<cr>:Gpush<cr>
+nnoremap <leader>gh :Gbrowse<cr>
+nnoremap <leader>gl :Gpull<cr>
+nnoremap <leader>gp :Gpush<cr>
+nnoremap <leader>gr :Gremove<cr>
+nnoremap <leader>gs :Gstatus<cr>
+
+" FZF
+nnoremap <expr> <leader><leader> (expand('%') =~ 'NERD_tree' ? "\<C-w>\<C-w>" : '').":Files\<cr>"
+nnoremap <leader>B :Buffers<cr>
+nnoremap <leader>C :Colors<cr>
+nnoremap <leader>F :GFiles<cr>
+nnoremap <leader>H :History<cr>
+nnoremap <leader>L :Lines<cr>
+nnoremap <leader>M :Maps<cr>
+nnoremap <leader>R :Rg<cr>
+nnoremap <leader>T :Tags<cr>
+nnoremap <leader>` :Marks<cr>
+
+" Goyo
+nnoremap <leader>G :Goyo<cr>
+
+" NERDTree
+nnoremap <leader>n :NERDTreeToggle<cr>
+
+" Startify
+nnoremap <leader>S :Startify<cr>
+
+" Tagbar
+nnoremap <leader>t :TagbarToggle<cr>
+
+" Undotree
+nnoremap <leader>u :UndotreeToggle<cr>
 " }}}
 
 " Local {{{1

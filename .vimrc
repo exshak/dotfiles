@@ -103,14 +103,18 @@ augroup END
 filetype plugin indent on " Enable loading {ftdetect,ftplugin,indent}/*.vim files.
 syntax on " Enable loading syntax/*.vim files.
 
+" ══════════════════════════════════════════════════════════════════════════════
 " Buffers
+" ══════════════════════════════════════════════════════════════════════════════
 set autoread " Read file again if it's detected to have been changed outside of Vim.
 set hidden " Allows you to hide buffers with unsaved changes without being prompted.
 set splitbelow " Splitting a window will put the new window below of the current one.
 set splitright " Splitting a window will put the new window right of the current one.
 set switchbuf=useopen,usetab,newtab " Jump to first open window that contains the buffer.
 
+" ══════════════════════════════════════════════════════════════════════════════
 " Colors
+" ══════════════════════════════════════════════════════════════════════════════
 set background=dark " Choose dark colors if available.
 colorscheme dracula " Set dracula as colorscheme.
 
@@ -120,7 +124,9 @@ if has('termguicolors')
   set termguicolors " Enable True Color.
 endif
 
+" ══════════════════════════════════════════════════════════════════════════════
 " Display
+" ══════════════════════════════════════════════════════════════════════════════
 set cmdheight=1 " Number of screen lines to use for the command-line.
 set laststatus=2 " Always show the status line.
 set lazyredraw " Don't redraw screen while executing macros.
@@ -130,7 +136,9 @@ set showcmd " Display key presses in the bottom right.
 set showmatch " When a bracket is inserted, briefly jump to the matching one.
 set ttyfast " More characters will be sent to the screen for redrawing in terminal.
 
+" ══════════════════════════════════════════════════════════════════════════════
 " Edit
+" ══════════════════════════════════════════════════════════════════════════════
 set matchtime=2 " Tenths of a second to show the matching parenthesis.
 set modelines=0 " Set number of lines that is checked for set commands.
 set nomodeline " Disable modeline altogether.
@@ -140,7 +148,9 @@ set t_vb= " No errorbell beep or visualbell flash for errors.
 set timeoutlen=500 " Mapping delays in milliseconds.
 set updatetime=300 " If this many milliseconds nothing is typed, CursorHold will trigger.
 
+" ══════════════════════════════════════════════════════════════════════════════
 " Format
+" ══════════════════════════════════════════════════════════════════════════════
 set foldcolumn=0 " Column with the specified width is shown at the side of the window.
 set foldmethod=marker " Markers are used to specify the folding mechanism.
 set foldtext=Foldy() " Use custom fold text function for folds.
@@ -150,7 +160,9 @@ set signcolumn=number " Always draw the sign column even if there is no sign in 
 set textwidth=0 " Prevent auto wrapping when using affecting keys.
 set wrap " Wrap lines longer than the width of the window.
 
+" ══════════════════════════════════════════════════════════════════════════════
 " General
+" ══════════════════════════════════════════════════════════════════════════════
 set backspace=indent,eol,start " Allow backspacing over anything in insert mode.
 set clipboard^=unnamed,unnamedplus " Sync system clipboard with vim registers.
 set encoding=utf-8 " Default character encoding. (vim-only)
@@ -162,7 +174,9 @@ set shortmess+=ac " Use abbreviations and short messages in command-line menu.
 set viminfo=!,%,'1000,<50,s10,h " Saves buffers, marks, registers and search history.
 set whichwrap+=h,l,<,> " Allow keys that move left/right to move to the prev/next line.
 
+" ══════════════════════════════════════════════════════════════════════════════
 " Indent
+" ══════════════════════════════════════════════════════════════════════════════
 set autoindent " Copy indent from current line when starting a new line.
 set smartindent " Automatically inserts one extra level of indentation in some cases.
 set expandtab " Use the appropriate number of spaces instead of tab characters.
@@ -172,7 +186,9 @@ set shiftwidth=2 " Number of spaces to use for each step of auto indent operator
 set softtabstop=2 " Number of spaces that a <Tab> counts.
 set tabstop=2 " Length of a <Tab> character.
 
+" ══════════════════════════════════════════════════════════════════════════════
 " Search
+" ══════════════════════════════════════════════════════════════════════════════
 set grepformat=%f:%l:%c:%m,%f:%l:%m " Format to recognize for the :grep command output.
 set hlsearch " Highlight the matched search results by default.
 set incsearch " Instantly show results when you start searching.
@@ -181,7 +197,9 @@ set smartcase " If a uppercase character is entered, the search will be case sen
 set shortmess-=S " Show search count message when searching, e.g. '[1/5]'.
 set magic " Regex special characters can be used in search patterns.
 
+" ══════════════════════════════════════════════════════════════════════════════
 " Wild
+" ══════════════════════════════════════════════════════════════════════════════
 set wildmenu " Command-line completion operates in an enhanced mode.
 set wildignore=*.o,*~,*.pyc " Ignore compiled files.
 if s:windows
@@ -190,7 +208,9 @@ else
   set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 endif
 
+" ══════════════════════════════════════════════════════════════════════════════
 " Backup
+" ══════════════════════════════════════════════════════════════════════════════
 set nobackup
 set noswapfile
 set nowritebackup
@@ -206,16 +226,18 @@ endif
 " Mappings {{{1
 let mapleader = ' '
 
+" ══════════════════════════════════════════════════════════════════════════════
 " Buffer
-
+" ══════════════════════════════════════════════════════════════════════════════
 " Close all the buffers.
 nnoremap <leader>ba :bufdo bd<cr>
 
 " Close the current buffer.
 nnoremap <leader>bd :bdelete<cr>
 
+" ══════════════════════════════════════════════════════════════════════════════
 " Edit
-
+" ══════════════════════════════════════════════════════════════════════════════
 " Override Ex mode with run @q.
 nnoremap Q @q
 
@@ -226,8 +248,9 @@ nnoremap Y y$
 xnoremap < <gv
 xnoremap > >gv
 
+" ══════════════════════════════════════════════════════════════════════════════
 " File
-
+" ══════════════════════════════════════════════════════════════════════════════
 " Quick close current window.
 nnoremap <leader>q :q<cr>
 
@@ -237,8 +260,9 @@ nnoremap <leader>w :w<cr>
 " Quick editing of the ~/.vimrc.
 nnoremap <leader>e :e! ~/.vimrc<cr>
 
+" ══════════════════════════════════════════════════════════════════════════════
 " Move
-
+" ══════════════════════════════════════════════════════════════════════════════
 " Jump to start and end of line using the home row keys.
 noremap H ^
 noremap L $
@@ -263,8 +287,9 @@ xnoremap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 "   xnoremap <D-k> <M-k>
 " endif
 
+" ══════════════════════════════════════════════════════════════════════════════
 " Search
-
+" ══════════════════════════════════════════════════════════════════════════════
 " Visual mode pressing * or # searches for the current selection.
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<cr>/<C-r>=@/<cr><cr>
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<cr>?<C-r>=@/<cr><cr>
@@ -272,8 +297,9 @@ vnoremap <silent> # :<C-u>call VisualSelection('', '')<cr>?<C-r>=@/<cr><cr>
 " When you press <leader>r you can search and replace the selected text.
 vnoremap <silent> <leader>r :call VisualSelection('replace', '')<cr>
 
+" ══════════════════════════════════════════════════════════════════════════════
 " Toggle
-
+" ══════════════════════════════════════════════════════════════════════════════
 " co? : Toggle options
 function! ToggleOption(...)
   let [key, opt] = a:000[0:1]
@@ -299,8 +325,9 @@ call ToggleOption('t', 'textwidth',
 call ToggleOption('v', 'visualbell')
 call ToggleOption('w', 'wrap')
 
+" ══════════════════════════════════════════════════════════════════════════════
 " Window
-
+" ══════════════════════════════════════════════════════════════════════════════
 " Window navigation.
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
@@ -323,8 +350,9 @@ nnoremap <S-Right> <C-w><
 nnoremap <leader>h :split<cr>
 nnoremap <leader>v :vsplit<cr>
 
+" ══════════════════════════════════════════════════════════════════════════════
 " Plugin
-
+" ══════════════════════════════════════════════════════════════════════════════
 " Commentary
 map  gc  <Plug>Commentary
 nmap gcc <Plug>CommentaryLine

@@ -146,6 +146,7 @@ set noerrorbells " Never ring the bell for error messages.
 set visualbell " Use visual bell instead of beeping on errors.
 set t_vb= " No errorbell beep or visualbell flash for errors.
 set timeoutlen=500 " Mapping delays in milliseconds.
+set ttimeoutlen=10 " Key code delays in milliseconds.
 set updatetime=300 " If this many milliseconds nothing is typed, CursorHold will trigger.
 
 " ══════════════════════════════════════════════════════════════════════════════
@@ -236,6 +237,26 @@ nnoremap <leader>ba :bufdo bd<cr>
 nnoremap <leader>bd :bdelete<cr>
 
 " ══════════════════════════════════════════════════════════════════════════════
+" Command
+" ══════════════════════════════════════════════════════════════════════════════
+" Readline bindings for the command-line.
+" cnoremap <C-a> <Home>
+" cnoremap <C-b> <Left>
+" cnoremap <expr> <C-d> getcmdpos()>strlen(getcmdline())?"\<Lt>C-D>":"\<Lt>Del>"
+" cnoremap <C-e> <End>
+" cnoremap <expr> <C-f> getcmdpos()>strlen(getcmdline())?&cedit:"\<Lt>Right>"
+" cnoremap <C-n> <Down>
+" cnoremap <C-p> <Up>
+" cnoremap <M-b> <S-Left>
+" cnoremap <M-d> <S-Right><C-w>
+" cnoremap <M-f> <S-Right>
+" silent! exe "set <Down>=\<Esc>n"
+" silent! exe "set <Up>=\<Esc>p"
+" silent! exe "set <S-Left>=\<Esc>b"
+" silent! exe "set <S-Right><C-w>=\<Esc>d"
+" silent! exe "set <S-Right>=\<Esc>f"
+
+" ══════════════════════════════════════════════════════════════════════════════
 " Edit
 " ══════════════════════════════════════════════════════════════════════════════
 " Override Ex mode with run @q.
@@ -263,6 +284,11 @@ nnoremap <leader>e :e! ~/.vimrc<cr>
 " ══════════════════════════════════════════════════════════════════════════════
 " Move
 " ══════════════════════════════════════════════════════════════════════════════
+" Escape with jk.
+inoremap jk <Esc>
+xnoremap jk <Esc>
+cnoremap jk <C-c>
+
 " Jump to start and end of line using the home row keys.
 noremap H ^
 noremap L $
@@ -290,6 +316,16 @@ xnoremap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 " ══════════════════════════════════════════════════════════════════════════════
 " Search
 " ══════════════════════════════════════════════════════════════════════════════
+" Search results centered.
+nnoremap <silent> n :normal! nzzzv<cr>
+nnoremap <silent> N :normal! Nzzzv<cr>
+nnoremap <silent> * :normal! *zzzv<cr>
+nnoremap <silent> # :normal! #zzzv<cr>
+nnoremap <silent> g* :normal! g*zzzv<cr>
+nnoremap <silent> g# :normal! g#zzzv<cr>
+nnoremap <silent> <C-o> <C-o>zz
+nnoremap <silent> <C-i> <C-i>zz
+
 " Visual mode pressing * or # searches for the current selection.
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<cr>/<C-r>=@/<cr><cr>
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<cr>?<C-r>=@/<cr><cr>
@@ -411,6 +447,23 @@ nnoremap <leader>t :TagbarToggle<cr>
 
 " Undotree
 nnoremap <leader>u :UndotreeToggle<cr>
+
+" Commands {{{1
+augroup vimrc
+  " When editing a file, always jump to the last known cursor position.
+  " Don't do it for commit messages, when the position is invalid, or when
+  " inside an event handler (happens when dropping a file on gvim).
+  autocmd BufReadPost *
+    \ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal g'\"" |
+    \ endif
+
+  " Automatically load ~/.vimrc source when saved.
+  autocmd BufWritePost ~/.vimrc nested source $MYVIMRC
+
+  " Update on buffer entry or focus change.
+  autocmd FocusGained,BufEnter * checktime
+augroup END
 " }}}
 
 " Local {{{1

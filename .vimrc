@@ -458,12 +458,70 @@ augroup vimrc
     \   exe "normal g'\"" |
     \ endif
 
+  " Strip trailing whitespaces automatically when saving files of certain type.
+  autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call TrimWhitespace()
+
   " Automatically load ~/.vimrc source when saved.
   autocmd BufWritePost ~/.vimrc nested source $MYVIMRC
 
   " Update on buffer entry or focus change.
   autocmd FocusGained,BufEnter * checktime
 augroup END
+
+" Functions {{{1
+function! CmdLine(str)
+  call feedkeys(":" . a:str)
+endfunction
+
+" For 'foldtext'.
+function! Foldy()
+  let linelen = &tw ? &tw : 80
+  let marker = strpart(&fmr, 0, stridx(&fmr, ',')) . '\d*'
+  let range = foldclosedend(v:foldstart) - foldclosed(v:foldstart) + 1
+
+  let left = substitute(getline(v:foldstart), marker, '', '')
+  let leftlen = len(left)
+
+  let right = range . ' [' . v:foldlevel . ']'
+  let rightlen = len(right)
+
+  let tmp = strpart(left, 0, linelen - rightlen)
+  let tmplen = len(tmp)
+
+  if leftlen > len(tmp)
+    let left = strpart(tmp, 0, tmplen - 4) . '... '
+    let leftlen = tmplen
+  endif
+
+  let fill = repeat(' ', linelen - (leftlen + rightlen))
+
+  return left . fill . right . repeat(' ', 100)
+endfunction
+
+" Trim trailing whitespace characters from end of lines.
+function! TrimWhitespace()
+  let l:view = winsaveview()
+  keeppatterns %s/\s\+$//e
+  call winrestview(l:view)
+endfunction
+
+" Visual mode search and replace for the selected text.
+function! VisualSelection(direction, extra_filter) range
+  let l:saved_reg = @"
+  execute "normal! vgvy"
+
+  let l:pattern = escape(@", "\\/.*'$^~[]")
+  let l:pattern = substitute(l:pattern, "\n$", "", "")
+
+  if a:direction == 'gv'
+    call CmdLine("Ack '" . l:pattern . "' " )
+  elseif a:direction == 'replace'
+    call CmdLine("%s" . '/'. l:pattern . '/')
+  endif
+
+  let @/ = l:pattern
+  let @" = l:saved_reg
+endfunction
 " }}}
 
 " Local {{{1

@@ -571,6 +571,74 @@ function! VisualSelection(direction, extra_filter) range
 endfunction
 " }}}
 
+" Plugins {{{1
+" Plugin: lightline {{{2
+let g:lightline = {
+  \ 'colorscheme': 'dracula',
+  \ 'active': {
+  \   'left': [ ['mode', 'paste'],
+  \             ['fugitive', 'readonly', 'filename', 'modified'] ],
+  \   'right': [ [ 'lineinfo' ], ['percent'] ]
+  \ },
+  \ 'component': {
+  \   'readonly': '%{&filetype=="help"?"":&readonly?"🔒":""}',
+  \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
+  \   'fugitive': '%{exists("*FugitiveHead")?FugitiveHead():""}'
+  \ },
+  \ 'component_visible_condition': {
+  \   'readonly': '(&filetype!="help"&& &readonly)',
+  \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
+  \   'fugitive': '(exists("*FugitiveHead") && ""!=FugitiveHead())'
+  \ },
+  \ 'separator': { 'left': '', 'right': '' },
+  \ 'subseparator': { 'left': '', 'right': '' }
+  \ }
+
+" Plugin: limelight {{{2
+let g:limelight_paragraph_span = 1
+let g:limelight_priority = -1
+
+" Plugin: splitjoin {{{2
+let g:splitjoin_join_mapping = ''
+let g:splitjoin_split_mapping = ''
+
+" Plugin: vim-airline {{{2
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_powerline_fonts = 1
+let g:airline_skip_empty_sections = 1
+let g:airline#extensions#whitespace#enabled = 0
+" let g:airline_symbols.branch = ''
+" let g:airline_symbols.readonly = ''
+" let g:airline_symbols.linenr = '☰'
+" let g:airline_symbols.maxlinenr = ''
+" let g:airline_symbols.dirty='⚡'
+
+" Plugin: vim-easy-align {{{2
+let g:easy_align_delimiters = {
+  \ '"': { 'pattern': '"', 'ignore_groups': [] }
+  \ }
+
+" Plugin: vim-easymotion {{{2
+let g:EasyMotion_do_mapping        = 0
+let g:EasyMotion_do_shade          = 1
+let g:EasyMotion_inc_highlight     = 0
+let g:EasyMotion_landing_highlight = 0
+let g:EasyMotion_off_screen_search = 0
+let g:EasyMotion_smartcase         = 0
+let g:EasyMotion_startofline       = 0
+let g:EasyMotion_use_smartsign_us  = 1
+let g:EasyMotion_use_upper         = 0
+let g:EasyMotion_skipfoldedline    = 0
+
+" Plugin: vim-github-dashboard {{{2
+let g:github_dashboard = { 'username': 'exshak' }
+
+" Plugin: vim-gtfo {{{2
+let g:gtfo#terminals = { 'mac': 'iterm' }
+
 " Local {{{1
 let $local = glob('~/.vimrc.local')
 if filereadable($local)

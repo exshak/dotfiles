@@ -166,6 +166,8 @@ set wrap " Wrap lines longer than the width of the window.
 " ══════════════════════════════════════════════════════════════════════════════
 set backspace=indent,eol,start " Allow backspacing over anything in insert mode.
 set clipboard^=unnamed,unnamedplus " Sync system clipboard with vim registers.
+set complete-=i " Options for keyword completion.
+set completeopt=menuone,preview,longest " Options for insert mode completion.
 set encoding=utf-8 " Default character encoding. (vim-only)
 set fileformats=unix,dos,mac " Use compatible end-of-line <EOL> format.
 set history=1000 " Define maximum command history size.
@@ -234,7 +236,13 @@ let mapleader = ' '
 nnoremap <leader>ba :bufdo bd<cr>
 
 " Close the current buffer.
-nnoremap <leader>bd :bdelete<cr>
+nnoremap <leader>bd :Bclose<cr>
+
+" Buffer navigation.
+nnoremap <leader>bf :bfirst<cr>
+nnoremap <leader>bl :blast<cr>
+nnoremap <leader>bn :bnext<cr>
+nnoremap <leader>bp :bprevious<cr>
 
 " ══════════════════════════════════════════════════════════════════════════════
 " Command
@@ -255,6 +263,20 @@ nnoremap <leader>bd :bdelete<cr>
 " silent! exe "set <S-Left>=\<Esc>b"
 " silent! exe "set <S-Right><C-w>=\<Esc>d"
 " silent! exe "set <S-Right>=\<Esc>f"
+
+" ══════════════════════════════════════════════════════════════════════════════
+" Cursor
+" ══════════════════════════════════════════════════════════════════════════════
+" Use a block cursor in normal mode, i-beam cursor in insertmode.
+if empty($TMUX)
+  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+  let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+else
+  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+  let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+endif
 
 " ══════════════════════════════════════════════════════════════════════════════
 " Edit
@@ -279,7 +301,10 @@ nnoremap <leader>q :q<cr>
 nnoremap <leader>w :w<cr>
 
 " Quick editing of the ~/.vimrc.
-nnoremap <leader>e :e! ~/.vimrc<cr>
+nnoremap <leader>e :vsp ~/.vimrc<cr>
+
+" Switch CWD to that of the open buffer.
+nnoremap <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 " ══════════════════════════════════════════════════════════════════════════════
 " Move
@@ -323,8 +348,8 @@ nnoremap <silent> * :normal! *zzzv<cr>
 nnoremap <silent> # :normal! #zzzv<cr>
 nnoremap <silent> g* :normal! g*zzzv<cr>
 nnoremap <silent> g# :normal! g#zzzv<cr>
-nnoremap <silent> <C-o> <C-o>zz
-nnoremap <silent> <C-i> <C-i>zz
+nnoremap <silent> <C-o> <C-o>zzzv
+nnoremap <silent> <C-i> <C-i>zzzv
 
 " Visual mode pressing * or # searches for the current selection.
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<cr>/<C-r>=@/<cr><cr>
@@ -437,6 +462,7 @@ nnoremap <leader>` :Marks<cr>
 nnoremap <leader>G :Goyo<cr>
 
 " NERDTree
+nnoremap <leader>m :NERDTreeFind<cr>
 nnoremap <leader>n :NERDTreeToggle<cr>
 
 " Startify
@@ -469,6 +495,27 @@ augroup vimrc
 augroup END
 
 " Functions {{{1
+" Don't close window, when deleting a buffer.
+command! Bclose call BufferClose()
+function! BufferClose()
+  let l:currentBufNum = bufnr("%")
+  let l:alternateBufNum = bufnr("#")
+
+  if buflisted(l:alternateBufNum)
+    buffer #
+  else
+    bnext
+  endif
+
+  if bufnr("%") == l:currentBufNum
+    new
+  endif
+
+  if buflisted(l:currentBufNum)
+    execute("bdelete! ".l:currentBufNum)
+  endif
+endfunction
+
 function! CmdLine(str)
   call feedkeys(":" . a:str)
 endfunction

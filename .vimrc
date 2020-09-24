@@ -47,10 +47,12 @@ Plug 'tpope/vim-unimpaired' " Bracket mappings
 Plug 'mg979/vim-visual-multi' " Multiple cursors
 
 " Format
+Plug 'jiangmiao/auto-pairs' "Automatic brackets
 Plug 'junegunn/vim-easy-align' " Alignment
 Plug 'easymotion/vim-easymotion' " Movement
 Plug 'justinmk/vim-gtfo' " Go to Terminal/File manager
 Plug 'tpope/vim-eunuch' " UNIX helpers
+Plug 'tpope/vim-rsi' " Readline bindings
 Plug 'tpope/vim-vinegar' " Enhances netrw
 
 " Git
@@ -63,7 +65,7 @@ Plug 'junegunn/vim-github-dashboard' " GitHub events
 
 " Lang
 Plug 'w0rp/ale' " Lint engine
-Plug 'neoclide/coc.nvim' " Intellisense engine
+Plug 'neoclide/coc.nvim', { 'branch': 'release' } " Intellisense engine
 Plug 'mattn/emmet-vim' " Expand HTML/XML/CSS
 Plug 'ap/vim-css-color' " Preview colors
 Plug 'sheerun/vim-polyglot' " Language packs
@@ -86,10 +88,12 @@ Plug 'romainl/vim-cool' " Automatic search highlighting
 " Tools
 Plug 'metakirby5/codi.vim' " Interactive scratchpad
 Plug 'tpope/vim-dispatch' " Test dispatcher
+Plug 'christoomey/vim-tmux-navigator' " Tmux navigation
 Plug 'puremourning/vimspector' " Graphical debugger
 
 " Write
 Plug 'junegunn/goyo.vim' " Distraction-free mode
+Plug 'junegunn/limelight.vim' " Highlight current paragraph
 Plug 'vimwiki/vimwiki' " Personal Wiki
 
 call plug#end()
@@ -300,8 +304,8 @@ nnoremap <leader>q :q<cr>
 " Quick save the current file.
 nnoremap <leader>w :w<cr>
 
-" Quick editing of the ~/.vimrc.
-nnoremap <leader>e :vsp ~/.vimrc<cr>
+" Quick editing of the $MYVIMRC.
+nnoremap <leader>ev :vs $MYVIMRC<cr>
 
 " Switch CWD to that of the open buffer.
 nnoremap <leader>cd :cd %:p:h<cr>:pwd<cr>
@@ -352,48 +356,48 @@ nnoremap <silent> <C-o> <C-o>zzzv
 nnoremap <silent> <C-i> <C-i>zzzv
 
 " Visual mode pressing * or # searches for the current selection.
-vnoremap <silent> * :<C-u>call VisualSelection('', '')<cr>/<C-r>=@/<cr><cr>
-vnoremap <silent> # :<C-u>call VisualSelection('', '')<cr>?<C-r>=@/<cr><cr>
+vnoremap <silent> * :<C-u>call <sid>visual_selection('', '')<cr>/<C-r>=@/<cr><cr>
+vnoremap <silent> # :<C-u>call <sid>visual_selection('', '')<cr>?<C-r>=@/<cr><cr>
 
 " When you press <leader>r you can search and replace the selected text.
-vnoremap <silent> <leader>r :call VisualSelection('replace', '')<cr>
+vnoremap <silent> <leader>r :call <sid>visual_selection('replace', '')<cr>
 
 " ══════════════════════════════════════════════════════════════════════════════
 " Toggle
 " ══════════════════════════════════════════════════════════════════════════════
 " co? : Toggle options
-function! ToggleOption(...)
+function! s:toggle_option(...)
   let [key, opt] = a:000[0:1]
   let op = get(a:, 3, 'set '.opt.'!')
   execute printf("nnoremap <silent> co%s :%s<bar>set %s?<cr>", key, op, opt)
 endfunction
 
-call ToggleOption('a', 'autowrite')
-call ToggleOption('b', 'background',
+call s:toggle_option('a', 'autowrite')
+call s:toggle_option('b', 'background',
     \ 'let &background = &background == "dark" ? "light" : "dark"<bar>redraw')
-call ToggleOption('c', 'cursorline')
-call ToggleOption('h', 'hlsearch')
-call ToggleOption('l', 'list')
-call ToggleOption('m', 'mouse', 'let &mouse = &mouse == "" ? "a" : ""')
-call ToggleOption('n', 'number')
-call ToggleOption('o', 'startofline')
-call ToggleOption('p', 'paste')
-call ToggleOption('q', 'belloff', 'let &belloff = &belloff == "" ? "all" : ""')
-call ToggleOption('r', 'relativenumber')
-call ToggleOption('s', 'spell')
-call ToggleOption('t', 'textwidth',
+call s:toggle_option('c', 'cursorline')
+call s:toggle_option('h', 'hlsearch')
+call s:toggle_option('l', 'list')
+call s:toggle_option('m', 'mouse', 'let &mouse = &mouse == "" ? "a" : ""')
+call s:toggle_option('n', 'number')
+call s:toggle_option('o', 'startofline')
+call s:toggle_option('p', 'paste')
+call s:toggle_option('q', 'belloff', 'let &belloff = &belloff == "" ? "all" : ""')
+call s:toggle_option('r', 'relativenumber')
+call s:toggle_option('s', 'spell')
+call s:toggle_option('t', 'textwidth',
     \ 'let &textwidth = input("textwidth (". &textwidth ."): ")<bar>redraw')
-call ToggleOption('v', 'visualbell')
-call ToggleOption('w', 'wrap')
+call s:toggle_option('v', 'visualbell')
+call s:toggle_option('w', 'wrap')
 
 " ══════════════════════════════════════════════════════════════════════════════
 " Window
 " ══════════════════════════════════════════════════════════════════════════════
 " Window navigation.
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
+" nnoremap <C-h> <C-w>h
+" nnoremap <C-j> <C-w>j
+" nnoremap <C-k> <C-w>k
+" nnoremap <C-l> <C-w>l
 
 " Window resizing.
 nnoremap <S-Up> <C-w>+
@@ -410,6 +414,10 @@ nnoremap <S-Right> <C-w><
 " Split `h`orizontal or `v`ertical.
 nnoremap <leader>h :split<cr>
 nnoremap <leader>v :vsplit<cr>
+
+" Zoom/Restore window.
+nnoremap <leader>z :Zoom<cr>
+inoremap <leader>z <esc>:Zoom<cr>a
 
 " ══════════════════════════════════════════════════════════════════════════════
 " Plugin
@@ -448,8 +456,9 @@ nnoremap <leader>gs :Gstatus<cr>
 
 " FZF
 nnoremap <expr> <leader><leader> (expand('%') =~ 'NERD_tree' ? "\<C-w>\<C-w>" : '').":Files\<cr>"
+nnoremap <leader><cr> :Buffers<cr>
 nnoremap <leader>B :Buffers<cr>
-nnoremap <leader>C :Colors<cr>
+nnoremap <leader>C :Commands<cr>
 nnoremap <leader>F :GFiles<cr>
 nnoremap <leader>H :History<cr>
 nnoremap <leader>L :Lines<cr>
@@ -466,13 +475,19 @@ nnoremap <leader>m :NERDTreeFind<cr>
 nnoremap <leader>n :NERDTreeToggle<cr>
 
 " Startify
-nnoremap <leader>S :Startify<cr>
+nnoremap <leader>st :Startify<cr>
+
+" Surround
+vnoremap Si S(i_<esc>f)
 
 " Tagbar
-nnoremap <leader>t :TagbarToggle<cr>
+nnoremap <leader>ta :TagbarToggle<cr>
 
 " Undotree
 nnoremap <leader>u :UndotreeToggle<cr>
+
+" VimWiki
+let g:vimwiki_map_prefix = '<leader>x'
 
 " Commands {{{1
 augroup vimrc
@@ -485,7 +500,7 @@ augroup vimrc
     \ endif
 
   " Strip trailing whitespaces automatically when saving files of certain type.
-  autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call TrimWhitespace()
+  autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call <sid>trim_whitespace()
 
   " Automatically load ~/.vimrc source when saved.
   autocmd BufWritePost ~/.vimrc nested source $MYVIMRC
@@ -496,8 +511,7 @@ augroup END
 
 " Functions {{{1
 " Don't close window, when deleting a buffer.
-command! Bclose call BufferClose()
-function! BufferClose()
+function! s:buffer_close()
   let l:currentBufNum = bufnr("%")
   let l:alternateBufNum = bufnr("#")
 
@@ -515,8 +529,9 @@ function! BufferClose()
     execute("bdelete! ".l:currentBufNum)
   endif
 endfunction
+command! Bclose call <sid>buffer_close()
 
-function! CmdLine(str)
+function! s:cmd_line(str)
   call feedkeys(":" . a:str)
 endfunction
 
@@ -546,14 +561,14 @@ function! Foldy()
 endfunction
 
 " Trim trailing whitespace characters from end of lines.
-function! TrimWhitespace()
+function! s:trim_whitespace()
   let l:view = winsaveview()
   keeppatterns %s/\s\+$//e
   call winrestview(l:view)
 endfunction
 
 " Visual mode search and replace for the selected text.
-function! VisualSelection(direction, extra_filter) range
+function! s:visual_selection(direction, extra_filter) range
   let l:saved_reg = @"
   execute "normal! vgvy"
 
@@ -561,17 +576,76 @@ function! VisualSelection(direction, extra_filter) range
   let l:pattern = substitute(l:pattern, "\n$", "", "")
 
   if a:direction == 'gv'
-    call CmdLine("Ack '" . l:pattern . "' " )
+    call <sid>cmd_line("Ack '" . l:pattern . "' " )
   elseif a:direction == 'replace'
-    call CmdLine("%s" . '/'. l:pattern . '/')
+    call <sid>cmd_line("%s" . '/'. l:pattern . '/')
   endif
 
   let @/ = l:pattern
   let @" = l:saved_reg
 endfunction
+
+" Zoom
+function! s:zoom() abort
+  if winnr('$') > 1
+    if exists('t:zoomed') && t:zoomed
+        execute t:zoom_winrestcmd
+        let t:zoomed = 0
+    else
+        let t:zoom_winrestcmd = winrestcmd()
+        vertical resize | resize
+        let t:zoomed = 1
+    endif
+  else
+    execute "silent !tmux resize-pane -Z"
+  endif
+endfunction
+command! Zoom call <sid>zoom()
 " }}}
 
 " Plugins {{{1
+" Plugin: goyo {{{2
+function! s:goyo_enter()
+  if has('gui_running')
+    set fullscreen
+    set background=light
+    set linespace=7
+  elseif exists('$TMUX')
+    silent !tmux set status off
+  endif
+  Limelight
+  let &l:statusline = '%M'
+  hi StatusLine ctermfg=red guifg=red cterm=NONE gui=NONE
+endfunction
+
+function! s:goyo_leave()
+  if has('gui_running')
+    set nofullscreen
+    set background=dark
+    set linespace=0
+  elseif exists('$TMUX')
+    silent !tmux set status on
+  endif
+  Limelight!
+endfunction
+
+autocmd! User GoyoEnter nested call <sid>goyo_enter()
+autocmd! User GoyoLeave nested call <sid>goyo_leave()
+
+" let g:goyo_margin_bottom = 2
+" let g:goyo_margin_top = 2
+" let g:goyo_width=100
+
+" Plugin: gv {{{2
+function! s:gv_expand()
+  let line = getline('.')
+  GV --name-status
+  call search('\V'.line, 'c')
+  normal! zz
+endfunction
+
+autocmd! FileType GV nnoremap <buffer> <silent> + :call <sid>gv_expand()<cr>
+
 " Plugin: lightline {{{2
 let g:lightline = {
   \ 'colorscheme': 'dracula',
@@ -598,9 +672,38 @@ let g:lightline = {
 let g:limelight_paragraph_span = 1
 let g:limelight_priority = -1
 
+" Plugin: nerdtree {{{2
+" Open NERDTree automatically when opening a directory.
+augroup nerd_loader
+  autocmd!
+  autocmd VimEnter * silent! autocmd! FileExplorer
+  autocmd BufEnter,BufNew *
+        \  if isdirectory(expand('<amatch>'))
+        \|   call plug#load('nerdtree')
+        \|   execute 'autocmd! nerd_loader'
+        \| endif
+augroup END
+
+let NERDTreeIgnore = ['.DS_Store$', '.pyc$', '__pycache__']
+let NERDTreeMinimalUI = 1
+let NERDTreeShowHidden = 1
+let g:NERDTreeHighlightFolders = 1
+let g:NERDTreeHighlightFoldersFullName = 1
+" let g:NERDTreeDirArrowExpandable = ''
+" let g:NERDTreeDirArrowCollapsible = ''
+
 " Plugin: splitjoin {{{2
 let g:splitjoin_join_mapping = ''
 let g:splitjoin_split_mapping = ''
+
+" Plugin: tagbar {{{2
+let g:tagbar_autoclose = 0
+let g:tagbar_autofocus = 1
+let g:tagbar_compact   = 1
+let g:tagbar_sort      = 0
+
+" Plugin: undotree {{{2
+let g:undotree_WindowLayout = 2
 
 " Plugin: vim-airline {{{2
 let g:airline_left_sep = ''
@@ -610,6 +713,7 @@ let g:airline_right_alt_sep = ''
 let g:airline_powerline_fonts = 1
 let g:airline_skip_empty_sections = 1
 let g:airline#extensions#whitespace#enabled = 0
+" let g:airline_section_z = "%p%% %l/%L \ue0a1:%c"
 " let g:airline_symbols.branch = ''
 " let g:airline_symbols.readonly = ''
 " let g:airline_symbols.linenr = '☰'
@@ -638,6 +742,33 @@ let g:github_dashboard = { 'username': 'exshak' }
 
 " Plugin: vim-gtfo {{{2
 let g:gtfo#terminals = { 'mac': 'iterm' }
+
+" Plugin: vim-signify {{{2
+" Update Git signs every time the text is changed.
+autocmd vimrc TextChanged,TextChangedI * call sy#start()
+
+let g:signify_sign_add          = '│'
+let g:signify_sign_change       = '│'
+let g:signify_sign_changedelete = '│'
+let g:signify_skip_filetype = { 'journal': 1 }
+let g:signify_vcs_list = ['git']
+
+" Plugin: vim-startify {{{2
+let g:startify_change_to_dir       = 1
+let g:startify_custom_header       = 'startify#pad(startify#fortune#boxed())'
+let g:startify_enable_special      = 0
+let g:startify_fortune_use_unicode = 1
+let g:startify_update_oldfiles     = 1
+let g:startify_use_env             = 1
+let g:startify_bookmarks=[
+  \ '~/.vimrc',
+  \ '~/.zshrc',
+  \ ]
+
+" Plugin: vim-surround {{{2
+autocmd FileType mako vnoremap Si S"i${ _(<esc>2f"a) }<esc>
+
+let g:surround_indent = 1
 
 " Local {{{1
 let $local = glob('~/.vimrc.local')

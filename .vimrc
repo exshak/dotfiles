@@ -419,76 +419,6 @@ nnoremap <leader>v :vsplit<cr>
 nnoremap <leader>z :Zoom<cr>
 inoremap <leader>z <esc>:Zoom<cr>a
 
-" ══════════════════════════════════════════════════════════════════════════════
-" Plugin
-" ══════════════════════════════════════════════════════════════════════════════
-" Commentary
-map  gc  <Plug>Commentary
-nmap gcc <Plug>CommentaryLine
-
-" EasyAlign
-nmap ga <Plug>(EasyAlign)
-xmap ga <Plug>(EasyAlign)
-
-" EasyMotion
-map <leader>h <Plug>(easymotion-linebackward)
-map <leader>j <Plug>(easymotion-j)
-map <leader>k <Plug>(easymotion-k)
-map <leader>l <Plug>(easymotion-lineforward)
-map <leader>f <Plug>(easymotion-bd-f)
-nmap <leader>f <Plug>(easymotion-overwin-f)
-map <leader>s <Plug>(easymotion-f2)
-nmap <leader>s <Plug>(easymotion-overwin-f2)
-" map <leader>t <Plug>(easymotion-t2)
-" nmap <leader>t <Plug>(easymotion-overwin-t2)
-
-" Fugitive
-nnoremap <leader>ga :Gwrite<cr>
-nnoremap <leader>gb :Gblame<cr>
-nnoremap <leader>gc :Gcommit<cr>
-nnoremap <leader>gd :Gvdiff<cr>
-nnoremap <leader>gg :Gwrite<cr>:Gcommit -m 'updated'<cr>:Gpush<cr>
-nnoremap <leader>gh :Gbrowse<cr>
-nnoremap <leader>gl :Gpull<cr>
-nnoremap <leader>gp :Gpush<cr>
-nnoremap <leader>gr :Gremove<cr>
-nnoremap <leader>gs :Gstatus<cr>
-
-" FZF
-nnoremap <expr> <leader><leader> (expand('%') =~ 'NERD_tree' ? "\<C-w>\<C-w>" : '').":Files\<cr>"
-nnoremap <leader><cr> :Buffers<cr>
-nnoremap <leader>B :Buffers<cr>
-nnoremap <leader>C :Commands<cr>
-nnoremap <leader>F :GFiles<cr>
-nnoremap <leader>H :History<cr>
-nnoremap <leader>L :Lines<cr>
-nnoremap <leader>M :Maps<cr>
-nnoremap <leader>R :Rg<cr>
-nnoremap <leader>T :Tags<cr>
-nnoremap <leader>` :Marks<cr>
-
-" Goyo
-nnoremap <leader>G :Goyo<cr>
-
-" NERDTree
-nnoremap <leader>m :NERDTreeFind<cr>
-nnoremap <leader>n :NERDTreeToggle<cr>
-
-" Startify
-nnoremap <leader>st :Startify<cr>
-
-" Surround
-vnoremap Si S(i_<esc>f)
-
-" Tagbar
-nnoremap <leader>ta :TagbarToggle<cr>
-
-" Undotree
-nnoremap <leader>u :UndotreeToggle<cr>
-
-" VimWiki
-let g:vimwiki_map_prefix = '<leader>x'
-
 " Commands {{{1
 augroup vimrc
   " When editing a file, always jump to the last known cursor position.
@@ -605,6 +535,8 @@ command! Zoom call <sid>zoom()
 
 " Plugins {{{1
 " Plugin: goyo {{{2
+nnoremap <leader>G :Goyo<cr>
+
 function! s:goyo_enter()
   if has('gui_running')
     set fullscreen
@@ -673,6 +605,9 @@ let g:limelight_paragraph_span = 1
 let g:limelight_priority = -1
 
 " Plugin: nerdtree {{{2
+nnoremap <leader>m :NERDTreeFind<cr>
+nnoremap <leader>n :NERDTreeToggle<cr>
+
 " Open NERDTree automatically when opening a directory.
 augroup nerd_loader
   autocmd!
@@ -697,12 +632,16 @@ let g:splitjoin_join_mapping = ''
 let g:splitjoin_split_mapping = ''
 
 " Plugin: tagbar {{{2
+nnoremap <leader>ta :TagbarToggle<cr>
+
 let g:tagbar_autoclose = 0
 let g:tagbar_autofocus = 1
 let g:tagbar_compact   = 1
 let g:tagbar_sort      = 0
 
 " Plugin: undotree {{{2
+nnoremap <leader>u :UndotreeToggle<cr>
+
 let g:undotree_WindowLayout = 2
 
 " Plugin: vim-airline {{{2
@@ -720,12 +659,26 @@ let g:airline#extensions#whitespace#enabled = 0
 " let g:airline_symbols.maxlinenr = ''
 " let g:airline_symbols.dirty='⚡'
 
+" Plugin: vim-commentary {{{2
+map  gc  <Plug>Commentary
+nmap gcc <Plug>CommentaryLine
+
 " Plugin: vim-easy-align {{{2
+nmap ga <Plug>(EasyAlign)
+xmap ga <Plug>(EasyAlign)
+
 let g:easy_align_delimiters = {
   \ '"': { 'pattern': '"', 'ignore_groups': [] }
   \ }
 
 " Plugin: vim-easymotion {{{2
+map <leader>h <Plug>(easymotion-linebackward)
+map <leader>j <Plug>(easymotion-j)
+map <leader>k <Plug>(easymotion-k)
+map <leader>l <Plug>(easymotion-lineforward)
+nmap <leader>s <Plug>(easymotion-s2)
+nmap <leader>s <Plug>(easymotion-overwin-f2)
+
 let g:EasyMotion_do_mapping        = 0
 let g:EasyMotion_do_shade          = 1
 let g:EasyMotion_inc_highlight     = 0
@@ -736,6 +689,18 @@ let g:EasyMotion_startofline       = 0
 let g:EasyMotion_use_smartsign_us  = 1
 let g:EasyMotion_use_upper         = 0
 let g:EasyMotion_skipfoldedline    = 0
+
+" Plugin: vim-fugitive {{{2
+nnoremap <leader>ga :Gwrite<cr>
+nnoremap <leader>gb :Gblame<cr>
+nnoremap <leader>gc :Gcommit<cr>
+nnoremap <leader>gd :Gvdiff<cr>
+nnoremap <leader>gg :Gwrite<cr>:Gcommit -m 'updated'<cr>:Gpush<cr>
+nnoremap <leader>gh :Gbrowse<cr>
+nnoremap <leader>gl :Gpull<cr>
+nnoremap <leader>gp :Gpush<cr>
+nnoremap <leader>gr :Gremove<cr>
+nnoremap <leader>gs :Gstatus<cr>
 
 " Plugin: vim-github-dashboard {{{2
 let g:github_dashboard = { 'username': 'exshak' }
@@ -754,6 +719,8 @@ let g:signify_skip_filetype = { 'journal': 1 }
 let g:signify_vcs_list = ['git']
 
 " Plugin: vim-startify {{{2
+nnoremap <leader>st :Startify<cr>
+
 let g:startify_change_to_dir       = 1
 let g:startify_custom_header       = 'startify#pad(startify#fortune#boxed())'
 let g:startify_enable_special      = 0
@@ -766,9 +733,14 @@ let g:startify_bookmarks=[
   \ ]
 
 " Plugin: vim-surround {{{2
+vnoremap Si S(i_<esc>f)
+
 autocmd FileType mako vnoremap Si S"i${ _(<esc>2f"a) }<esc>
 
 let g:surround_indent = 1
+
+" Plugin: vimwiki {{{2
+let g:vimwiki_map_prefix = '<leader>x'
 
 " Local {{{1
 let $local = glob('~/.vimrc.local')

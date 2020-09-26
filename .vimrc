@@ -50,6 +50,7 @@ Plug 'mg979/vim-visual-multi' " Multiple cursors
 Plug 'jiangmiao/auto-pairs' "Automatic brackets
 Plug 'junegunn/vim-easy-align' " Alignment
 Plug 'easymotion/vim-easymotion' " Movement
+Plug 'justinmk/vim-sneak' " Motion
 Plug 'justinmk/vim-gtfo' " Go to Terminal/File manager
 Plug 'tpope/vim-eunuch' " UNIX helpers
 Plug 'tpope/vim-rsi' " Readline bindings
@@ -295,6 +296,9 @@ nnoremap Y y$
 xnoremap < <gv
 xnoremap > >gv
 
+" Highlight last inserted text.
+nnoremap gV `[v`]
+
 " ══════════════════════════════════════════════════════════════════════════════
 " File
 " ══════════════════════════════════════════════════════════════════════════════
@@ -326,6 +330,12 @@ noremap L $
 nnoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
 nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
 
+" Indent lines/blocks of text using Alt+[hl].
+nnoremap <M-h> <<
+nnoremap <M-l> >>
+xnoremap <M-h> <gv
+xnoremap <M-l> >gv
+
 " Move lines/blocks of text using Alt+[jk].
 execute "set <M-j>=\ej"
 execute "set <M-k>=\ek"
@@ -352,6 +362,8 @@ nnoremap <silent> * :normal! *zzzv<cr>
 nnoremap <silent> # :normal! #zzzv<cr>
 nnoremap <silent> g* :normal! g*zzzv<cr>
 nnoremap <silent> g# :normal! g#zzzv<cr>
+nnoremap <silent> g; :normal! g;zzzv<cr>
+nnoremap <silent> g, :normal! g,zzzv<cr>
 nnoremap <silent> <C-o> <C-o>zzzv
 nnoremap <silent> <C-i> <C-i>zzzv
 
@@ -717,6 +729,9 @@ let g:signify_sign_change       = '│'
 let g:signify_sign_changedelete = '│'
 let g:signify_skip_filetype = { 'journal': 1 }
 let g:signify_vcs_list = ['git']
+
+" Plugin: vim-sneak {{{2
+let g:sneak#label = 1
 
 " Plugin: vim-startify {{{2
 nnoremap <leader>st :Startify<cr>

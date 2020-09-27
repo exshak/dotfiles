@@ -296,8 +296,15 @@ nnoremap Y y$
 xnoremap < <gv
 xnoremap > >gv
 
+" Reselect last visual block.
+onoremap gv  :<c-u>normal! gv<cr>
+
 " Highlight last inserted text.
 nnoremap gV `[v`]
+
+" Enter new line above or below.
+nnoremap <leader>o o<esc>
+nnoremap <leader>O O<esc>
 
 " ══════════════════════════════════════════════════════════════════════════════
 " File
@@ -307,6 +314,9 @@ nnoremap <leader>q :q<cr>
 
 " Quick save the current file.
 nnoremap <leader>w :w<cr>
+
+" Sudo save the current file (read-only).
+noremap <leader>W :w !sudo tee % > /dev/null<cr>
 
 " Quick editing of the $MYVIMRC.
 nnoremap <leader>ev :vs $MYVIMRC<cr>
@@ -324,7 +334,7 @@ cnoremap jk <C-c>
 
 " Jump to start and end of line using the home row keys.
 noremap H ^
-noremap L $
+noremap L g_
 
 " Save movements larger than 5 lines to the jumplist, if no count use g[jk].
 nnoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'

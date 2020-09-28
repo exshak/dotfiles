@@ -89,6 +89,7 @@ Plug 'romainl/vim-cool' " Automatic search highlighting
 " Tools
 Plug 'metakirby5/codi.vim' " Interactive scratchpad
 Plug 'tpope/vim-dispatch' " Test dispatcher
+Plug 'tpope/vim-obsession' " Save sessions automatically
 Plug 'christoomey/vim-tmux-navigator' " Tmux navigation
 Plug 'puremourning/vimspector' " Graphical debugger
 
@@ -202,13 +203,14 @@ set hlsearch " Highlight the matched search results by default.
 set incsearch " Instantly show results when you start searching.
 set ignorecase " Makes sure default search is not case sensitive.
 set smartcase " If a uppercase character is entered, the search will be case sensitive.
-set shortmess-=S " Show search count message when searching, e.g. '[1/5]'.
+" set shortmess-=S " Show search count message when searching, e.g. '[1/5]'.
 set magic " Regex special characters can be used in search patterns.
 
 " ══════════════════════════════════════════════════════════════════════════════
 " Wild
 " ══════════════════════════════════════════════════════════════════════════════
 set wildmenu " Command-line completion operates in an enhanced mode.
+set wildmode=full " Wildmenu options.
 set wildignore=*.o,*~,*.pyc " Ignore compiled files.
 if s:windows
   set wildignore+=.git\*,.hg\*,.svn\*
@@ -296,8 +298,8 @@ nnoremap Y y$
 xnoremap < <gv
 xnoremap > >gv
 
-" Reselect last visual block.
-onoremap gv  :<c-u>normal! gv<cr>
+" Reselect last visual area.
+onoremap gv :<c-u>normal! gv<cr>
 
 " Highlight last inserted text.
 nnoremap gV `[v`]
@@ -311,6 +313,9 @@ nnoremap <leader>O O<esc>
 " ══════════════════════════════════════════════════════════════════════════════
 " Quick close current window.
 nnoremap <leader>q :q<cr>
+
+" Quick close all windows.
+nnoremap <leader>Q :qa<cr>
 
 " Quick save the current file.
 nnoremap <leader>w :w<cr>
@@ -768,7 +773,7 @@ let g:surround_indent = 1
 let g:vimwiki_map_prefix = '<leader>x'
 
 " Local {{{1
-let $local = glob('~/.vimrc.local')
+let $local = expand('~/.vimrc.local')
 if filereadable($local)
   source $local
 endif

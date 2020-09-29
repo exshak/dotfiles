@@ -210,8 +210,9 @@ set magic " Regex special characters can be used in search patterns.
 " Wild
 " ══════════════════════════════════════════════════════════════════════════════
 set wildmenu " Command-line completion operates in an enhanced mode.
-set wildmode=full " Wildmenu options.
+set wildmode=full " Wildmenu completion options.
 set wildignore=*.o,*~,*.pyc " Ignore compiled files.
+set wildignorecase " Ignore case when completing in command menu.
 if s:windows
   set wildignore+=.git\*,.hg\*,.svn\*
 else
@@ -229,9 +230,6 @@ if has('persistent_undo')
   if !isdirectory(&undodir) | call mkdir(&undodir) | endif
   set undofile
 endif
-
-" Format the status line.
-" set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
 
 " Mappings {{{1
 let mapleader = ' '
@@ -327,7 +325,7 @@ noremap <leader>W :w !sudo tee % > /dev/null<cr>
 nnoremap <leader>ev :vs $MYVIMRC<cr>
 
 " Switch CWD to that of the open buffer.
-nnoremap <leader>cd :cd %:p:h<cr>:pwd<cr>
+nnoremap <leader>cd :lcd %:p:h<cr>:pwd<cr>
 
 " ══════════════════════════════════════════════════════════════════════════════
 " Move

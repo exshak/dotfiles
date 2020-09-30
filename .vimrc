@@ -252,6 +252,9 @@ nnoremap <leader>bp :bprevious<cr>
 " ══════════════════════════════════════════════════════════════════════════════
 " Command
 " ══════════════════════════════════════════════════════════════════════════════
+" Repeat last command.
+nnoremap <leader>. :<C-p><cr>
+
 " Readline bindings for the command-line.
 " cnoremap <C-a> <Home>
 " cnoremap <C-b> <Left>
@@ -324,6 +327,9 @@ noremap <leader>W :w !sudo tee % > /dev/null<cr>
 " Quick editing of the $MYVIMRC.
 nnoremap <leader>ev :vs $MYVIMRC<cr>
 
+" Quick reload of the $MYVIMRC.
+nnoremap <leader>so :so $MYVIMRC<cr>
+
 " Switch CWD to that of the open buffer.
 nnoremap <leader>cd :lcd %:p:h<cr>:pwd<cr>
 
@@ -380,12 +386,15 @@ nnoremap <silent> g, :normal! g,zzzv<cr>
 nnoremap <silent> <C-o> <C-o>zzzv
 nnoremap <silent> <C-i> <C-i>zzzv
 
-" Visual mode pressing * or # searches for the current selection.
-vnoremap <silent> * :<C-u>call <sid>visual_selection('', '')<cr>/<C-r>=@/<cr><cr>
-vnoremap <silent> # :<C-u>call <sid>visual_selection('', '')<cr>?<C-r>=@/<cr><cr>
+" Visual mode * or # searches for the current selection.
+vnoremap <silent> * :call <sid>visual_search('f')<cr>
+vnoremap <silent> # :call <sid>visual_search('b')<cr>
 
-" When you press <leader>r you can search and replace the selected text.
-vnoremap <silent> <leader>r :call <sid>visual_selection('replace', '')<cr>
+" Visual mode <leader>r can search and replace the selected text.
+vnoremap <silent> <leader>r :call <sid>visual_search('r')<cr>
+
+" Visual mode <leader>gv can Ag after the selected text.
+vnoremap <silent> <leader>gv :call <sid>visual_search('g')<cr>
 
 " ══════════════════════════════════════════════════════════════════════════════
 " Toggle
@@ -444,6 +453,9 @@ nnoremap <leader>v :vsplit<cr>
 nnoremap <leader>z :Zoom<cr>
 inoremap <leader>z <esc>:Zoom<cr>a
 
+" Terminal emulation.
+nnoremap <leader>sh :terminal<cr>
+
 " Commands {{{1
 augroup vimrc
   " When editing a file, always jump to the last known cursor position.
@@ -487,7 +499,7 @@ endfunction
 command! Bclose call <sid>buffer_close()
 
 function! s:cmd_line(str)
-  call feedkeys(":" . a:str)
+  call feedkeys(a:str)
 endfunction
 
 " For 'foldtext'.
@@ -523,17 +535,21 @@ function! s:trim_whitespace()
 endfunction
 
 " Visual mode search and replace for the selected text.
-function! s:visual_selection(direction, extra_filter) range
+function! s:visual_search(direction) range
   let l:saved_reg = @"
   execute "normal! vgvy"
 
   let l:pattern = escape(@", "\\/.*'$^~[]")
   let l:pattern = substitute(l:pattern, "\n$", "", "")
 
-  if a:direction == 'gv'
-    call <sid>cmd_line("Ack '" . l:pattern . "' " )
-  elseif a:direction == 'replace'
-    call <sid>cmd_line("%s" . '/'. l:pattern . '/')
+  if a:direction == 'b'
+    call s:cmd_line("?" . l:pattern . "\<cr>" )
+  elseif a:direction == 'f'
+    call s:cmd_line("/" . l:pattern . "\<cr>" )
+  elseif a:direction == 'g'
+    call s:cmd_line(":Ag '" . l:pattern . "' " )
+  elseif a:direction == 'r'
+    call s:cmd_line(":%s" . '/'. l:pattern . '/')
   endif
 
   let @/ = l:pattern

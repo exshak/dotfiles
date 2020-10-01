@@ -296,14 +296,15 @@ set -g mouse on
 #set -g status-position top
 
 # List of plugins
-set -g @tpm_plugins '            \
-    tmux-plugins/tpm             \
-    tmux-plugins/tmux-sensible   \
-    tmux-plugins/tmux-resurrect  \
-    tmux-plugins/tmux-continuum  \
-    tmux-plugins/tmux-yank       \
-    tmux-plugins/tmux-open       \
-    chriszarate/tmux-tasks       \
+set -g @tpm_plugins '               \
+    tmux-plugins/tpm                \
+    tmux-plugins/tmux-continuum     \
+    tmux-plugins/tmux-open          \
+    tmux-plugins/tmux-resurrect     \
+    tmux-plugins/tmux-sensible      \
+    tmux-plugins/tmux-yank          \
+    chriszarate/tmux-tasks          \
+    christoomey/vim-tmux-navigator  \
 '
 
 # tmux-tasks plugin configuration

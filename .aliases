@@ -1,5 +1,5 @@
 # `ls` with color and icons
-alias ls='colorls --gs --sd'
+alias ls='colorls -A --gs --sd'
 alias lt='colorls --gs --sd --tree'
 alias l='colorls -l --gs --sd'
 alias la='colorls -lA --gs --sd'

@@ -619,6 +619,13 @@ endfunction
 
 autocmd! FileType GV nnoremap <buffer> <silent> + :call <sid>gv_expand()<cr>
 
+" Plugin: indentline {{{2
+let g:indentLine_fileTypeExclude = ['startify']
+" let g:indentLine_char = '¦'
+" let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+" let g:indentLine_color_term = 239
+" let g:indentLine_color_gui = '#616161'
+
 " Plugin: lightline {{{2
 let g:lightline = {
   \ 'colorscheme': 'dracula',
@@ -761,6 +768,7 @@ let g:signify_vcs_list = ['git']
 
 " Plugin: vim-sneak {{{2
 let g:sneak#label = 1
+let g:sneak#prompt = '👟 '
 
 " Plugin: vim-startify {{{2
 nnoremap <leader>st :Startify<cr>

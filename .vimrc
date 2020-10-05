@@ -356,8 +356,10 @@ xnoremap <M-h> <gv
 xnoremap <M-l> >gv
 
 " Move lines/blocks of text using Alt+[jk].
-execute "set <M-j>=\ej"
-execute "set <M-k>=\ek"
+if !has('nvim')
+  execute "set <M-j>=\ej"
+  execute "set <M-k>=\ek"
+endif
 nnoremap <M-j> mz:m+<cr>`z
 nnoremap <M-k> mz:m-2<cr>`z
 xnoremap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
@@ -620,7 +622,7 @@ endfunction
 autocmd! FileType GV nnoremap <buffer> <silent> + :call <sid>gv_expand()<cr>
 
 " Plugin: indentline {{{2
-let g:indentLine_fileTypeExclude = ['startify']
+let g:indentLine_fileTypeExclude = ['markdown', 'startify']
 " let g:indentLine_char = '¦'
 " let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 " let g:indentLine_color_term = 239
@@ -674,6 +676,23 @@ let g:NERDTreeHighlightFolders = 1
 let g:NERDTreeHighlightFoldersFullName = 1
 " let g:NERDTreeDirArrowExpandable = ''
 " let g:NERDTreeDirArrowCollapsible = ''
+
+" Plugin: provider {{{2
+if executable('python2')
+  let g:python_host_prog = exepath('python2')
+else
+  let g:loaded_python_provider = 0
+endif
+
+if executable('python3')
+  let g:python3_host_prog = exepath('python3')
+else
+  let g:loaded_python3_provider = 0
+endif
+
+let g:loaded_node_provider = 0
+let g:loaded_perl_provider = 0
+let g:loaded_ruby_provider = 0
 
 " Plugin: splitjoin {{{2
 let g:splitjoin_join_mapping = ''
@@ -792,6 +811,7 @@ autocmd FileType mako vnoremap Si S"i${ _(<esc>2f"a) }<esc>
 let g:surround_indent = 1
 
 " Plugin: vimwiki {{{2
+let g:vimwiki_global_ext = 0
 let g:vimwiki_map_prefix = '<leader>x'
 
 " Local {{{1

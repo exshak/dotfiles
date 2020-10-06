@@ -47,7 +47,8 @@ Plug 'tpope/vim-unimpaired' " Bracket mappings
 Plug 'mg979/vim-visual-multi' " Multiple cursors
 
 " Format
-Plug 'jiangmiao/auto-pairs' "Automatic brackets
+Plug 'jiangmiao/auto-pairs' " Automatic brackets
+Plug 'yggdroot/indentline' " Indentation level
 Plug 'junegunn/vim-easy-align' " Alignment
 Plug 'easymotion/vim-easymotion' " Movement
 Plug 'justinmk/vim-sneak' " Motion
@@ -97,6 +98,17 @@ Plug 'puremourning/vimspector' " Graphical debugger
 Plug 'junegunn/goyo.vim' " Distraction-free mode
 Plug 'junegunn/limelight.vim' " Highlight current paragraph
 Plug 'vimwiki/vimwiki' " Personal Wiki
+Plug 'iamcco/markdown-preview.nvim', {
+  \ 'do': { -> mkdp#util#install() },
+  \ 'for': ['markdown', 'vim-plug'],
+  \ 'on': 'MarkdownPreview'
+  \ } " Preview markdown
+
+let g:plug_url_format = 'git@github.com:%s.git'
+
+Plug 'exshak/vim-easypaste' " Automatic paste mode
+
+unlet! g:plug_url_format
 
 call plug#end()
 " }}}
@@ -622,7 +634,7 @@ endfunction
 autocmd! FileType GV nnoremap <buffer> <silent> + :call <sid>gv_expand()<cr>
 
 " Plugin: indentline {{{2
-let g:indentLine_fileTypeExclude = ['markdown', 'startify']
+let g:indentLine_fileTypeExclude = ['markdown', 'nerdtree', 'startify']
 " let g:indentLine_char = '¦'
 " let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 " let g:indentLine_color_term = 239

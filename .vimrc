@@ -72,6 +72,7 @@ Plug 'mattn/emmet-vim' " Expand HTML/XML/CSS
 Plug 'ap/vim-css-color' " Preview colors
 Plug 'sheerun/vim-polyglot' " Language packs
 Plug 'honza/vim-snippets' " Common snippets
+Plug 'styled-components/vim-styled-components', { 'branch': 'main' } " JSX
 
 " Browse
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } " File explorer
@@ -92,6 +93,7 @@ Plug 'metakirby5/codi.vim' " Interactive scratchpad
 Plug 'tpope/vim-dispatch' " Test dispatcher
 Plug 'tpope/vim-obsession' " Save sessions automatically
 Plug 'christoomey/vim-tmux-navigator' " Tmux navigation
+" Plug 'wakatime/vim-wakatime' " Automatic time tracking
 Plug 'puremourning/vimspector' " Graphical debugger
 
 " Write
@@ -106,7 +108,9 @@ Plug 'iamcco/markdown-preview.nvim', {
 
 let g:plug_url_format = 'git@github.com:%s.git'
 
-Plug 'exshak/vim-easypaste' " Automatic paste mode
+Plug 'exshak/vim-autonohl' " Automatic nohlsearch
+Plug 'exshak/vim-easypaste' " Easy auto paste mode
+Plug 'exshak/vim-position' " Restore last position
 
 unlet! g:plug_url_format
 
@@ -121,18 +125,149 @@ augroup END
 filetype plugin indent on " Enable loading {ftdetect,ftplugin,indent}/*.vim files.
 syntax on " Enable loading syntax/*.vim files.
 
-" ══════════════════════════════════════════════════════════════════════════════
-" Buffers
-" ══════════════════════════════════════════════════════════════════════════════
+" - Buffer {{{2
 set autoread " Read file again if it's detected to have been changed outside of Vim.
 set hidden " Allows you to hide buffers with unsaved changes without being prompted.
+set sessionoptions-=options " Options for `mksession` command.
 set splitbelow " Splitting a window will put the new window below of the current one.
 set splitright " Splitting a window will put the new window right of the current one.
 set switchbuf=useopen,usetab,newtab " Jump to first open window that contains the buffer.
 
-" ══════════════════════════════════════════════════════════════════════════════
-" Colors
-" ══════════════════════════════════════════════════════════════════════════════
+" - Command {{{2
+set cmdheight=1 " Number of screen lines to use for the command-line.
+set noshowmode " Disable native mode indicator.
+set ruler " Show line and column numbers in command-line.
+set showcmd " Display key presses in the bottom right.
+
+" - Display {{{2
+set diffopt=filler,vertical,hiddenoff,foldcolumn:0,algorithm:patience " Settings for diff mode.
+set display=lastline " As much as possible of the last line in a window will be displayed.
+set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:\ ,diff:\  " Characters used in UI elements.
+set laststatus=2 " Always show the status line.
+set showmatch " When a bracket is inserted, briefly jump to the matching one.
+set synmaxcol=300 " Maximum column in which to search for syntax items.
+set viewoptions-=options " Options used by `mkview` and `loadview` commands.
+
+if s:windows
+  set listchars=tab:>\ ,trail:.,eol:$,nbsp:_,extends:>,precedes:< " Unicode strings to use
+else
+  set listchars=tab:▸\ ,trail:·,eol:¬,nbsp:_,extends:»,precedes:« " when 'list' option set.
+endif
+
+if has('patch-8.1.1564')
+  set signcolumn=number " Recently vim can merge signcolumn and number column into one.
+else
+  set signcolumn=auto " Always draw the sign column even if there is no sign in it.
+endif
+
+" - Edit {{{2
+set backspace=indent,eol,start " Allow backspacing over anything in insert mode.
+set clipboard^=unnamed,unnamedplus " Sync system clipboard with vim registers.
+set complete-=i " Options for keyword completion.
+set completeopt=menuone,preview,longest " Options for insert mode completion.
+set nojoinspaces " Disable inserting two spaces after '.', '?', '!' with join command.
+
+" - Error {{{2
+set belloff=all " Never ring the bell for any reason.
+set noerrorbells " Never ring the bell for error messages.
+set visualbell " Use visual bell instead of beeping on errors.
+set t_vb= " No errorbell beep or visualbell flash for errors.
+
+" - Fold {{{2
+set foldlevelstart=0 " Start editing with all folds open.
+set foldmethod=marker " Markers are used to specify the folding mechanism.
+set foldopen+=insert " Specifies for which type of commands folds will be opened.
+set foldtext=Foldy() " Use custom fold text function for folds.
+
+" - Format {{{2
+set autoindent " Copy indent from current line when starting a new line.
+set smartindent " Automatically inserts one extra level of indentation in some cases.
+set expandtab " Use the appropriate number of spaces instead of tab characters.
+set smarttab " Make <Tab>, <BS> indent and remove indent in leading whitespaces.
+set shiftround " Round indent to multiple of 'shiftwidth'. Applies to > and < commands.
+set shiftwidth=2 " Number of spaces to use for each step of auto indent operators.
+set softtabstop=2 " Number of spaces that a <Tab> counts.
+set tabstop=2 " Length of a <Tab> character.
+set linebreak " Wrap lines in 'breakat', rather than at the last character.
+set startofline " Move cursor to the start of each line when jumping with certain commands.
+set textwidth=0 " Prevent auto wrapping when using affecting keys.
+set wrap " Wrap lines longer than the width of the window.
+
+if has('patch-7.4.338')
+  let &showbreak = '↪ '
+  let &showbreak = '↳ '
+  set breakindent " Wrapped lines will be visually indented with same amount of space.
+  set breakindentopt=sbr
+endif
+
+" - General {{{2
+set cpoptions+=q " Standard compatibility options for Vim's default behaviour.
+set encoding=utf-8 " Default character encoding. (vim-only)
+set fileformats=unix,dos,mac " Use compatible end-of-line <EOL> format.
+set formatoptions=tcroqnj " General text formatting options used by many mechanics.
+set history=10000 " Define maximum command history size.
+set lazyredraw " Don't redraw screen while executing macros.
+set modelines=0 " Set number of lines that is checked for set commands.
+set nomodeline " Disable modeline altogether.
+set nrformats=bin,hex " Only accept binary and hexadecimal numbers.
+set report=0 " Threshold for reporting number of lines changed.
+set shortmess+=ac " Use abbreviations and short messages in command-line menu.
+set ttyfast " More characters will be sent to the screen for redrawing in terminal.
+
+" - Motion {{{2
+set matchpairs+=<:> " Use % to jump between pairs.
+set mouse=a " Enable the use of the mouse.
+set scrolloff=5 " Minimum number of screen lines to keep above and below the cursor.
+set sidescrolloff=5 " Minimum number of screen columns to keep to cursor right.
+set whichwrap+=h,l,<,> " Allow keys that move left/right to move to the prev/next line.
+
+" - Search {{{2
+set grepformat=%f:%l:%c:%m,%f:%l:%m " Format to recognize for the :grep command output.
+set hlsearch " Highlight the matched search results by default.
+set incsearch " Instantly show results when you start searching.
+set ignorecase " Makes sure default search is not case sensitive.
+set smartcase " If a uppercase character is entered, the search will be case sensitive.
+set path=.,, " List of directories which will be searched when using related features.
+set tags=./.git/tags;,./tags;,tags " Look for `tags` file in .git/ directory.
+set magic " Regex special characters can be used in search patterns.
+
+" - Time {{{2
+set matchtime=2 " Tenths of a second to show the matching parenthesis.
+set timeoutlen=500 " Mapping delays in milliseconds.
+set ttimeoutlen=50 " Key code delays in milliseconds.
+set updatetime=300 " If this many milliseconds nothing is typed, CursorHold will trigger.
+
+" - Wild {{{2
+set wildmenu " Command-line completion operates in an enhanced mode.
+set wildmode=full " Wildmenu completion options.
+set wildignore=*.o,*~,*.pyc " Ignore compiled files.
+set wildignorecase " Ignore case when completing in command menu.
+
+if s:windows
+  set wildignore+=.git\*,.hg\*,.svn\*
+else
+  set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
+endif
+
+" - Backup {{{2
+set nobackup
+set noswapfile
+set nowritebackup
+
+if has('persistent_undo')
+  set undodir=$v/undodir
+  if !isdirectory(&undodir) | call mkdir(&undodir) | endif
+  set undofile
+  set undolevels=10000 " Maximum undo limit.
+endif
+
+if has('nvim')
+  set shada=!,%,'1000,<50,s10,h " Saves buffers, marks, registers and history.
+else
+  set viminfo=!,%,'1000,<50,s10,h " Saves buffers, marks, registers and history.
+endif
+
+" - Color {{{2
 set background=dark " Choose dark colors if available.
 colorscheme dracula " Set dracula as colorscheme.
 
@@ -142,128 +277,54 @@ if has('termguicolors')
   set termguicolors " Enable True Color.
 endif
 
-" ══════════════════════════════════════════════════════════════════════════════
-" Display
-" ══════════════════════════════════════════════════════════════════════════════
-set cmdheight=1 " Number of screen lines to use for the command-line.
-set laststatus=2 " Always show the status line.
-set lazyredraw " Don't redraw screen while executing macros.
-set noshowmode " Disable native mode indicator.
-set ruler " Show line and column numbers in command-line.
-set showcmd " Display key presses in the bottom right.
-set showmatch " When a bracket is inserted, briefly jump to the matching one.
-set ttyfast " More characters will be sent to the screen for redrawing in terminal.
-
-" ══════════════════════════════════════════════════════════════════════════════
-" Edit
-" ══════════════════════════════════════════════════════════════════════════════
-set matchtime=2 " Tenths of a second to show the matching parenthesis.
-set modelines=0 " Set number of lines that is checked for set commands.
-set nomodeline " Disable modeline altogether.
-set noerrorbells " Never ring the bell for error messages.
-set visualbell " Use visual bell instead of beeping on errors.
-set t_vb= " No errorbell beep or visualbell flash for errors.
-set timeoutlen=500 " Mapping delays in milliseconds.
-set ttimeoutlen=10 " Key code delays in milliseconds.
-set updatetime=300 " If this many milliseconds nothing is typed, CursorHold will trigger.
-
-" ══════════════════════════════════════════════════════════════════════════════
-" Format
-" ══════════════════════════════════════════════════════════════════════════════
-set foldcolumn=0 " Column with the specified width is shown at the side of the window.
-set foldmethod=marker " Markers are used to specify the folding mechanism.
-set foldtext=Foldy() " Use custom fold text function for folds.
-set linebreak " Wrap lines in 'breakat', rather than at the last character.
-set nojoinspaces " Disable inserting two spaces after '.', '?', '!' with join command.
-set signcolumn=number " Always draw the sign column even if there is no sign in it.
-set textwidth=0 " Prevent auto wrapping when using affecting keys.
-set wrap " Wrap lines longer than the width of the window.
-
-" ══════════════════════════════════════════════════════════════════════════════
-" General
-" ══════════════════════════════════════════════════════════════════════════════
-set backspace=indent,eol,start " Allow backspacing over anything in insert mode.
-set clipboard^=unnamed,unnamedplus " Sync system clipboard with vim registers.
-set complete-=i " Options for keyword completion.
-set completeopt=menuone,preview,longest " Options for insert mode completion.
-set encoding=utf-8 " Default character encoding. (vim-only)
-set fileformats=unix,dos,mac " Use compatible end-of-line <EOL> format.
-set history=1000 " Define maximum command history size.
-set mouse+=a " Enable the use of the mouse.
-set scrolloff=8 " Minimum number of screen lines to keep above and below the cursor.
-set shortmess+=ac " Use abbreviations and short messages in command-line menu.
-set viminfo=!,%,'1000,<50,s10,h " Saves buffers, marks, registers and search history.
-set whichwrap+=h,l,<,> " Allow keys that move left/right to move to the prev/next line.
-
-" ══════════════════════════════════════════════════════════════════════════════
-" Indent
-" ══════════════════════════════════════════════════════════════════════════════
-set autoindent " Copy indent from current line when starting a new line.
-set smartindent " Automatically inserts one extra level of indentation in some cases.
-set expandtab " Use the appropriate number of spaces instead of tab characters.
-set smarttab " Make <Tab>, <BS> indent and remove indent in leading whitespaces.
-set shiftround " Round indent to multiple of 'shiftwidth'. Applies to > and < commands.
-set shiftwidth=2 " Number of spaces to use for each step of auto indent operators.
-set softtabstop=2 " Number of spaces that a <Tab> counts.
-set tabstop=2 " Length of a <Tab> character.
-
-" ══════════════════════════════════════════════════════════════════════════════
-" Search
-" ══════════════════════════════════════════════════════════════════════════════
-set grepformat=%f:%l:%c:%m,%f:%l:%m " Format to recognize for the :grep command output.
-set hlsearch " Highlight the matched search results by default.
-set incsearch " Instantly show results when you start searching.
-set ignorecase " Makes sure default search is not case sensitive.
-set smartcase " If a uppercase character is entered, the search will be case sensitive.
-" set shortmess-=S " Show search count message when searching, e.g. '[1/5]'.
-set magic " Regex special characters can be used in search patterns.
-
-" ══════════════════════════════════════════════════════════════════════════════
-" Wild
-" ══════════════════════════════════════════════════════════════════════════════
-set wildmenu " Command-line completion operates in an enhanced mode.
-set wildmode=full " Wildmenu completion options.
-set wildignore=*.o,*~,*.pyc " Ignore compiled files.
-set wildignorecase " Ignore case when completing in command menu.
-if s:windows
-  set wildignore+=.git\*,.hg\*,.svn\*
-else
-  set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
-endif
-
-" ══════════════════════════════════════════════════════════════════════════════
-" Backup
-" ══════════════════════════════════════════════════════════════════════════════
-set nobackup
-set noswapfile
-set nowritebackup
-if has('persistent_undo')
-  set undodir=$v/undodir
-  if !isdirectory(&undodir) | call mkdir(&undodir) | endif
-  set undofile
-endif
-
 " Mappings {{{1
+" Set leader.
 let mapleader = ' '
+let maplocalleader = ' '
 
-" ══════════════════════════════════════════════════════════════════════════════
-" Buffer
-" ══════════════════════════════════════════════════════════════════════════════
-" Close all the buffers.
+" - Abbrev {{{2
+cnoreabbrev W! w!
+cnoreabbrev Q! q!
+cnoreabbrev Qall! qall!
+cnoreabbrev Wq wq
+cnoreabbrev Wa wa
+cnoreabbrev wQ wq
+cnoreabbrev WQ wq
+cnoreabbrev W w
+cnoreabbrev Q q
+cnoreabbrev Qall qall
+
+function! s:command_abbrev(from, to)
+  exec 'cnoreabbrev <expr> '.a:from
+    \ .' ((getcmdtype() ==# ":" && getcmdline() ==# "'.a:from.'")'
+    \ .'? ("'.a:to.'") : ("'.a:from.'"))'
+endfunction
+
+call s:command_abbrev('C', 'CocConfig')
+
+iabbrev Licence License
+iabbrev xdate <C-r>=strftime('%x')<cr>
+iabbrev zdate <C-r>=strftime('%b %d, %Y')<cr>
+
+" #!! | Shebang
+inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
+
+" - Buffer {{{2
+" Close all buffers.
 nnoremap <leader>ba :bufdo bd<cr>
-
 " Close the current buffer.
 nnoremap <leader>bd :Bclose<cr>
 
-" Buffer navigation.
+" Navigate buffers.
 nnoremap <leader>bf :bfirst<cr>
 nnoremap <leader>bl :blast<cr>
 nnoremap <leader>bn :bnext<cr>
 nnoremap <leader>bp :bprevious<cr>
 
-" ══════════════════════════════════════════════════════════════════════════════
-" Command
-" ══════════════════════════════════════════════════════════════════════════════
+" Search buffers.
+nnoremap <leader>bs :cex []<BAR>bufdo vimgrepadd @@g %<BAR>cw<s-left><s-left><right>
+
+" - Command {{{2
 " Repeat last command.
 nnoremap <leader>. :<C-p><cr>
 
@@ -284,70 +345,103 @@ nnoremap <leader>. :<C-p><cr>
 " silent! exe "set <S-Right><C-w>=\<Esc>d"
 " silent! exe "set <S-Right>=\<Esc>f"
 
-" ══════════════════════════════════════════════════════════════════════════════
-" Cursor
-" ══════════════════════════════════════════════════════════════════════════════
+" - Display {{{2
+" Reveal syntax group under cursor.
+nnoremap <leader>sx :echo
+  \ map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')<cr>
+
 " Use a block cursor in normal mode, i-beam cursor in insertmode.
-if empty($TMUX)
-  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-  let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-else
-  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-  let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+if !has('nvim') && !has('gui')
+  if has('unix')
+    let &t_EI = "\<Esc>[2 q" " [E]nd [I]nsert
+    let &t_SI = "\<Esc>[6 q" " [S]tart [I]nsert
+    let &t_SR = "\<Esc>[4 q" " [S]tart [R]eplace
+  elseif has('macuinx')
+    if empty($TMUX)
+      let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+      let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+      let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+    else
+      let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+      let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+      let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+    endif
+  endif
 endif
 
-" ══════════════════════════════════════════════════════════════════════════════
-" Edit
-" ══════════════════════════════════════════════════════════════════════════════
+" - Edit {{{2
 " Override Ex mode with run @q.
 nnoremap Q @q
 
 " Yank from cursor to end of line.
 nnoremap Y y$
 
-" Stay in visual mode when indenting.
-xnoremap < <gv
-xnoremap > >gv
-
 " Reselect last visual area.
 onoremap gv :<c-u>normal! gv<cr>
 
 " Highlight last inserted text.
-nnoremap gV `[v`]
+nnoremap g. :<c-u>normal! `[v`]<cr><left>
 
-" Enter new line above or below.
-nnoremap <leader>o o<esc>
-nnoremap <leader>O O<esc>
+" New line above or below.
+inoremap <leader>o <C-o>o
+inoremap <leader>O <C-o>O
 
-" ══════════════════════════════════════════════════════════════════════════════
-" File
-" ══════════════════════════════════════════════════════════════════════════════
+" - File {{{2
+" Open in IntelliJ.
+if s:darwin
+  nnoremap <silent> <leader>ij :call
+    \ system('nohup "/Applications/IntelliJ IDEA.app/Contents/MacOS/idea"
+    \ '.expand('%:p').'> /dev/null 2>&1 < /dev/null &')<cr>
+endif
+
+" - Format {{{2
+" Auto indent pasted text.
+nnoremap <leader>p p=`]
+nnoremap <leader>P P=`]
+
+" Stay in visual mode when indenting.
+xnoremap < <gv
+xnoremap > >gv
+
+" Indent lines/blocks of text using Alt+[hl].
+nnoremap <M-h> <<
+nnoremap <M-l> >>
+xnoremap <M-h> <gv
+xnoremap <M-l> >gv
+
+" - General {{{2
 " Quick close current window.
 nnoremap <leader>q :q<cr>
-
 " Quick close all windows.
 nnoremap <leader>Q :qa<cr>
 
 " Quick save the current file.
 nnoremap <leader>w :w<cr>
-
 " Sudo save the current file (read-only).
-noremap <leader>W :w !sudo tee % > /dev/null<cr>
+nnoremap <leader>W :w !sudo tee % > /dev/null<cr>
 
 " Quick editing of the $MYVIMRC.
 nnoremap <leader>ev :vs $MYVIMRC<cr>
-
 " Quick reload of the $MYVIMRC.
 nnoremap <leader>so :so $MYVIMRC<cr>
 
 " Switch CWD to that of the open buffer.
 nnoremap <leader>cd :lcd %:p:h<cr>:pwd<cr>
 
-" ══════════════════════════════════════════════════════════════════════════════
-" Move
-" ══════════════════════════════════════════════════════════════════════════════
+" - Jump {{{2
+" Jump list centered.
+nnoremap <silent> <C-o> <C-o>zzzv
+nnoremap <silent> <C-i> <C-i>zzzv
+
+" Jump list (newer).
+nnoremap <C-p> <C-i>
+
+" Jump to tag directly when there is only one match.
+nnoremap <C-]> g<C-]>zt
+nnoremap g[ :pop<cr>
+nnoremap <bs> <c-t>
+
+" - Motion {{{2
 " Escape with jk.
 inoremap jk <Esc>
 xnoremap jk <Esc>
@@ -361,11 +455,9 @@ noremap L g_
 nnoremap <expr> j v:count ? (v:count > 5 ? "m'" . v:count : '') . 'j' : 'gj'
 nnoremap <expr> k v:count ? (v:count > 5 ? "m'" . v:count : '') . 'k' : 'gk'
 
-" Indent lines/blocks of text using Alt+[hl].
-nnoremap <M-h> <<
-nnoremap <M-l> >>
-xnoremap <M-h> <gv
-xnoremap <M-l> >gv
+" Scroll viewport faster.
+nnoremap <C-e> 2<C-e>
+nnoremap <C-y> 2<C-y>
 
 " Move lines/blocks of text using Alt+[jk].
 if !has('nvim')
@@ -385,10 +477,15 @@ xnoremap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 "   xnoremap <D-k> <M-k>
 " endif
 
-" ══════════════════════════════════════════════════════════════════════════════
-" Search
-" ══════════════════════════════════════════════════════════════════════════════
-" Search results centered.
+" - Python {{{2
+" URL encode/decode selection.
+vnoremap <leader>de :!python -c 'import sys,urllib;
+  \ print urllib.unquote(sys.stdin.read().strip())'<cr>
+vnoremap <leader>en :!python -c 'import sys,urllib;
+  \ print urllib.quote(sys.stdin.read().strip())'<cr>
+
+" - Search {{{2
+" Center search results.
 nnoremap <silent> n :normal! nzzzv<cr>
 nnoremap <silent> N :normal! Nzzzv<cr>
 nnoremap <silent> * :normal! *zzzv<cr>
@@ -397,8 +494,13 @@ nnoremap <silent> g* :normal! g*zzzv<cr>
 nnoremap <silent> g# :normal! g#zzzv<cr>
 nnoremap <silent> g; :normal! g;zzzv<cr>
 nnoremap <silent> g, :normal! g,zzzv<cr>
-nnoremap <silent> <C-o> <C-o>zzzv
-nnoremap <silent> <C-i> <C-i>zzzv
+
+nnoremap } }zz
+nnoremap { {zz
+nnoremap ]] ]]zz
+nnoremap [[ [[zz
+nnoremap [] []zz
+nnoremap ][ ][zz
 
 " Visual mode * or # searches for the current selection.
 vnoremap <silent> * :call <sid>visual_search('f')<cr>
@@ -407,12 +509,63 @@ vnoremap <silent> # :call <sid>visual_search('b')<cr>
 " Visual mode <leader>r can search and replace the selected text.
 vnoremap <silent> <leader>r :call <sid>visual_search('r')<cr>
 
-" Visual mode <leader>gv can Ag after the selected text.
+" Visual mode <leader>gv can Ag search after the selected text.
 vnoremap <silent> <leader>gv :call <sid>visual_search('g')<cr>
 
-" ══════════════════════════════════════════════════════════════════════════════
-" Toggle
-" ══════════════════════════════════════════════════════════════════════════════
+" Search devdocs.io
+nnoremap <silent> <leader>do :exe 'sil !open'
+  \ fnameescape(printf('https://devdocs.io/#q=%s%%20%s',
+  \ &ft, expand('<cword>')))<cr>
+
+" - Spell {{{2
+" Check spelling.
+nnoremap <leader>s? z=
+nnoremap <leader>sa zg
+nnoremap <leader>sn ]s
+nnoremap <leader>sp [s
+
+" - Tab {{{2
+" Manage tabs.
+nnoremap <leader>td :tabclose<cr>
+nnoremap <leader>te :tabedit <C-r>=expand("%:p:h")<cr>/
+nnoremap <leader>tf :tabfirst<cr>
+nnoremap <leader>tl :tablast<cr>
+nnoremap <leader>tm :tabmove<cr>
+nnoremap <leader>tn :tabnew<cr>
+nnoremap <leader>to :tabonly<cr>
+
+" Toggle between this and the last accessed tab.
+let g:lasttab = 1
+nnoremap <leader>ts :exe "tabn ".g:lasttab<cr>
+autocmd TabLeave * let g:lasttab = tabpagenr()
+
+" - Tmux {{{2
+" Send to tmux.
+function! s:tmux_send(content, dest) range
+  let dest = empty(a:dest) ? input('To which pane? ') : a:dest
+  let tempfile = tempname()
+  call writefile(split(a:content, "\n", 1), tempfile, 'b')
+  call system(printf('tmux load-buffer -b vim-tmux %s \; paste-buffer -d -b vim-tmux -t %s',
+    \ shellescape(tempfile), shellescape(dest)))
+  call delete(tempfile)
+endfunction
+
+function! s:tmux_map(key, dest)
+  execute printf('nnoremap <silent> %s "tyy:call <SID>tmux_send(@t, "%s")<cr>', a:key, a:dest)
+  execute printf('xnoremap <silent> %s "ty:call <SID>tmux_send(@t, "%s")<cr>gv', a:key, a:dest)
+endfunction
+
+call s:tmux_map('<leader>tt', '')
+" call s:tmux_map('<leader>th', '.left')
+" call s:tmux_map('<leader>tj', '.bottom')
+" call s:tmux_map('<leader>tk', '.top')
+" call s:tmux_map('<leader>tl', '.right')
+" call s:tmux_map('<leader>ty', '.top-left')
+" call s:tmux_map('<leader>to', '.top-right')
+" call s:tmux_map('<leader>tn', '.bottom-left')
+" call s:tmux_map('<leader>t.', '.bottom-right')
+
+" - Toggle {{{2
 " co? : Toggle options
 function! s:toggle_option(...)
   let [key, opt] = a:000[0:1]
@@ -422,7 +575,7 @@ endfunction
 
 call s:toggle_option('a', 'autowrite')
 call s:toggle_option('b', 'background',
-    \ 'let &background = &background == "dark" ? "light" : "dark"<bar>redraw')
+  \ 'let &background = &background == "dark" ? "light" : "dark"<bar>redraw')
 call s:toggle_option('c', 'cursorline')
 call s:toggle_option('h', 'hlsearch')
 call s:toggle_option('l', 'list')
@@ -434,30 +587,20 @@ call s:toggle_option('q', 'belloff', 'let &belloff = &belloff == "" ? "all" : ""
 call s:toggle_option('r', 'relativenumber')
 call s:toggle_option('s', 'spell')
 call s:toggle_option('t', 'textwidth',
-    \ 'let &textwidth = input("textwidth (". &textwidth ."): ")<bar>redraw')
+  \ 'let &textwidth = input("textwidth (". &textwidth ."): ")<bar>redraw')
 call s:toggle_option('v', 'visualbell')
 call s:toggle_option('w', 'wrap')
 
-" ══════════════════════════════════════════════════════════════════════════════
-" Window
-" ══════════════════════════════════════════════════════════════════════════════
-" Window navigation.
-" nnoremap <C-h> <C-w>h
-" nnoremap <C-j> <C-w>j
-" nnoremap <C-k> <C-w>k
-" nnoremap <C-l> <C-w>l
+" - Window {{{2
+" Circular navigation.
+nnoremap <tab> <c-w>w
+nnoremap <S-tab> <c-w>W
 
-" Window resizing.
-nnoremap <S-Up> <C-w>+
-nnoremap <S-Down> <C-w>-
-nnoremap <S-Left> <C-w>>
-nnoremap <S-Right> <C-w><
-
-" Window switching.
-" nnoremap <C-H> <C-w>H
-" nnoremap <C-J> <C-w>J
-" nnoremap <C-K> <C-w>K
-" nnoremap <C-L> <C-w>L
+" Resize windows.
+nnoremap <S-Up> 2<C-w>+
+nnoremap <S-Down> 2<C-w>-
+nnoremap <S-Left> 2<C-w>>
+nnoremap <S-Right> 2<C-w><
 
 " Split `h`orizontal or `v`ertical.
 nnoremap <leader>h :split<cr>
@@ -469,32 +612,54 @@ inoremap <leader>z <esc>:Zoom<cr>a
 
 " Terminal emulation.
 nnoremap <leader>sh :terminal<cr>
+tnoremap <Esc> <C-\><C-n>
+
+" Navigate windows.
+" nnoremap <C-h> <C-w>h
+" nnoremap <C-j> <C-w>j
+" nnoremap <C-k> <C-w>k
+" nnoremap <C-l> <C-w>l
+
+" Switch windows.
+" nnoremap <C-H> <C-w>H
+" nnoremap <C-J> <C-w>J
+" nnoremap <C-K> <C-w>K
+" nnoremap <C-L> <C-w>L
 
 " Commands {{{1
+if s:darwin
+  command! -range=% -nargs=? -complete=customlist,
+    \s:colors CopyRTF call s:copy_rtf(<line1>, <line2>, <f-args>)
+endif
+
 augroup vimrc
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it for commit messages, when the position is invalid, or when
-  " inside an event handler (happens when dropping a file on gvim).
-  autocmd BufReadPost *
-    \ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
-    \   exe "normal g'\"" |
-    \ endif
+  " Automatic renaming of the tmux window.
+  if exists('$TMUX') && !exists('$NORENAME')
+    autocmd BufEnter *
+      \  if empty(&buftype)
+      \|   call system('tmux rename-window '.expand('%:t:S'))
+      \| endif
+    autocmd VimLeave * call system('tmux set-window automatic-rename on')
+  endif
+
+  " Help in new tabs.
+  autocmd BufEnter *.txt call s:help_tab()
 
   " Strip trailing whitespaces automatically when saving files of certain type.
-  autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call <sid>trim_whitespace()
+  autocmd BufWritePre *.js,*.py,*.sh,*.txt,*.wiki call s:trim_whitespace()
 
-  " Automatically load ~/.vimrc source when saved.
-  autocmd BufWritePost ~/.vimrc nested source $MYVIMRC
+  " Automatically load .vimrc source when saved.
+  autocmd BufWritePost .vimrc nested source $MYVIMRC
 
   " Update on buffer entry or focus change.
   autocmd FocusGained,BufEnter * checktime
 augroup END
 
 " Functions {{{1
-" Don't close window, when deleting a buffer.
+" :Bclose | Don't close window, when deleting a buffer.
 function! s:buffer_close()
-  let l:currentBufNum = bufnr("%")
-  let l:alternateBufNum = bufnr("#")
+  let l:currentBufNum = bufnr('%')
+  let l:alternateBufNum = bufnr('#')
 
   if buflisted(l:alternateBufNum)
     buffer #
@@ -502,21 +667,22 @@ function! s:buffer_close()
     bnext
   endif
 
-  if bufnr("%") == l:currentBufNum
+  if bufnr('%') == l:currentBufNum
     new
   endif
 
   if buflisted(l:currentBufNum)
-    execute("bdelete! ".l:currentBufNum)
+    execute('bdelete! '.l:currentBufNum)
   endif
 endfunction
 command! Bclose call <sid>buffer_close()
 
+" Command-line helper.
 function! s:cmd_line(str)
   call feedkeys(a:str)
 endfunction
 
-" For 'foldtext'.
+" Set 'foldtext'.
 function! Foldy()
   let linelen = &tw ? &tw : 80
   let marker = strpart(&fmr, 0, stridx(&fmr, ',')) . '\d*'
@@ -537,8 +703,15 @@ function! Foldy()
   endif
 
   let fill = repeat(' ', linelen - (leftlen + rightlen))
-
   return left . fill . right . repeat(' ', 100)
+endfunction
+
+" Help in new tabs.
+function! s:help_tab()
+  if &buftype == 'help'
+    wincmd T
+    nnoremap <buffer> q :q<cr>
+  endif
 endfunction
 
 " Trim trailing whitespace characters from end of lines.
@@ -551,35 +724,35 @@ endfunction
 " Visual mode search and replace for the selected text.
 function! s:visual_search(direction) range
   let l:saved_reg = @"
-  execute "normal! vgvy"
+  execute 'normal! vgvy'
 
   let l:pattern = escape(@", "\\/.*'$^~[]")
-  let l:pattern = substitute(l:pattern, "\n$", "", "")
+  let l:pattern = substitute(l:pattern, "\n$", '', '')
 
   if a:direction == 'b'
-    call s:cmd_line("?" . l:pattern . "\<cr>" )
+    call s:cmd_line('?' . l:pattern . "\<cr>" )
   elseif a:direction == 'f'
-    call s:cmd_line("/" . l:pattern . "\<cr>" )
+    call s:cmd_line('/' . l:pattern . "\<cr>" )
   elseif a:direction == 'g'
     call s:cmd_line(":Ag '" . l:pattern . "' " )
   elseif a:direction == 'r'
-    call s:cmd_line(":%s" . '/'. l:pattern . '/')
+    call s:cmd_line(':%s' . '/'. l:pattern . '/')
   endif
 
   let @/ = l:pattern
   let @" = l:saved_reg
 endfunction
 
-" Zoom
+" :Zoom
 function! s:zoom() abort
   if winnr('$') > 1
     if exists('t:zoomed') && t:zoomed
-        execute t:zoom_winrestcmd
-        let t:zoomed = 0
+      execute t:zoom_winrestcmd
+      let t:zoomed = 0
     else
-        let t:zoom_winrestcmd = winrestcmd()
-        vertical resize | resize
-        let t:zoomed = 1
+      let t:zoom_winrestcmd = winrestcmd()
+      vertical resize | resize
+      let t:zoomed = 1
     endif
   else
     execute "silent !tmux resize-pane -Z"
@@ -589,6 +762,9 @@ command! Zoom call <sid>zoom()
 " }}}
 
 " Plugins {{{1
+" Plugin: editorconfig {{{2
+let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
+
 " Plugin: goyo {{{2
 nnoremap <leader>G :Goyo<cr>
 
@@ -634,6 +810,9 @@ endfunction
 autocmd! FileType GV nnoremap <buffer> <silent> + :call <sid>gv_expand()<cr>
 
 " Plugin: indentline {{{2
+autocmd! User indentLine doautocmd indentLine Syntax
+
+let g:indentLine_bufTypeExclude = ['help', 'nofile', 'terminal']
 let g:indentLine_fileTypeExclude = ['markdown', 'nerdtree', 'startify']
 " let g:indentLine_char = '¦'
 " let g:indentLine_char_list = ['|', '¦', '┆', '┊']
@@ -667,7 +846,7 @@ let g:limelight_paragraph_span = 1
 let g:limelight_priority = -1
 
 " Plugin: nerdtree {{{2
-nnoremap <leader>m :NERDTreeFind<cr>
+nnoremap <leader>N :NERDTreeFind<cr>
 nnoremap <leader>n :NERDTreeToggle<cr>
 
 " Open NERDTree automatically when opening a directory.
@@ -675,10 +854,10 @@ augroup nerd_loader
   autocmd!
   autocmd VimEnter * silent! autocmd! FileExplorer
   autocmd BufEnter,BufNew *
-        \  if isdirectory(expand('<amatch>'))
-        \|   call plug#load('nerdtree')
-        \|   execute 'autocmd! nerd_loader'
-        \| endif
+    \  if isdirectory(expand('<amatch>'))
+    \|   call plug#load('nerdtree')
+    \|   execute 'autocmd! nerd_loader'
+    \| endif
 augroup END
 
 let NERDTreeIgnore = ['.DS_Store$', '.pyc$', '__pycache__']
@@ -688,23 +867,6 @@ let g:NERDTreeHighlightFolders = 1
 let g:NERDTreeHighlightFoldersFullName = 1
 " let g:NERDTreeDirArrowExpandable = ''
 " let g:NERDTreeDirArrowCollapsible = ''
-
-" Plugin: provider {{{2
-if executable('python2')
-  let g:python_host_prog = exepath('python2')
-else
-  let g:loaded_python_provider = 0
-endif
-
-if executable('python3')
-  let g:python3_host_prog = exepath('python3')
-else
-  let g:loaded_python3_provider = 0
-endif
-
-let g:loaded_node_provider = 0
-let g:loaded_perl_provider = 0
-let g:loaded_ruby_provider = 0
 
 " Plugin: splitjoin {{{2
 let g:splitjoin_join_mapping = ''
@@ -755,8 +917,8 @@ map <leader>h <Plug>(easymotion-linebackward)
 map <leader>j <Plug>(easymotion-j)
 map <leader>k <Plug>(easymotion-k)
 map <leader>l <Plug>(easymotion-lineforward)
-nmap <leader>s <Plug>(easymotion-s2)
-nmap <leader>s <Plug>(easymotion-overwin-f2)
+" nmap <leader>s <Plug>(easymotion-s2)
+" nmap <leader>s <Plug>(easymotion-overwin-f2)
 
 let g:EasyMotion_do_mapping        = 0
 let g:EasyMotion_do_shade          = 1
@@ -825,6 +987,8 @@ let g:surround_indent = 1
 " Plugin: vimwiki {{{2
 let g:vimwiki_global_ext = 0
 let g:vimwiki_map_prefix = '<leader>x'
+
+" Filetypes {{{1
 
 " Local {{{1
 let $local = expand('~/.vimrc.local')

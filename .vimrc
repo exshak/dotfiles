@@ -1,11 +1,11 @@
 
-" ╔══════════════════════════════════════════╗
-" ║           ⎋ .vimrc by exshak ⎋           ║
-" ╚══════════════════════════════════════════╝
+" ╔══════════════════════════════════════════════╗
+" ║             ⎋ .vimrc by exshak ⎋             ║
+" ╚══════════════════════════════════════════════╝
 
 let s:darwin = has('mac')
 let s:windows = has('win32') || has('win64')
-let $v = $HOME.(s:darwin ? '/.vim' : '\vim')
+let $v = $HOME.(s:windows ? '\vimfiles' : '/.vim')
 
 set runtimepath+=$v
 

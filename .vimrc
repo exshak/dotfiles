@@ -136,6 +136,9 @@ augroup vimrc
   autocmd!
 augroup END
 
+filetype plugin indent on " Enable loading {ftdetect,ftplugin,indent}/*.vim files.
+syntax on " Enable loading syntax/*.vim files.
+
 " Backup {{{2
 set nobackup
 set noswapfile
@@ -187,10 +190,20 @@ else
   endif
 endif
 
-" Options {{{1
-filetype plugin indent on " Enable loading {ftdetect,ftplugin,indent}/*.vim files.
-syntax on " Enable loading syntax/*.vim files.
+" highlight Comment gui=italic cterm=italic
+" highlight Keyword gui=italic cterm=italic
 
+highlight link EasyMotionIncSearch Search
+highlight link EasyMotionMoveHL Search
+highlight link EasyMotionShade Comment
+highlight link EasyMotionTarget Function
+highlight link EasyMotionTarget2First Function
+highlight link EasyMotionTarget2Second Function
+
+highlight Sneak guifg=black guibg=#f8f8f2 ctermfg=black ctermbg=red
+highlight SneakScope guifg=black guibg=#ffb86c ctermfg=red ctermbg=yellow
+
+" Options {{{1
 " Option: Buffer {{{2
 set autoread " Read file again if it's detected to have been changed outside of Vim.
 set hidden " Allows you to hide buffers with unsaved changes without being prompted.
@@ -318,7 +331,9 @@ endif
 " Mappings {{{1
 " Set leader.
 let mapleader = ' '
+let g:mapleader = ' '
 let maplocalleader = ' '
+let g:maplocalleader = ' '
 
 " Mapping: Abbrev {{{2
 cnoreabbrev W! w!
@@ -360,11 +375,14 @@ nnoremap <leader>bn :bnext<cr>
 nnoremap <leader>bp :bprevious<cr>
 
 " Search buffers.
-nnoremap <leader>bs :cex []<BAR>bufdo vimgrepadd @@g %<BAR>cw<s-left><s-left><right>
+nnoremap <leader>bs :cex []<bar>bufdo vimgrepadd @@g %<bar>cw<s-left><s-left><right>
 
 " Mapping: Command {{{2
 " Repeat last command.
 nnoremap <leader>. :<C-p><cr>
+
+" TMUX split window.
+cnoremap !! TX<space>
 
 " Readline bindings for the command-line.
 " cnoremap <C-a> <Home>
@@ -590,6 +608,12 @@ nnoremap <leader>ts :exe "tabn ".g:lasttab<cr>
 autocmd TabLeave * let g:lasttab = tabpagenr()
 
 " Mapping: Tmux {{{2
+" Disable CTRL-A on tmux.
+if $TERM =~ 'screen'
+  nnoremap <C-a> <nop>
+  nnoremap <leader><C-a> <C-a>
+endif
+
 " Send to tmux.
 function! s:tmux_send(content, dest) range
   let dest = empty(a:dest) ? input('To which pane? ') : a:dest
@@ -679,6 +703,38 @@ tnoremap <Esc> <C-\><C-n>
 " Text {} {{{1
 
 " Commands {{{1
+" :BC
+command! BC %bd|e#
+
+" :Chomp
+command! Chomp %s/\s\+$// | normal! ``
+
+" :Count
+command! -nargs=1 Count execute printf('%%s/%s//gn', escape(<q-args>, '/')) | normal! ``
+
+" :EmojiReplace
+command! -range EmojiReplace
+  \ <line1>,<line2>s/:\([^:]\+\):/\=emoji#for(submatch(1), submatch(0))/g
+
+" :FixSyntax
+command! FixSyntax :syntax sync fromstart
+
+" :GP
+command! GP TX git push
+
+" :M
+command! M execute printf('!bundle exec m %s:%d', expand('%'), line('.'))
+
+" :NL
+command! -range=% -nargs=1 NL
+  \ <line1>,<line2>!nl -w <args> -s '. ' | perl -pe 's/^.{<args>}..$//'
+
+" :PU
+command! PU PlugUpdate | PlugUpgrade
+
+" :TX
+command! -nargs=1 TX call system('tmux split-window -d -l 16 '.<q-args>)
+
 if s:darwin
   command! -range=% -nargs=? -complete=customlist,
     \s:colors CopyRTF call s:copy_rtf(<line1>, <line2>, <f-args>)
@@ -707,6 +763,9 @@ augroup vimrc
   " Help in new tabs.
   autocmd BufEnter *.txt call s:help_tab()
 
+  " Open file at line and column number.
+  autocmd BufNewFile * nested call s:goto_line()
+
   " Create parent directory on save if it does not exist.
   autocmd BufWritePre,FileWritePre * call s:create_directory()
 
@@ -717,7 +776,7 @@ augroup vimrc
   autocmd BufWritePost .vimrc nested source $MYVIMRC
 
   " Update on buffer entry or focus change.
-  autocmd FocusGained,BufEnter * checktime
+  autocmd BufEnter,FocusGained * checktime
 augroup END
 
 " Functions {{{1
@@ -764,6 +823,28 @@ function! s:rotate_colors()
   echo name
 endfunction
 
+" call LSD()
+function! LSD()
+  syntax clear
+
+  for i in range(16, 255)
+    execute printf('highlight LSD%s ctermfg=%s', i - 16, i)
+  endfor
+
+  let block = 4
+  for l in range(1, line('$'))
+    let c = 1
+    let max = len(getline(l))
+    while c < max
+      let stride = 4 + reltime()[1] % 8
+      execute printf('syntax region lsd%s_%s start=/\%%%sl\%%%sc/ end=/\%%%sl\%%%sc/ contains=ALL', l, c, l, c, l, min([c + stride, max]))
+      let rand = abs(reltime()[1] % (256 - 16))
+      execute printf('hi def link lsd%s_%s LSD%s', l, c, rand)
+      let c += stride
+    endwhile
+  endfor
+endfunction
+
 " Function: Command {{{2
 " Command-line helper.
 function! s:cmd_line(str)
@@ -786,6 +867,54 @@ function! s:trim_whitespace()
   keeppatterns %s/\s\+$//e
   call winrestview(l:view)
 endfunction
+
+" Function: File {{{2
+" :AutoSave
+function! s:autosave(enable)
+  augroup autosave
+    autocmd!
+    if a:enable
+      autocmd TextChanged,InsertLeave <buffer>
+        \  if empty(&buftype) && !empty(bufname(''))
+        \|   silent! update
+        \| endif
+    endif
+  augroup END
+endfunction
+command! -bang AutoSave call s:autosave(<bang>1)
+
+" Open FILENAME:LINE:COL
+function! s:goto_line()
+  let tokens = split(expand('%'), ':')
+  if len(tokens) <= 1 || !filereadable(tokens[0])
+    return
+  endif
+
+  let file = tokens[0]
+  let rest = map(tokens[1:], 'str2nr(v:val)')
+  let line = get(rest, 0, 1)
+  let col  = get(rest, 1, 1)
+  bd!
+  silent execute 'e' file
+  execute printf('normal! %dG%d|', line, col)
+endfunction
+
+" :SaveMacro / :LoadMacro
+function! s:save_macro(name, file)
+  let content = eval('@'.a:name)
+  if !empty(content)
+    call writefile(split(content, "\n"), a:file)
+    echom len(content) . " bytes save to ". a:file
+  endif
+endfunction
+command! -nargs=* SaveMacro call <sid>save_macro(<f-args>)
+
+function! s:load_macro(file, name)
+  let data = join(readfile(a:file), "\n")
+  call setreg(a:name, data, 'c')
+  echom "Macro loaded to @". a:name
+endfunction
+command! -nargs=* LoadMacro call <sid>load_macro(<f-args>)
 
 " Function: Fold {{{2
 " Set 'foldtext'.
@@ -879,8 +1008,53 @@ endfunction
 command! Zoom call <sid>zoom()
 
 " Plugins {{{1
+" Plugin: ale {{{2
+
+" Plugin: coc {{{2
+
+let g:coc_global_extensions = [
+  \ 'coc-actions',
+  \ 'coc-css',
+  \ 'coc-emoji',
+  \ 'coc-eslint',
+  \ 'coc-fzf-preview',
+  \ 'coc-git',
+  \ 'coc-html',
+  \ 'coc-json',
+  \ 'coc-lists',
+  \ 'coc-marketplace',
+  \ 'coc-prettier',
+  \ 'coc-python',
+  \ 'coc-snippets',
+  \ 'coc-tsserver',
+  \ 'coc-vimtex',
+  \ 'coc-yaml',
+  \ ]
+
 " Plugin: editorconfig {{{2
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
+
+" Plugin: emmet {{{2
+" let g:user_emmet_leader_key = '<C-y>'
+" let g:user_emmet_mode = 'a'
+
+" Plugin: fzf {{{2
+
+" let g:fzf_colors = {
+"   \ 'fg':      ['fg', 'Normal'],
+"   \ 'bg':      ['bg', 'Normal'],
+"   \ 'hl':      ['fg', 'Search'],
+"   \ 'fg+':     ['fg', 'Normal'],
+"   \ 'bg+':     ['bg', 'Normal'],
+"   \ 'hl+':     ['fg', 'DiffChange'],
+"   \ 'info':    ['fg', 'Constant'],
+"   \ 'border':  ['fg', 'Ignore'],
+"   \ 'prompt':  ['fg', 'Function'],
+"   \ 'pointer': ['fg', 'Exception'],
+"   \ 'marker':  ['fg', 'Keyword'],
+"   \ 'spinner': ['fg', 'Label'],
+"   \ 'header':  ['fg', 'Comment']
+"   \ }
 
 " Plugin: goyo {{{2
 nnoremap <leader>G :Goyo<cr>

@@ -22,6 +22,9 @@ autocmd VimEnter *
   \|   PlugInstall --sync | q | source $MYVIMRC
   \| endif
 
+let g:plug_window = '-tabnew'
+let g:plug_pwindow = 'vertical rightbelow new'
+
 call plug#begin($v.'/plugged')
 
 " Colors
@@ -505,8 +508,8 @@ nnoremap <bs> <c-t>
 
 " Mapping: Motion {{{2
 " Escape with jk.
-inoremap jk <Esc>
-xnoremap jk <Esc>
+inoremap jk <esc>
+xnoremap jk <esc>
 cnoremap jk <C-c>
 
 " Jump to start and end of line using the home row keys.
@@ -686,7 +689,7 @@ inoremap <leader>z <esc>:Zoom<cr>a
 
 " Terminal emulation.
 nnoremap <leader>sh :terminal<cr>
-tnoremap <Esc> <C-\><C-n>
+tnoremap <esc> <C-\><C-n>
 
 " Navigate windows.
 " nnoremap <C-h> <C-w>h
@@ -962,102 +965,6 @@ function! s:profile(bang)
 endfunction
 command! -bang Profile call s:profile(<bang>0)
 
-" vim-plug extension
-function! s:plug_gx()
-  let line = getline('.')
-  let sha  = matchstr(line, '^  \X*\zs\x\{7,9}\ze ')
-  let name = empty(sha) ? matchstr(line, '^[-x+] \zs[^:]\+\ze:')
-                      \ : getline(search('^- .*:$', 'bn'))[2:-2]
-  let uri  = get(get(g:plugs, name, {}), 'uri', '')
-  if uri !~ 'github.com'
-    return
-  endif
-  let repo = matchstr(uri, '[^:/]*/'.name)
-  let url  = empty(sha) ? 'https://github.com/'.repo
-                      \ : printf('https://github.com/%s/commit/%s', repo, sha)
-  call netrw#BrowseX(url, 0)
-endfunction
-
-function! s:scroll_preview(down)
-  silent! wincmd P
-  if &previewwindow
-    execute 'normal!' a:down ? "\<c-e>" : "\<c-y>"
-    wincmd p
-  endif
-endfunction
-
-function! s:plug_doc()
-  let name = matchstr(getline('.'), '^- \zs\S\+\ze:')
-  if has_key(g:plugs, name)
-    for doc in split(globpath(g:plugs[name].dir, 'doc/*.txt'), '\n')
-      execute 'tabe' doc
-    endfor
-  endif
-endfunction
-
-function! s:setup_extra_keys()
-  " PlugDiff
-  nnoremap <silent> <buffer> J :call <sid>scroll_preview(1)<cr>
-  nnoremap <silent> <buffer> K :call <sid>scroll_preview(0)<cr>
-  nnoremap <silent> <buffer> <c-n> :call search('^  \X*\zs\x')<cr>
-  nnoremap <silent> <buffer> <c-p> :call search('^  \X*\zs\x', 'b')<cr>
-  nmap <silent> <buffer> <c-j> <c-n>o
-  nmap <silent> <buffer> <c-k> <c-p>o
-
-  " gx
-  nnoremap <buffer> <silent> gx :call <sid>plug_gx()<cr>
-
-  " helpdoc
-  nnoremap <buffer> <silent> H  :call <sid>plug_doc()<cr>
-endfunction
-
-autocmd vimrc FileType vim-plug call s:setup_extra_keys()
-
-let g:plug_window = '-tabnew'
-let g:plug_pwindow = 'vertical rightbelow new'
-
-" vimawesome.com
-function! VimAwesomeComplete() abort
-  let prefix = matchstr(strpart(getline('.'), 0, col('.') - 1), '[.a-zA-Z0-9_/-]*$')
-  echohl WarningMsg
-  echo 'Downloading plugin list from VimAwesome'
-  echohl None
-ruby << EOF
-  require 'json'
-  require 'open-uri'
-
-  query = VIM::evaluate('prefix').gsub('/', '%20')
-  items = 1.upto(max_pages = 3).map do |page|
-    Thread.new do
-      url  = "http://vimawesome.com/api/plugins?page=#{page}&query=#{query}"
-      data = open(url).read
-      json = JSON.parse(data, symbolize_names: true)
-      json[:plugins].map do |info|
-        pair = info.values_at :github_owner, :github_repo_name
-        next if pair.any? { |e| e.nil? || e.empty? }
-        {word: pair.join('/'),
-         menu: info[:category].to_s,
-         info: info.values_at(:short_desc, :author).compact.join($/)}
-      end.compact
-    end
-  end.each(&:join).map(&:value).inject(:+)
-  VIM::command("let cands = #{JSON.dump items}")
-EOF
-  if !empty(cands)
-    inoremap <buffer> <c-v> <c-n>
-    augroup _VimAwesomeComplete
-      autocmd!
-      autocmd CursorMovedI,InsertLeave * iunmap <buffer> <c-v>
-            \| autocmd! _VimAwesomeComplete
-    augroup END
-
-    call complete(col('.') - strchars(prefix), cands)
-  endif
-  return ''
-endfunction
-
-autocmd vimrc FileType vim inoremap <buffer> <c-x><c-v> <c-r>=VimAwesomeComplete()<cr>
-
 " Function: Search {{{2
 " Google it / Feeling lucky.
 function! s:goog(pat, lucky)
@@ -1122,6 +1029,70 @@ command! Zoom call <sid>zoom()
 
 " Plugin: coc {{{2
 
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <sid>show_documentation()<cr>
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <tab>
+  \ pumvisible() ? "\<C-n>" :
+  \ <sid>check_back_space() ? "\<tab>" :
+  \ coc#refresh()
+inoremap <expr><S-tab> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+" <cr> could be remapped by other vim plugin, try `:verbose imap <cr>`.
+if exists('*complete_info')
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<cr>"
+else
+  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<cr>"
+endif
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
+
+" Sets up command for prettier.
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+augroup vimrc
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType json,typescript setlocal formatexpr=CocAction('formatSelected')
+
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocActionAsync('doHover')
+  endif
+endfunction
+
 let g:coc_global_extensions = [
   \ 'coc-actions',
   \ 'coc-css',
@@ -1129,6 +1100,7 @@ let g:coc_global_extensions = [
   \ 'coc-eslint',
   \ 'coc-fzf-preview',
   \ 'coc-git',
+  \ 'coc-highlight',
   \ 'coc-html',
   \ 'coc-json',
   \ 'coc-lists',
@@ -1141,6 +1113,11 @@ let g:coc_global_extensions = [
   \ 'coc-yaml',
   \ ]
 
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
 " Plugin: editorconfig {{{2
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 
@@ -1149,6 +1126,50 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 " let g:user_emmet_mode = 'a'
 
 " Plugin: fzf {{{2
+
+command! PlugHelp call fzf#run(fzf#wrap({
+  \ 'source': reverse(sort(keys(g:plugs))),
+  \ 'sink': function('s:plug_help_sink'),
+  \ 'left': 30
+  \ }))
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
+" Terminal buffer options for fzf.
+autocmd! FileType fzf
+autocmd  FileType fzf set noshowmode noruler nonumber
+
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let options = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  let options = fzf#vim#with_preview(options, 'right', 'ctrl-/')
+  call fzf#vim#grep(initial_command, 1, options, a:fullscreen)
+endfunction
+
+function! s:plug_help_sink(line)
+  let dir = g:plugs[a:line].dir
+  for pat in ['doc/*.txt', 'README.md']
+    let match = get(split(globpath(dir, pat), "\n"), 0, '')
+    if len(match)
+      execute 'tabedit' match
+      nnoremap <buffer> q :q<cr>
+      set syntax=help
+      return
+    endif
+  endfor
+  tabnew
+  execute 'Explore' dir
+endfunction
+
+if exists('$TMUX')
+  " Requires tmux 3.2 or above.
+  " let g:fzf_layout = { 'tmux': '-p90%,60%' }
+  let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+else
+  let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+endif
 
 " let g:fzf_colors = {
 "   \ 'fg':      ['fg', 'Normal'],
@@ -1385,6 +1406,58 @@ let g:Hexokinase_highlighters = [ 'backgroundfull' ]
 " Plugin: vim-highlightedyank {{{2
 let g:highlightedyank_highlight_duration = 100
 
+" Plugin: vim-plug {{{2
+" vim-plug extension.
+function! s:plug_gx()
+  let line = getline('.')
+  let sha  = matchstr(line, '^  \X*\zs\x\{7,9}\ze ')
+  let name = empty(sha) ? matchstr(line, '^[-x+] \zs[^:]\+\ze:')
+                      \ : getline(search('^- .*:$', 'bn'))[2:-2]
+  let uri  = get(get(g:plugs, name, {}), 'uri', '')
+  if uri !~ 'github.com'
+    return
+  endif
+  let repo = matchstr(uri, '[^:/]*/'.name)
+  let url  = empty(sha) ? 'https://github.com/'.repo
+                      \ : printf('https://github.com/%s/commit/%s', repo, sha)
+  call netrw#BrowseX(url, 0)
+endfunction
+
+function! s:scroll_preview(down)
+  silent! wincmd P
+  if &previewwindow
+    execute 'normal!' a:down ? "\<c-e>" : "\<c-y>"
+    wincmd p
+  endif
+endfunction
+
+function! s:plug_doc()
+  let name = matchstr(getline('.'), '^- \zs\S\+\ze:')
+  if has_key(g:plugs, name)
+    for doc in split(globpath(g:plugs[name].dir, 'doc/*.txt'), '\n')
+      execute 'tabe' doc
+    endfor
+  endif
+endfunction
+
+function! s:setup_extra_keys()
+  " PlugDiff
+  nnoremap <silent> <buffer> J :call <sid>scroll_preview(1)<cr>
+  nnoremap <silent> <buffer> K :call <sid>scroll_preview(0)<cr>
+  nnoremap <silent> <buffer> <c-n> :call search('^  \X*\zs\x')<cr>
+  nnoremap <silent> <buffer> <c-p> :call search('^  \X*\zs\x', 'b')<cr>
+  nmap <silent> <buffer> <c-j> <c-n>o
+  nmap <silent> <buffer> <c-k> <c-p>o
+
+  " gx
+  nnoremap <buffer> <silent> gx :call <sid>plug_gx()<cr>
+
+  " helpdoc
+  nnoremap <buffer> <silent> H  :call <sid>plug_doc()<cr>
+endfunction
+
+autocmd vimrc FileType vim-plug call s:setup_extra_keys()
+
 " Plugin: vim-polyglot {{{2
 " let g:polyglot_disabled = ['python']
 
@@ -1422,6 +1495,49 @@ vnoremap Si S(i_<esc>f)
 autocmd FileType mako vnoremap Si S"i${ _(<esc>2f"a) }<esc>
 
 let g:surround_indent = 1
+
+" Plugin: vimawesome {{{2
+" vimawesome.com
+function! VimAwesomeComplete() abort
+  let prefix = matchstr(strpart(getline('.'), 0, col('.') - 1), '[.a-zA-Z0-9_/-]*$')
+  echohl WarningMsg
+  echo 'Downloading plugin list from VimAwesome'
+  echohl None
+ruby << EOF
+  require 'json'
+  require 'open-uri'
+
+  query = VIM::evaluate('prefix').gsub('/', '%20')
+  items = 1.upto(max_pages = 3).map do |page|
+    Thread.new do
+      url  = "http://vimawesome.com/api/plugins?page=#{page}&query=#{query}"
+      data = open(url).read
+      json = JSON.parse(data, symbolize_names: true)
+      json[:plugins].map do |info|
+        pair = info.values_at :github_owner, :github_repo_name
+        next if pair.any? { |e| e.nil? || e.empty? }
+        {word: pair.join('/'),
+         menu: info[:category].to_s,
+         info: info.values_at(:short_desc, :author).compact.join($/)}
+      end.compact
+    end
+  end.each(&:join).map(&:value).inject(:+)
+  VIM::command("let cands = #{JSON.dump items}")
+EOF
+  if !empty(cands)
+    inoremap <buffer> <c-v> <c-n>
+    augroup _VimAwesomeComplete
+      autocmd!
+      autocmd CursorMovedI,InsertLeave * iunmap <buffer> <c-v>
+            \| autocmd! _VimAwesomeComplete
+    augroup END
+
+    call complete(col('.') - strchars(prefix), cands)
+  endif
+  return ''
+endfunction
+
+autocmd vimrc FileType vim inoremap <buffer> <c-x><c-v> <c-r>=VimAwesomeComplete()<cr>
 
 " Plugin: vimtex {{{2
 let g:tex_flavor = 'latex'

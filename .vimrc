@@ -53,6 +53,7 @@ Plug 'tpope/vim-endwise'                               " Automatic `end`
 Plug 'tpope/vim-repeat'                                " Repeat plugins
 Plug 'tpope/vim-surround'                              " Surround mappings
 Plug 'tpope/vim-unimpaired'                            " Bracket mappings
+Plug 'tommcdo/vim-exchange'                            " Text exchange
 
 " Format
 Plug 'jiangmiao/auto-pairs'                            " Automatic brackets
@@ -139,10 +140,10 @@ augroup vimrc
   autocmd!
 augroup END
 
+" Backup {{{2
 filetype plugin indent on " Enable loading {ftdetect,ftplugin,indent}/*.vim files.
 syntax on " Enable loading syntax/*.vim files.
 
-" Backup {{{2
 set nobackup
 set noswapfile
 set nowritebackup
@@ -160,11 +161,40 @@ else
   set viminfo=!,%,'1000,<50,s10,h,n$v/.viminfo " Saves buffers, marks, registers and history.
 endif
 
+" Set internal g:clipboard to save some startup time.
+if has('mac') && executable('pbpaste')
+  let g:clipboard = {
+    \ 'name': 'pbcopy',
+    \ 'cache_enabled': v:false,
+    \ 'copy': {
+    \ '+': 'pbcopy',
+    \ '*': 'pbcopy'
+    \ },
+    \ 'paste': {
+    \ '+': 'pbpaste',
+    \ '*': 'pbpaste'
+    \ }
+    \ }
+elseif exists('$DISPLAY') && executable('xclip')
+  let g:clipboard = {
+    \ 'name': 'xclip',
+    \ 'cache_enabled': v:false,
+    \ 'copy': {
+    \ '+': 'xclip -quiet -i -selection clipboard',
+    \ '*': 'xclip -quiet -i -selection primary'
+    \ },
+    \ 'paste': {
+    \ '+': 'xclip -o -selection clipboard',
+    \ '*': 'xclip -o -selection primary'
+    \ }
+    \ }
+endif
+
 " Color {{{2
 " Graphical user interface.
 if has('gui_running')
   set background=dark " Choose dark colors if available.
-  colorscheme dracula " Set dracula as colorscheme.
+  silent! colorscheme dracula " Set dracula as colorscheme.
   set guioptions=a
   set mousehide
   if s:windows
@@ -176,7 +206,7 @@ if has('gui_running')
     set macligatures | set macmeta
   endif
 elseif &t_Co < 256
-  colorscheme default " Set default colorscheme.
+  silent! colorscheme default " Set default colorscheme.
   set nocursorline " No highlight the line background of the cursor.
 else
   if has('termguicolors')
@@ -186,10 +216,10 @@ else
   endif
   if exists('$ITERM_PROFILE') || $ITERM_PROFILE == 'Default'
     set background=dark " Choose dark colors if available.
-    colorscheme dracula " Set dracula as colorscheme.
+    silent! colorscheme dracula " Set dracula as colorscheme.
   else
     set background=dark " Choose dark colors if available.
-    colorscheme gruvbox " Set gruvbox as colorscheme.
+    silent! colorscheme gruvbox " Set gruvbox as colorscheme.
   endif
 endif
 
@@ -438,6 +468,9 @@ nnoremap Q @q
 " Yank from cursor to end of line.
 nnoremap Y y$
 
+" Don’t overwrite paste.
+xnoremap p "_dP
+
 " Reselect last visual area.
 onoremap gv :<c-u>normal! gv<cr>
 
@@ -445,12 +478,13 @@ onoremap gv :<c-u>normal! gv<cr>
 nnoremap g. :<c-u>normal! `[v`]<cr><left>
 
 " New line above or below.
-inoremap <leader>o <C-o>o
-inoremap <leader>O <C-o>O
+nnoremap <leader>o <C-o>o
+nnoremap <leader>O <C-o>O
 
 " Mapping: File {{{2
 " Toggle between last buffer.
 nnoremap <C-q> :e#<cr>
+inoremap <C-q> <C-o><C-^>
 
 " Open in IntelliJ.
 if s:darwin
@@ -473,6 +507,28 @@ nnoremap <M-h> <<
 nnoremap <M-l> >>
 xnoremap <M-h> <gv
 xnoremap <M-l> >gv
+
+" Go to next/previous indentation level.
+function! s:go_indent(times, dir)
+  for _ in range(a:times)
+    let l = line('.')
+    let x = line('$')
+    let i = s:indent_len(getline(l))
+    let e = empty(getline(l))
+
+    while l >= 1 && l <= x
+      let line = getline(l + a:dir)
+      let l += a:dir
+      if s:indent_len(line) != i || empty(line) != e
+        break
+      endif
+    endwhile
+    let l = min([max([1, l]), x])
+    execute 'normal! '. l .'G^'
+  endfor
+endfunction
+nnoremap <silent> gi :<c-u>call <sid>go_indent(v:count1, 1)<cr>
+nnoremap <silent> gpi :<c-u>call <sid>go_indent(v:count1, -1)<cr>
 
 " Mapping: General {{{2
 " Quick close current window.
@@ -951,6 +1007,62 @@ function! Foldy()
   return left . diff . fill . right . repeat(' ', 100)
 endfunction
 
+" Function: Format {{{2
+" Syntax highlighting in code snippets.
+function! s:syntax_include(lang, b, e, inclusive)
+  let syns = split(globpath(&rtp, "syntax/".a:lang.".vim"), "\n")
+  if empty(syns)
+    return
+  endif
+
+  if exists('b:current_syntax')
+    let csyn = b:current_syntax
+    unlet b:current_syntax
+  endif
+
+  let z = "'" " Default
+  for nr in range(char2nr('a'), char2nr('z'))
+    let char = nr2char(nr)
+    if a:b !~ char && a:e !~ char
+      let z = char
+      break
+    endif
+  endfor
+
+  silent! exec printf("syntax include @%s %s", a:lang, syns[0])
+  if a:inclusive
+    exec printf('syntax region %sSnip start=%s\(%s\)\@=%s ' .
+                \ 'end=%s\(%s\)\@<=\(\)%s contains=@%s containedin=ALL',
+                \ a:lang, z, a:b, z, z, a:e, z, a:lang)
+  else
+    exec printf('syntax region %sSnip matchgroup=Snip start=%s%s%s ' .
+                \ 'end=%s%s%s contains=@%s containedin=ALL',
+                \ a:lang, z, a:b, z, z, a:e, z, a:lang)
+  endif
+
+  if exists('csyn')
+    let b:current_syntax = csyn
+  endif
+endfunction
+
+function! s:file_type_handler()
+  if &ft =~ 'jinja' && &ft != 'jinja'
+    call s:syntax_include('jinja', '{{', '}}', 1)
+    call s:syntax_include('jinja', '{%', '%}', 1)
+  elseif &ft =~ 'mkd\|markdown'
+    for lang in ['ruby', 'yaml', 'vim', 'sh', 'bash=sh', 'python', 'java', 'c',
+          \ 'clojure', 'clj=clojure', 'scala', 'sql', 'gnuplot', 'json=javascript']
+      call s:syntax_include(split(lang, '=')[-1], '```'.split(lang, '=')[0], '```', 0)
+    endfor
+
+    highlight def link Snip Folded
+    setlocal textwidth=78
+    setlocal completefunc=emoji#complete
+  elseif &ft == 'sh'
+    call s:syntax_include('ruby', '#!ruby', '/\%$', 1)
+  endif
+endfunction
+
 " Function: Plugin {{{2
 " :Profile
 function! s:profile(bang)
@@ -975,6 +1087,35 @@ function! s:goog(pat, lucky)
     \ "https://www.google.com/search?%sq=%s"', a:lucky ? 'btnI&' : '', q))
 endfunction
 
+" Help in new tabs.
+function! s:help_tab()
+  if &buftype == 'help'
+    wincmd T
+    nnoremap <buffer> q :q<cr>
+  endif
+endfunction
+
+" :Todo
+function! s:todo() abort
+  let entries = []
+  for cmd in ['git grep -niI -e TODO -e FIXME -e XXX 2> /dev/null',
+            \ 'grep -rniI -e TODO -e FIXME -e XXX * 2> /dev/null']
+    let lines = split(system(cmd), '\n')
+    if v:shell_error != 0 | continue | endif
+    for line in lines
+      let [fname, lno, text] = matchlist(line, '^\([^:]*\):\([^:]*\):\(.*\)')[1:3]
+      call add(entries, { 'filename': fname, 'lnum': lno, 'text': text })
+    endfor
+    break
+  endfor
+
+  if !empty(entries)
+    call setqflist(entries)
+    copen
+  endif
+endfunction
+command! Todo call s:todo()
+
 " Visual mode search and replace for the selected text.
 function! s:visual_search(direction) range
   let l:saved_reg = @"
@@ -995,15 +1136,6 @@ function! s:visual_search(direction) range
 
   let @/ = l:pattern
   let @" = l:saved_reg
-endfunction
-
-" Function: Tab {{{2
-" Help in new tabs.
-function! s:help_tab()
-  if &buftype == 'help'
-    wincmd T
-    nnoremap <buffer> q :q<cr>
-  endif
 endfunction
 
 " Function: Window {{{2
@@ -1048,14 +1180,12 @@ else
   inoremap <silent><expr> <c-@> coc#refresh()
 endif
 
+" Make <cr> auto-select the first completion item and notify to format on enter.
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
 " position. Coc only does snippet and additional edit on confirm.
 " <cr> could be remapped by other vim plugin, try `:verbose imap <cr>`.
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<cr>"
-else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<cr>"
-endif
+inoremap <silent><expr> <cr>
+  \ pumvisible() ? coc#_select_confirm() : "\<C-g>u\<cr>\<c-r>=coc#on_enter()\<cr>"
 
 " Add `:Format` command to format current buffer.
 command! -nargs=0 Format :call CocAction('format')
@@ -1093,6 +1223,7 @@ function! s:show_documentation()
   endif
 endfunction
 
+let g:coc_config_home = $v
 let g:coc_global_extensions = [
   \ 'coc-actions',
   \ 'coc-css',
@@ -1374,6 +1505,12 @@ let g:EasyMotion_use_smartsign_us  = 1
 let g:EasyMotion_use_upper         = 0
 let g:EasyMotion_skipfoldedline    = 0
 
+" Plugin: vim-endwise {{{2
+let g:endwise_no_mappings = 1
+
+" Plugin: vim-exchange {{{2
+" let g:exchange_no_mappings = 1
+
 " Plugin: vim-fugitive {{{2
 nnoremap <leader>ga :Gwrite<cr>
 nnoremap <leader>gb :Gblame<cr>
@@ -1553,6 +1690,7 @@ augroup vimrc
   autocmd BufRead,BufNewFile *.git/config setlocal filetype=gitconfig
   autocmd BufRead,BufNewFile *.{markdown,md} setlocal filetype=markdown
   autocmd BufRead,BufNewFile *.tmux.conf.local setlocal filetype=tmux
+  autocmd FileType,ColorScheme * call <sid>file_type_handler()
   autocmd FileType * set formatoptions=tcrqnj
 
 " Filetype: Git {{{2
@@ -1587,6 +1725,9 @@ augroup vimrc
 
 " Filetype: Text {{{2
   autocmd FileType text setlocal spell textwidth=80
+
+" Filetype: TypeScript {{{2
+  autocmd FileType typescript setlocal iskeyword-=58
 
 " Filetype: Vim {{{2
   autocmd FileType vim setlocal iskeyword-=#

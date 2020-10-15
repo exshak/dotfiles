@@ -73,6 +73,7 @@ brew 'tree'
 brew 'youtube-dl'
 
 # Applications
+cask 'alacritty'
 cask 'alfred'
 cask 'bartender'
 cask 'cheatsheet'

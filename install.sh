@@ -6,30 +6,50 @@
 
 { # This ensures the entire script is downloaded.
 
-  basedir=$HOME/.dotfiles
-  repourl=https://github.com/exshak/dotfiles
+  backup=$HOME/.dotfiles-backup
+  dotdir=$HOME/.dotfiles
+  ghrepo=https://github.com/exshak/dotfiles
 
   function config {
     /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $@
   }
 
-  if ! command -v git >/dev/null 2>&1; then
+  if [[ $(uname -s) == Darwin ]]; then
+    if $(command -v xcode-select) >/dev/null 2>&1; then
+      echo "Xcode command line tools already installed."
+    else
+      $(xcode-select --install)
+      sleep 1
+      osascript <<EOD
+        tell application "System Events"
+          tell process "Install Command Line Developer Tools"
+            keystroke return
+            click button "Agree" of window "License Agreement"
+          end tell
+        end tell
+      EOD
+    fi
+  fi
+
+  if ! $(command -v git) >/dev/null 2>&1; then
     echo "Error: Git is not installed!"
     exit 1
   fi
 
-  if [ -d "$basedir" ]; then
+  if [[ -d $dotdir ]]; then
     config pull --quiet --rebase origin master
   else
-    rm -rf "$basedir"
-    git clone --bare --quiet --depth=1 "$repourl" "$basedir"
-    mkdir -p .config-backup
+    rm -rf "$dotdir"
+    git clone --bare --quiet --depth=1 "$ghrepo" "$dotdir"
+    mkdir -p "$backup"
     config checkout
     if [ $? = 0 ]; then
       echo "Checked out config."
     else
       echo "Backing up pre-existing dotfiles."
-      config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} .config-backup/{}
+      cp $HOME/.config "$backup"
+      cp $HOME/.vim "$backup"
+      config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} "${backup}/"{}
     fi
     config checkout -f
     config config status.showUntrackedFiles no

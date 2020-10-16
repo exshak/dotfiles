@@ -1,0 +1,7 @@
+---
+rules:
+  eqeqeq: off
+  curly: error
+  quotes:
+    - error
+    - single

@@ -82,7 +82,7 @@ Plug 'w0rp/ale'                                        " Lint engine
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }      " Intellisense engine
 Plug 'mattn/emmet-vim'                                 " Expand HTML/XML/CSS
 Plug 'junegunn/vim-emoji'                              " :smiley:
-Plug 'rrethy/vim-hexokinase', {'do':'make hexokinase'} " Preview colors
+" Plug 'rrethy/vim-hexokinase', {'do':'make hexokinase'} " Preview colors
 Plug 'sheerun/vim-polyglot'                            " Language packs
 Plug 'sirver/ultisnips'                                " Common snippets
 Plug 'honza/vim-snippets'                              " Complete snippets
@@ -126,9 +126,9 @@ Plug 'iamcco/markdown-preview.nvim', {
 
 let g:plug_url_format = 'git@github.com:%s.git'
 
-Plug 'exshak/vim-autonohl'                             " Automatic nohlsearch
-Plug 'exshak/vim-easypaste'                            " Easy auto paste mode
-Plug 'exshak/vim-position'                             " Restore last position
+" Plug 'exshak/vim-autonohl'                             " Automatic nohlsearch
+" Plug 'exshak/vim-easypaste'                            " Easy auto paste mode
+" Plug 'exshak/vim-position'                             " Restore last position
 
 unlet! g:plug_url_format
 
@@ -1689,6 +1689,7 @@ let g:vimwiki_map_prefix = '<leader>x'
 " Filetype: * {{{2
 augroup vimrc
 
+  autocmd BufRead,BufNewFile *.applescript setlocal filetype=applescript
   autocmd BufRead,BufNewFile *.git/config setlocal filetype=gitconfig
   autocmd BufRead,BufNewFile *.{markdown,md} setlocal filetype=markdown
   autocmd BufRead,BufNewFile *.tmux.conf.local setlocal filetype=tmux

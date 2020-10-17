@@ -6,55 +6,51 @@
 
 { # This ensures the entire script is downloaded.
 
-  backup=$HOME/.dotfiles-backup
-  dotdir=$HOME/.dotfiles
-  ghrepo=https://github.com/exshak/dotfiles
+  basedir=$HOME/.dotfiles
+  repourl=https://github.com/exshak/dotfiles
+  savedir=(".config" ".vim")
+  current=$(date +"%Y.%m.%d.%H.%M.%S")
+  backup=$HOME/.dotfiles_backup/$current
 
   function config {
     /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $@
   }
 
   if [[ $(uname -s) == Darwin ]]; then
-    if $(command -v xcode-select) >/dev/null 2>&1; then
-      echo "Xcode command line tools already installed."
+    if [[ -x $(command -v brew) ]]; then
+      # Homebrew is already installed, check for updates.
+      brew upgrade && brew update
     else
-      $(xcode-select --install)
-      sleep 1
-      osascript <<EOD
-        tell application "System Events"
-          tell process "Install Command Line Developer Tools"
-            keystroke return
-            click button "Agree" of window "License Agreement"
-          end tell
-        end tell
-      EOD
+      # Homebrew will install Xcode command line tools and brew.
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
     fi
   fi
 
-  if ! $(command -v git) >/dev/null 2>&1; then
+  if [[ ! -x $(command -v git) ]]; then
     echo "Error: Git is not installed!"
     exit 1
   fi
 
-  if [[ -d $dotdir ]]; then
-    config pull --quiet --rebase origin master
+  if [[ -d $basedir ]]; then
+    config pull --quiet --rebase origin master || exit 1
+    echo "Updated dotfiles."
   else
-    rm -rf "$dotdir"
-    git clone --bare --quiet --depth=1 "$ghrepo" "$dotdir"
-    mkdir -p "$backup"
-    config checkout
-    if [ $? = 0 ]; then
-      echo "Checked out config."
-    else
-      echo "Backing up pre-existing dotfiles."
-      cp $HOME/.config "$backup"
-      cp $HOME/.vim "$backup"
-      config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} "${backup}/"{}
+    rm -rf "$basedir"
+    git clone --bare --quiet --depth=1 "$repourl" "$basedir"
+    config checkout 2>/dev/null
+    if [[ $? != 0 ]]; then
+      echo "Backing up pre-existing dotfiles to $current."
+      mkdir -p "$backup"
+      for d in "${savedir[@]}"; do
+        [[ -d $HOME/$d ]] && cp -R "$HOME/$d" "$backup"
+      done
+      config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} "$backup/"{}
+      config checkout -f
     fi
-    config checkout -f
-    config config status.showUntrackedFiles no
+    echo "Checked out dotfiles."
+    config config --local status.showUntrackedFiles no
   fi
 
-  ./setup.sh -t build
+  # ./setup.sh -t build
 
 } # This ensures the entire script is downloaded.

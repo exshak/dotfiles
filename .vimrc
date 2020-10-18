@@ -79,7 +79,9 @@ Plug 'junegunn/vim-github-dashboard'                   " GitHub events
 
 " Lang
 Plug 'w0rp/ale'                                        " Lint engine
-Plug 'neoclide/coc.nvim', { 'branch': 'release' }      " Intellisense engine
+if executable('node')
+  Plug 'neoclide/coc.nvim', { 'branch': 'release' }    " Intellisense engine
+endif
 Plug 'mattn/emmet-vim'                                 " Expand HTML/XML/CSS
 Plug 'junegunn/vim-emoji'                              " :smiley:
 " Plug 'rrethy/vim-hexokinase', {'do':'make hexokinase'} " Preview colors
@@ -254,7 +256,7 @@ set ruler " Show line and column numbers in command-line.
 set showcmd " Display key presses in the bottom right.
 
 " Option: Display {{{2
-set diffopt=filler,vertical,hiddenoff,foldcolumn:0,algorithm:patience " Settings for diff mode.
+set diffopt=filler,vertical,hiddenoff,foldcolumn:0 " Settings for diff mode.
 set display=lastline " As much as possible of the last line in a window will be displayed.
 set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:\ ,diff:\  " Characters used in UI elements.
 set laststatus=2 " Always show the status line.
@@ -266,6 +268,10 @@ if s:windows
   set listchars=tab:>\ ,trail:.,eol:$,nbsp:_,extends:>,precedes:< " Unicode strings to use
 else
   set listchars=tab:▸\ ,trail:·,eol:¬,nbsp:_,extends:»,precedes:« " when 'list' option set.
+endif
+
+if has('patch-8.1.0360')
+  set diffopt+=algorithm:patience " Use the same xdiff library that git uses by default.
 endif
 
 if has('patch-8.1.1564')
@@ -1163,6 +1169,8 @@ command! Zoom call <sid>zoom()
 
 " Plugin: coc {{{2
 
+if executable('node')
+
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <sid>show_documentation()<cr>
 
@@ -1250,6 +1258,8 @@ let g:coc_global_extensions = [
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
 " provide custom statusline: lightline.vim, vim-airline.
 " set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+endif
 
 " Plugin: editorconfig {{{2
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']

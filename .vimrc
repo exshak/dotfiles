@@ -44,6 +44,7 @@ Plug 'arzg/vim-colors-xcode'
 Plug 'vim-airline/vim-airline'                         " Statusline
 Plug 'vim-airline/vim-airline-themes'                  " Statusline themes
 Plug 'mhinz/vim-startify'                              " Start screen
+Plug 'dstein64/vim-startuptime'                        " Startup time
 
 " Edit
 Plug 'editorconfig/editorconfig-vim'                   " EditorConfig
@@ -1637,6 +1638,9 @@ let g:startify_bookmarks=[
   \ '~/.vimrc',
   \ '~/.zshrc',
   \ ]
+
+" Plugin: vim-startuptime {{{2
+nnoremap <leader>su :vertical StartupTime<cr>
 
 " Plugin: vim-surround {{{2
 vnoremap Si S(i_<esc>f)

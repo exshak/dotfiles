@@ -8,7 +8,7 @@
 
   basedir=$HOME/.dotfiles
   repourl=https://github.com/exshak/dotfiles
-  savedir=(".config" ".vim")
+  savedir=(".config" ".github" ".ssh" ".vim")
   current=$(date +"%Y.%m.%d.%H.%M.%S")
   backup=$HOME/.dotfiles_backup/$current
 

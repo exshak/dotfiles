@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
-COPY . /app
-RUN make /app
-CMD python /app/app.py
+FROM archlinux
+RUN pacman -Syu --noconfirm
+RUN pacman -S git --noconfirm
+CMD curl -fsSL https://raw.githubusercontent.com/exshak/dotfiles/master/install.sh | bash

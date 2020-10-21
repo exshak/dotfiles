@@ -14,6 +14,9 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest]
     steps:
-      - uses: actions/checkout@v2
       - name: Bare install dotfiles
+        uses: actions/checkout@v2
         run: bash install.sh
+      - name: Brew bundle
+        if: ${{ runner.os == 'macOS' }}
+        run: brew bundle --file=~/.brewfile

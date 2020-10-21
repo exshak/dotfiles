@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  dotfiles:
+    image: exshak/dotfiles:latest
+    container_name: dotfiles
+    volumes:
+      - .:/usr/src/
+    environment:
+      - CI=1

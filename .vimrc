@@ -99,7 +99,7 @@ Plug 'xuyuanp/nerdtree-git-plugin'                     " NERDTree git status
 Plug 'ryanoasis/vim-devicons'                          " Dev icons
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'         " NERDTree syntax highlighting
 Plug 'junegunn/vim-peekaboo'                           " Register sidebar
-Plug 'tpope/vim-vinegar'                               " Enhances netrw
+" Plug 'tpope/vim-vinegar'                               " Enhances netrw
 
 " Search
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }    " FZF plugin
@@ -121,6 +121,7 @@ Plug 'junegunn/goyo.vim'                               " Distraction-free mode
 Plug 'junegunn/limelight.vim'                          " Highlight current paragraph
 Plug 'lervag/vimtex'                                   " LaTeX files
 Plug 'vimwiki/vimwiki'                                 " Personal Wiki
+Plug 'michal-h21/vim-zettel'                           " Zettelkasten method
 Plug 'iamcco/markdown-preview.nvim', {
   \ 'do': { -> mkdp#util#install() },
   \ 'for': ['markdown', 'vim-plug'],
@@ -478,7 +479,7 @@ nnoremap Q @q
 nnoremap Y y$
 
 " Don’t overwrite paste.
-xnoremap p "_dP
+xnoremap p "_dp
 
 " Reselect last visual area.
 onoremap gv :<c-u>normal! gv<cr>
@@ -1649,6 +1650,12 @@ autocmd FileType mako vnoremap Si S"i${ _(<esc>2f"a) }<esc>
 
 let g:surround_indent = 1
 
+" Plugin: vim-zettel {{{2
+let g:zettel_options = [{
+  \ 'front_matter' : [['tags', ''], ['type','note']],
+  \ 'template' :  '~/Dropbox/Documents/zettel.tpl'
+  \ }]
+
 " Plugin: vimawesome {{{2
 " vimawesome.com
 function! VimAwesomeComplete() abort
@@ -1698,12 +1705,18 @@ let g:tex_flavor = 'latex'
 " Plugin: vimwiki {{{2
 let g:vimwiki_global_ext = 0
 let g:vimwiki_map_prefix = '<leader>x'
+let g:vimwiki_list = [{
+  \ 'auto_tags': 1,
+  \ 'auto_toc': 1,
+  \ 'path': '~/Dropbox/Documents',
+  \ }]
 
 " Filetypes {{{1
 " Filetype: * {{{2
 augroup vimrc
 
   autocmd BufRead,BufNewFile *.applescript setlocal filetype=applescript
+  autocmd BufRead,BufNewFile *.brewfile setlocal filetype=brewfile
   autocmd BufRead,BufNewFile *.git/config setlocal filetype=gitconfig
   autocmd BufRead,BufNewFile *.{markdown,md} setlocal filetype=markdown
   autocmd BufRead,BufNewFile *.tmux.conf.local setlocal filetype=tmux

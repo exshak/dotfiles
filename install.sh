@@ -1,14 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 
-# curl -fsSL https://raw.githubusercontent.com/exshak/dotfiles/master/install.sh | sh
+# curl -fsSL https://raw.githubusercontent.com/exshak/dotfiles/master/install.sh | bash
 # or
-# wget -qO- https://raw.githubusercontent.com/exshak/dotfiles/master/install.sh | sh
+# wget -qO- https://raw.githubusercontent.com/exshak/dotfiles/master/install.sh | bash
 
 { # This ensures the entire script is downloaded.
 
   basedir=$HOME/.dotfiles
   repourl=https://github.com/exshak/dotfiles
-  savedir=(".config" ".github" ".ssh" ".vim")
+  savedir=(".bin" ".config" ".github" ".ssh" ".vim")
   current=$(date +"%Y.%m.%d.%H.%M.%S")
   backup=$HOME/.dotfiles_backup/$current
 

@@ -31,6 +31,40 @@ zinit light-mode for \
 
 # }}}
 
+# Options {{{1
+
+# History
+typeset -g HISTFILE=~/.zsh_history # Where history logs are stored.
+typeset -g HISTSIZE=100000000 # The maximum number of events stored in the internal history list.
+typeset -g SAVEHIST=$HISTSIZE # The maximum number of history events to save in the history file.
+setopt extended_history # Save each command's epoch timestamps and the duration in seconds.
+setopt hist_expire_dups_first # Expire duplicate entries first when trimming history.
+setopt hist_ignore_dups # Don't record an entry that was just recorded again.
+setopt hist_ignore_space # Don't record an entry starting with a space.
+setopt hist_reduce_blanks # Remove superfluous blanks before recording an entry.
+setopt hist_verify # Don't execute the line directly instead perform history expansion.
+setopt share_history # Share history between all sessions.
+
+# Exports {{{1
+
+export HOMEBREW_INSTALL_BADGE='☕'
+export HOMEBREW_NO_ANALYTICS=1
+
+# Aliases {{{1
+
+# `ls` with color and icons
+alias ls='colorls -A --sd'
+alias lt='colorls --sd --tree'
+alias l='colorls -l --sd'
+alias la='colorls -lA --sd'
+alias lsd='colorls -ld --sd'
+alias lsf='colorls -lf --sd'
+
+# Shortcuts
+alias brewup='brew update && brew upgrade && brew cleanup && brew doctor'
+alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias speeds='speedtest --simple --server'
+
 # Local {{{1
 if [[ -f ~/.zshrc.local ]]; then
   source ~/.zshrc.local

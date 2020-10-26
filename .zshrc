@@ -31,6 +31,12 @@ zinit light-mode for \
 
 # }}}
 
+# Local {{{1
+if [[ -f ~/.zshrc.local ]]; then
+  source ~/.zshrc.local
+fi
+# }}}
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 

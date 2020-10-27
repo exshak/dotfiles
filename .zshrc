@@ -31,7 +31,25 @@ zinit light-mode for \
 
 # }}}
 
+# Init {{{1
+# Returns whether the given command is executable or aliased.
+_has() {
+  return $(whence $1 >/dev/null)
+}
+
 # Options {{{1
+
+# Completion
+setopt complete_aliases # Prevent aliases from being substituted before completion is attempted.
+setopt complete_in_word # Attempt to start completion from both ends of a word.
+setopt list_packed # Try to make the completion list smaller by drawing smaller columns.
+setopt menu_complete # Instead of listing possibilities, select the first match immediately.
+
+# Directory
+setopt auto_cd # If can't execute the directory, perform the cd command to that.
+setopt auto_pushd # Make cd push the old directory onto the directory stack.
+setopt pushd_ignore_dups # Don't push multiple copies of the same directory onto the stack.
+setopt pushd_minus # Exchanges the meanings of `+` and `-` for pushd.
 
 # History
 typeset -g HISTFILE=~/.zsh_history # Where history logs are stored.
@@ -45,22 +63,42 @@ setopt hist_reduce_blanks # Remove superfluous blanks before recording an entry.
 setopt hist_verify # Don't execute the line directly instead perform history expansion.
 setopt share_history # Share history between all sessions.
 
+# Input/Output
+setopt no_clobber # Don't allow `>` redirection to override existing files. Use `>!` instead.
+setopt no_flow_control # Disable flow control characters `^S` and `^Q`.
+setopt interactive_comments # Allow comments even in interactive shells.
+setopt rm_star_wait # Before executing `rm *` first wait 10 seconds and ignore anything typed.
+
+# Job Control
+setopt long_list_jobs # Display PID when suspending processes as well.
+
+# Prompt
+setopt prompt_subst # Expansions are performed in prompts.
+
 # Exports {{{1
+
+if _has less; then
+  export MANPAGER='less -X' # Don’t clear the screen after quitting a manual page.
+  export PAGER='less'
+  export LESS='-R'
+fi
 
 export HOMEBREW_INSTALL_BADGE='☕'
 export HOMEBREW_NO_ANALYTICS=1
 
 # Aliases {{{1
+# Alias: List {{{2
+if _has colorls; then
+  # `ls` with color and icons
+  alias ls='colorls -A --sd'
+  alias lt='colorls --sd --tree'
+  alias l='colorls -l --sd'
+  alias la='colorls -lA --sd'
+  alias lsd='colorls -ld --sd'
+  alias lsf='colorls -lf --sd'
+fi
 
-# `ls` with color and icons
-alias ls='colorls -A --sd'
-alias lt='colorls --sd --tree'
-alias l='colorls -l --sd'
-alias la='colorls -lA --sd'
-alias lsd='colorls -ld --sd'
-alias lsf='colorls -lf --sd'
-
-# Shortcuts
+# Alias: Shortcut {{{2
 alias brewup='brew update && brew upgrade && brew cleanup && brew doctor'
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias speeds='speedtest --simple --server'

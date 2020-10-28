@@ -6,7 +6,6 @@
 # ╚══════════════════════════════════════════════╝
 
 # Plug {{{1
-
 # Added by Zinit's installer
 if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
   print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
@@ -51,33 +50,32 @@ zinit ice wait"0c" lucid reset \
   atpull'%atclone' pick"c.zsh" nocompile'!' \
   atload'zstyle ":completion:*" list-colors “${(s.:.)LS_COLORS}”'
 zinit light trapd00r/LS_COLORS
-
 # }}}
 
 # Init {{{1
+
 # Returns whether the given command is executable or aliased.
 _has() {
   return $(whence $1 >/dev/null)
 }
 
 # Options {{{1
-
-# Completion
+# Option: Completion {{{2
 setopt complete_aliases # Prevent aliases from being substituted before completion is attempted.
 setopt complete_in_word # Attempt to start completion from both ends of a word.
 setopt list_packed # Try to make the completion list smaller by drawing smaller columns.
 setopt menu_complete # Instead of listing possibilities, select the first match immediately.
 
-# Directory
+# Option: Directory {{{2
 setopt auto_cd # If can't execute the directory, perform the cd command to that.
 setopt auto_pushd # Make cd push the old directory onto the directory stack.
 setopt pushd_ignore_dups # Don't push multiple copies of the same directory onto the stack.
 setopt pushd_minus # Exchanges the meanings of `+` and `-` for pushd.
 
-# General
+# Option: General {{{2
 setopt no_beep # Don't beep on errors.
 
-# History
+# Option: History {{{2
 typeset -g HISTFILE=~/.zsh_history # Where history logs are stored.
 typeset -g HISTSIZE=100000000 # The maximum number of events stored in the internal history list.
 typeset -g SAVEHIST=$HISTSIZE # The maximum number of history events to save in the history file.
@@ -89,16 +87,16 @@ setopt hist_reduce_blanks # Remove superfluous blanks before recording an entry.
 setopt hist_verify # Don't execute the line directly instead perform history expansion.
 setopt share_history # Share history between all sessions.
 
-# Input/Output
+# Option: Input/Output {{{2
 setopt no_clobber # Don't allow `>` redirection to override existing files. Use `>!` instead.
 setopt no_flow_control # Disable flow control characters `^S` and `^Q`.
 setopt interactive_comments # Allow comments even in interactive shells.
 setopt rm_star_wait # Before executing `rm *` first wait 10 seconds and ignore anything typed.
 
-# Job Control
+# Option: Job Control {{{2
 setopt long_list_jobs # Display PID when suspending processes as well.
 
-# Prompt
+# Option: Prompt {{{2
 setopt prompt_subst # Expansions are performed in prompts.
 
 # Exports {{{1
@@ -144,6 +142,41 @@ fi
 alias brewup='brew update && brew upgrade && brew cleanup && brew doctor'
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias speeds='speedtest --simple --server'
+
+# Bindings {{{1
+# Use emacs key bindings.
+bindkey -e
+
+# Functions {{{1
+function take() {
+  mkdir -p $@ && cd ${@:$#}
+}
+
+# Plugins {{{1
+# Plugin: fzf {{{2
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export FZF_DEFAULT_OPTS='
+  --info=inline
+  --color=dark
+  --color=fg:-1,bg:-1,hl:#5fff87,fg+:-1,bg+:-1,hl+:#ffaf5f
+  --color=info:#af87ff,prompt:#5fff87,pointer:#ff87d7,marker:#ff87d7,spinner:#ff87d7
+  --bind ctrl-a:select-all,ctrl-d:deselect-all,tab:toggle+up,shift-tab:toggle+down
+'
+
+# export FZF_TMUX=0
+# export FZF_TMUX_OPTS='-p80%,60%'
+export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview' --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort' --header 'Press CTRL-Y to copy command into clipboard'"
+
+if command -v fd > /dev/null; then
+  export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+  export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+  export FZF_CTRL_T_COMMAND='fd --type f --type d --hidden --follow --exclude .git'
+fi
+
+command -v bat  > /dev/null && export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}'"
+command -v blsd > /dev/null && export FZF_ALT_C_COMMAND='blsd'
+command -v tree > /dev/null && export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
 
 # Local {{{1
 if [[ -f ~/.zshrc.local ]]; then

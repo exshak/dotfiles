@@ -113,6 +113,22 @@ export HOMEBREW_INSTALL_BADGE='☕'
 export HOMEBREW_NO_ANALYTICS=1
 
 # Aliases {{{1
+# Alias: Date & Time {{{2
+# Date
+alias date_iso_8601='date "+%Y%m%dT%H%M%S"'
+alias date_clean='date "+%Y-%m-%d"'
+alias date_year='date "+%Y"'
+alias date_month='date "+%m"'
+alias date_week='date "+%V"'
+alias date_day='date "+%d"'
+alias date_hour='date "+%H"'
+alias date_minute='date "+%M"'
+alias date_second='date "+%S"'
+alias date_time='date "+%H:%M:%S"'
+
+# Stopwatch
+alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
+
 # Alias: List {{{2
 if _has colorls; then
   # `ls` with color and icons

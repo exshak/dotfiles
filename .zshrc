@@ -100,7 +100,6 @@ setopt long_list_jobs # Display PID when suspending processes as well.
 setopt prompt_subst # Expansions are performed in prompts.
 
 # Exports {{{1
-
 if _has less; then
   export MANPAGER='less -X' # Don’t clear the screen after quitting a manual page.
   export PAGER='less'
@@ -111,21 +110,8 @@ export HOMEBREW_INSTALL_BADGE='☕'
 export HOMEBREW_NO_ANALYTICS=1
 
 # Aliases {{{1
-# Alias: Date & Time {{{2
-# Date
-alias date_iso_8601='date "+%Y%m%dT%H%M%S"'
-alias date_clean='date "+%Y-%m-%d"'
-alias date_year='date "+%Y"'
-alias date_month='date "+%m"'
-alias date_week='date "+%V"'
-alias date_day='date "+%d"'
-alias date_hour='date "+%H"'
-alias date_minute='date "+%M"'
-alias date_second='date "+%S"'
-alias date_time='date "+%H:%M:%S"'
-
-# Stopwatch
-alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
+# Alias: Git {{{2
+alias g='git'
 
 # Alias: List {{{2
 if _has colorls; then
@@ -137,6 +123,33 @@ if _has colorls; then
   alias lsd='colorls -ld --sd'
   alias lsf='colorls -lf --sd'
 fi
+
+# Alias: Navigate {{{2
+# Easier navigation: .., ..., ...., ....., ~ and -
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+
+alias cd.='cd ..'
+alias cd..='cd ..'
+alias cd...='cd ../..'
+alias cd....='cd ../../..'
+alias cd.....='cd ../../../..'
+
+alias ~='cd ~' # `cd` is probably faster to type though
+alias -- -='cd -'
+
+alias 1='cd -'
+alias 2='cd -2'
+alias 3='cd -3'
+alias 4='cd -4'
+alias 5='cd -5'
+alias 6='cd -6'
+alias 7='cd -7'
+alias 8='cd -8'
+alias 9='cd -9'
 
 # Alias: Shortcut {{{2
 alias brewup='brew update && brew upgrade && brew cleanup && brew doctor'

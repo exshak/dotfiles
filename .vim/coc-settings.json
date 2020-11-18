@@ -1,0 +1,5 @@
+{
+  "eslint.autoFixOnSave": true,
+  "highlight.document.enable": false,
+  "prettier.eslintIntegration": true
+}

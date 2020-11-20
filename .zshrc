@@ -61,6 +61,7 @@ _has() {
 
 # Options {{{1
 # Option: Completion {{{2
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 setopt complete_aliases # Prevent aliases from being substituted before completion is attempted.
 setopt complete_in_word # Attempt to start completion from both ends of a word.
 setopt list_packed # Try to make the completion list smaller by drawing smaller columns.
@@ -73,6 +74,7 @@ setopt pushd_ignore_dups # Don't push multiple copies of the same directory onto
 setopt pushd_minus # Exchanges the meanings of `+` and `-` for pushd.
 
 # Option: General {{{2
+typeset -g WORDCHARS='*?_-.[]~=&;!#$%^(){}<>' # List of characters considered part of a word.
 setopt no_beep # Don't beep on errors.
 
 # Option: History {{{2

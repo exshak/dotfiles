@@ -108,19 +108,32 @@ if _has less; then
   export LESS='-R'
 fi
 
+if _has nvim; then
+  export EDITOR='nvim'
+else
+  export EDITOR='vim'
+fi
+
 export HOMEBREW_INSTALL_BADGE='☕'
 export HOMEBREW_NO_ANALYTICS=1
 
 # Aliases {{{1
+alias n='neofetch'
+alias l='clear'
+alias t='tmux'
+alias v='nvim'
+
 # Alias: Git {{{2
 alias g='git'
 
 # Alias: List {{{2
-if _has colorls; then
-  # `ls` with color and icons
+if _has gls; then
+  alias ls='gls -A --color --group-directories-first'
+  alias la='gls -lA --color --group-directories-first'
+  alias lsd='gls -ld --color --group-directories-first'
+  alias lsf='gls -lf --color --group-directories-first'
+elif _has colorls; then
   alias ls='colorls -A --sd'
-  alias lt='colorls --sd --tree'
-  alias l='colorls -l --sd'
   alias la='colorls -lA --sd'
   alias lsd='colorls -ld --sd'
   alias lsf='colorls -lf --sd'

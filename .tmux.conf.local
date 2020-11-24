@@ -156,6 +156,8 @@ tmux_conf_theme_status_attr="none"
 #     - #{circled_session_name}
 #     - #{hostname}
 #     - #{hostname_ssh}
+#     - #{hostname_full}
+#     - #{hostname_full_ssh}
 #     - #{username}
 #     - #{username_ssh}
 tmux_conf_theme_terminal_title="#h ❐ #S ● #I #W"
@@ -166,6 +168,8 @@ tmux_conf_theme_terminal_title="#h ❐ #S ● #I #W"
 #     - #{circled_session_name}
 #     - #{hostname}
 #     - #{hostname_ssh}
+#     - #{hostname_full}
+#     - #{hostname_full_ssh}
 #     - #{username}
 #     - #{username_ssh}
 tmux_conf_theme_window_status_fg="$tmux_conf_theme_colour_3"
@@ -181,6 +185,8 @@ tmux_conf_theme_window_status_format="#I #W#{?window_bell_flag,🔔,}#{?window_z
 #     - #{circled_session_name}
 #     - #{hostname}
 #     - #{hostname_ssh}
+#     - #{hostname_full}
+#     - #{hostname_full_ssh}
 #     - #{username}
 #     - #{username_ssh}
 tmux_conf_theme_window_status_current_fg="$tmux_conf_theme_colour_1"
@@ -227,7 +233,10 @@ tmux_conf_theme_right_separator_sub="\uE0B3"  #   PowerlineSymbols.otf font, see
 #     - #{circled_session_name}
 #     - #{hostname_ssh}
 #     - #{hostname}
+#     - #{hostname_full}
+#     - #{hostname_full_ssh}
 #     - #{loadavg}
+#     - #{mouse}
 #     - #{pairing}
 #     - #{prefix}
 #     - #{root}
@@ -240,9 +249,9 @@ tmux_conf_theme_right_separator_sub="\uE0B3"  #   PowerlineSymbols.otf font, see
 #     - #{username}
 #     - #{username_ssh}
 # tmux_conf_theme_status_left=" ❐ #S | ↑#{?uptime_y, #{uptime_y}y,}#{?uptime_d, #{uptime_d}d,}#{?uptime_h, #{uptime_h}h,}#{?uptime_m, #{uptime_m}m,} "
-# tmux_conf_theme_status_right="#{prefix}#{pairing}#{synchronized} #{?battery_status, #{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} , %I:%M %p , %d %b | #{username}#{root} | #{hostname} "
+# tmux_conf_theme_status_right="#{prefix}#{pairing}#{synchronized}#{?battery_status,#{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} , %I:%M %p , %d %b | #{username}#{root} | #{hostname} "
 tmux_conf_theme_status_left=" ❐ #S | ↑#{?uptime_y, #{uptime_y}y,}#{?uptime_d, #{uptime_d}d,}#{?uptime_h, #{uptime_h}h,}#{?uptime_m, #{uptime_m}m,} "
-tmux_conf_theme_status_right="#{prefix}#{pairing}#{synchronized} #{?battery_status, #{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} , %I:%M %p , %d %b | #{username}#{root} | #{hostname} "
+tmux_conf_theme_status_right="#{prefix}#{pairing}#{synchronized}#{spotify}, #{online}#{?battery_vbar, #{battery_vbar},}#{?battery_percentage, #{battery_percentage},} | #{weather} | %b %d , %I:%M %p "
 
 # status left style
 tmux_conf_theme_status_left_fg="$tmux_conf_theme_colour_6,$tmux_conf_theme_colour_7,$tmux_conf_theme_colour_8"
@@ -261,10 +270,16 @@ tmux_conf_theme_pairing_bg="none"
 tmux_conf_theme_pairing_attr="none"
 
 # prefix indicator
-tmux_conf_theme_prefix="⌨️  "                # U+2328
+tmux_conf_theme_prefix="⌨️ "                 # U+2328
 tmux_conf_theme_prefix_fg="none"
 tmux_conf_theme_prefix_bg="none"
 tmux_conf_theme_prefix_attr="none"
+
+# mouse indicator
+tmux_conf_theme_mouse="↗"                   # U+2197
+tmux_conf_theme_mouse_fg="none"
+tmux_conf_theme_mouse_bg="none"
+tmux_conf_theme_mouse_attr="none"
 
 # root indicator
 tmux_conf_theme_root="!"
@@ -277,6 +292,12 @@ tmux_conf_theme_synchronized="🔒"           # U+1F512
 tmux_conf_theme_synchronized_fg="none"
 tmux_conf_theme_synchronized_bg="none"
 tmux_conf_theme_synchronized_attr="none"
+
+# spotify indicator
+tmux_conf_theme_spotify="🔥"                # U+1F525
+tmux_conf_theme_spotify_artist="$tmux_conf_theme_colour_4"
+tmux_conf_theme_spotify_album="none"
+tmux_conf_theme_spotify_track="none"
 
 # battery bar symbols
 tmux_conf_battery_bar_symbol_full="◼"
@@ -313,7 +334,6 @@ tmux_conf_battery_vbar_palette="$tmux_conf_theme_colour_18,$tmux_conf_theme_colo
 # symbols used to indicate whether battery is charging or discharging
 #tmux_conf_battery_status_charging="↑"       # U+2191
 #tmux_conf_battery_status_discharging="↓"    # U+2193
-#tmux_conf_battery_status_charging='⚡'    # U+26A1
 tmux_conf_battery_status_charging="🔌"     # U+1F50C
 tmux_conf_battery_status_discharging="🔋"  # U+1F50B
 
@@ -357,35 +377,46 @@ bind C-a send-prefix
 # move status line to top
 #set -g status-position top
 
-# List of plugins
-set -g @tpm_plugins '               \
-    tmux-plugins/tpm                \
-    tmux-plugins/tmux-continuum     \
-    tmux-plugins/tmux-open          \
-    tmux-plugins/tmux-resurrect     \
-    tmux-plugins/tmux-sensible      \
-    tmux-plugins/tmux-yank          \
-    robhurring/tmux-spotify         \
-    chriszarate/tmux-tasks          \
-    christoomey/vim-tmux-navigator  \
-'
+# -- tpm -----------------------------------------------------------------------
 
-# tmux-tasks plugin configuration
-# Task manager
-set -g @tasks_manager 'taskwarrior'
+# while I don't use tpm myself, many people requested official support so here
+# is a seamless integration that automatically installs plugins in parallel
 
-# Colors
-set -g @tasks_format_begin '#[fg=orange,bg=#f8f8f2]'
-set -g @tasks_format_end '#[fg=white,bg=#44475a]'
+# whenever a plugin introduces a variable to be used in 'status-left' or
+# 'status-right', you can use it in 'tmux_conf_theme_status_left' and
+# 'tmux_conf_theme_status_right' variables.
 
-# Icons
-set -g @tasks_icon_urgent '🔥'
-set -g @tasks_icon_outstanding '+'
+# by default, launching tmux will update tpm and all plugins
+#   - true (default)
+#   - false
+tmux_conf_update_plugins_on_launch=true
 
-# set-option -g default-shell /usr/bin/fish
-run -b '~/.tmux/plugins/tpm/tpm'
+# by default, reloading the configuration will update tpm and all plugins
+#   - true (default)
+#   - false
+tmux_conf_update_plugins_on_reload=true
+
+# /!\ do not add set -g @plugin 'tmux-plugins/tpm'
+# /!\ do not add run '~/.tmux/plugins/tpm/tpm'
+
+# to enable a plugin, use the 'set -g @plugin' syntax:
+# visit https://github.com/tmux-plugins for available plugins
+#set -g @plugin 'tmux-plugins/tmux-copycat'
+#set -g @plugin 'tmux-plugins/tmux-cpu'
+#set -g @plugin 'tmux-plugins/tmux-resurrect'
+#set -g @plugin 'tmux-plugins/tmux-continuum'
+#set -g @continuum-restore 'on'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'tmux-plugins/tmux-open'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin 'robhurring/tmux-spotify'
+set -g @plugin 'chriszarate/tmux-tasks'
+set -g @plugin 'christoomey/vim-tmux-navigator'
 
 # -- custom variables ----------------------------------------------------------
+
 # to define a custom #{foo} variable, define a POSIX shell function between the
 # '# EOF' and the '# "$@"' lines. Please note that the opening brace { character
 # must be on the same line as the function name otherwise the parse won't detect
@@ -397,14 +428,15 @@ run -b '~/.tmux/plugins/tpm/tpm'
 # # /!\ do not remove the following line
 # EOF
 #
+# # /!\ do not "uncomment" the functions: the leading "# " characters are needed
+#
 # weather() {
 #   curl -m 1 wttr.in?format=1 2>/dev/null
 #   sleep 900 # sleep for 15 minutes, throttle network requests whatever the value of status-interval
 # }
 #
 # online() {
-#   # ping -t 1 -c 1 1.1.1.1 >/dev/null 2>&1 && printf '✔' || printf '✘'
-#   ping -t 1 -c 1 1.1.1.1 >/dev/null 2>&1 && printf ' ' || printf '睊'
+#   ping -c 1 1.1.1.1 >/dev/null 2>&1 && printf '#[fg=] ' || printf '#[fg=#ff5555]睊'
 # }
 #
 # "$@"

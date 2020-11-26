@@ -436,7 +436,7 @@ set -g @plugin 'christoomey/vim-tmux-navigator'
 # }
 #
 # online() {
-#   ping -c 1 1.1.1.1 >/dev/null 2>&1 && printf '#[fg=] ' || printf '#[fg=#ff5555]睊'
+#   ping -c 1 1.1.1.1 >/dev/null 2>&1 && printf '#[fg=default] ' || printf '#[fg=#ff5555]睊'
 # }
 #
 # "$@"

@@ -424,6 +424,12 @@ nnoremap <leader>bs :cex []<bar>bufdo vimgrepadd @@g %<bar>cw<s-left><s-left><ri
 " Repeat last command.
 nnoremap <leader>. :<C-p><cr>
 
+" Smart command paths.
+cnoremap $c e <C-\>e"e ".expand("%:p:h")."/"<cr>
+cnoremap $d e ~/Dropbox/
+cnoremap $h e ~/
+cnoremap $i e ./
+
 " TMUX split window.
 cnoremap !! TX<space>
 
@@ -770,6 +776,13 @@ tnoremap <esc> <C-\><C-n>
 " nnoremap <C-L> <C-w>L
 
 " Text {} {{{1
+" ?ie | entire object
+xnoremap <silent> ie gg0oG$
+onoremap <silent> ie :<C-u>execute "normal! m`"<bar>keepjumps normal! ggVG<cr>
+
+" ?il | inner line
+xnoremap <silent> il <esc>^vg_
+onoremap <silent> il :<C-u>normal! ^vg_<cr>
 
 " Commands {{{1
 " :BC
@@ -1173,6 +1186,29 @@ command! Zoom call <sid>zoom()
 
 if executable('node')
 
+" Mappings for CoCList
+" Show all diagnostics.
+nnoremap <silent><nowait> <leader>ca :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent><nowait> <leader>ce :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent><nowait> <leader>cc :<C-u>CocList commands<cr>
+" Find symbol of current document.
+nnoremap <silent><nowait> <leader>co :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent><nowait> <leader>cs :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent><nowait> <leader>cj :<C-u>CocNext<cr>
+" Do default action for previous item.
+nnoremap <silent><nowait> <leader>ck :<C-u>CocPrev<cr>
+" Resume latest coc list.
+nnoremap <silent><nowait> <leader>cp :<C-u>CocListResume<cr>
+
+nnoremap <silent><nowait> <leader>cr :<C-u>CocList -N mru -A<cr>
+
+nnoremap <silent><nowait> <leader>cw
+  \ :execute 'CocList -A -I --normal --input='.expand('<cword>').' words -w'<cr>
+
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <sid>show_documentation()<cr>
 
@@ -1230,8 +1266,10 @@ endfunction
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
-  else
+  elseif (coc#rpc#ready())
     call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
   endif
 endfunction
 
@@ -1271,6 +1309,22 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 " let g:user_emmet_mode = 'a'
 
 " Plugin: fzf {{{2
+nnoremap <expr> <leader><leader> (expand('%') =~ 'NERD_tree' ? "\<C-w>\<C-w>" : '').":Files\<cr>"
+nnoremap <leader><cr> :Buffers<cr>
+nnoremap <leader>B :BBuffers<cr>
+nnoremap <leader>C :Commands<cr>
+nnoremap <leader>F :GFiles<cr>
+nnoremap <leader>H :History<cr>
+nnoremap <leader>L :Lines<cr>
+nnoremap <leader>M :Maps<cr>
+nnoremap <leader>P :PlugHelp<cr>
+nnoremap <leader>R :Rg<cr>
+nnoremap <leader>T :Tags<cr>
+nnoremap <leader>` :Marks<cr>
+nnoremap q: :History:<cr>
+nnoremap q/ :History/<cr>
+
+command! BBuffers call fzf#vim#buffers({'down': len(getbufinfo({'buflisted': 1})) + 1})
 
 command! PlugHelp call fzf#run(fzf#wrap({
   \ 'source': reverse(sort(keys(g:plugs))),
@@ -1279,10 +1333,6 @@ command! PlugHelp call fzf#run(fzf#wrap({
   \ }))
 
 command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
-
-" Terminal buffer options for fzf.
-autocmd! FileType fzf
-autocmd  FileType fzf set noshowmode noruler nonumber
 
 function! RipgrepFzf(query, fullscreen)
   let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'

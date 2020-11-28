@@ -118,8 +118,9 @@ export HOMEBREW_INSTALL_BADGE='☕'
 export HOMEBREW_NO_ANALYTICS=1
 
 # Aliases {{{1
+alias c='clear'
+alias lc='leetcode'
 alias n='neofetch'
-alias l='clear'
 alias t='tmux'
 alias v='nvim'
 

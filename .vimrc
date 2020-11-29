@@ -27,6 +27,11 @@ autocmd VimEnter *
 let g:plug_window = '-tabnew'
 let g:plug_pwindow = 'vertical rightbelow new'
 
+function! Cond(cond, ...)
+  let opts = get(a:000, 0, {})
+  return a:cond ? opts : extend(opts, { 'on': [], 'for': [] })
+endfunction
+
 call plug#begin($v.'/plugged')
 
 " Colors
@@ -41,98 +46,102 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'arzg/vim-colors-xcode'
 
 " Display
-Plug 'vim-airline/vim-airline'                         " Statusline
-Plug 'vim-airline/vim-airline-themes'                  " Statusline themes
-Plug 'mhinz/vim-startify'                              " Start screen
-Plug 'dstein64/vim-startuptime'                        " Startup time
+Plug 'vim-airline/vim-airline'                             " Statusline
+Plug 'vim-airline/vim-airline-themes'                      " Statusline themes
+Plug 'mhinz/vim-startify'                                  " Start screen: <leader>st
+Plug 'dstein64/vim-startuptime'                            " Startup time: <leader>su
+Plug 'nvim-treesitter/nvim-treesitter',
+  \ Cond(has('nvim-0.5.0'), {'do': ':TSUpdate'})           " Treesitter highlighting
+Plug 'nvim-treesitter/playground', Cond(has('nvim-0.5.0')) " Treesitter playground
 
 " Edit
-Plug 'editorconfig/editorconfig-vim'                   " EditorConfig
-Plug 'andrewradev/splitjoin.vim'                       " Split/join multi-lines
-Plug 'markonm/traces.vim'                              " Substitute preview
-" Plug 'tpope/vim-abolish'                               " Word variants
-Plug 'tpope/vim-commentary'                            " Comment
-Plug 'tpope/vim-endwise'                               " Automatic `end`
-Plug 'tpope/vim-repeat'                                " Repeat plugins
-Plug 'tpope/vim-surround'                              " Surround mappings
-Plug 'tpope/vim-unimpaired'                            " Bracket mappings
-Plug 'tommcdo/vim-exchange'                            " Text exchange
+Plug 'editorconfig/editorconfig-vim'                       " EditorConfig
+Plug 'andrewradev/splitjoin.vim'                           " Split/join multi-lines: gS, gJ
+Plug 'markonm/traces.vim'                                  " Substitute preview
+" Plug 'tpope/vim-abolish'                                   " Word variants
+Plug 'tpope/vim-commentary'                                " Comment: gc, gcc
+Plug 'tpope/vim-endwise'                                   " Automatic `end`
+Plug 'tpope/vim-repeat'                                    " Repeat plugins
+Plug 'tpope/vim-surround'                                  " Surround mappings: cs, ds, ys
+Plug 'tpope/vim-unimpaired'                                " Bracket mappings
+Plug 'tommcdo/vim-exchange'                                " Text exchange: cx, cxx, X
 
 " Format
-Plug 'jiangmiao/auto-pairs'                            " Automatic brackets
-Plug 'yggdroot/indentline'                             " Indentation level
-Plug 'junegunn/vim-easy-align'                         " Alignment
-Plug 'easymotion/vim-easymotion'                       " Movement
-Plug 'justinmk/vim-sneak'                              " Motion
-Plug 'justinmk/vim-gtfo'                               " Go to Terminal/File manager
-Plug 'machakann/vim-highlightedyank'                   " Highlight yanked
-Plug 'psliwka/vim-smoothie'                            " Smooth scrolling
-Plug 'mg979/vim-visual-multi'                          " Multiple cursors
+Plug 'jiangmiao/auto-pairs'                                " Automatic brackets
+Plug 'yggdroot/indentline'                                 " Indentation level
+Plug 'junegunn/vim-easy-align'                             " Alignment: ga
+Plug 'easymotion/vim-easymotion'                           " Movement: <leader>[hjkl]
+Plug 'justinmk/vim-sneak'                                  " Motion: s
+Plug 'justinmk/vim-gtfo'                                   " Go to Terminal/File manager: gof, got
+Plug 'machakann/vim-highlightedyank'                       " Highlight yanked
+Plug 'psliwka/vim-smoothie'                                " Smooth scrolling
+Plug 'mg979/vim-visual-multi'                              " Multiple cursors: <C-n>
 
 " Git
-Plug 'tpope/vim-fugitive'                              " Git wrapper
-Plug 'tpope/vim-rhubarb'                               " GitHub tools
-Plug 'airblade/vim-gitgutter'                          " Git diff, hunks
-" Plug 'mhinz/vim-signify'                               " VCS sign column
-Plug 'rhysd/git-messenger.vim'                         " Commit messages
-Plug 'junegunn/gv.vim'                                 " Commit browser
-Plug 'junegunn/vim-github-dashboard'                   " GitHub events
+Plug 'tpope/vim-fugitive'                                  " Git wrapper: <leader>g[abcdglprs]
+Plug 'tpope/vim-rhubarb'                                   " GitHub tools: <leader>gh
+Plug 'airblade/vim-gitgutter'                              " Git diff, hunks
+" Plug 'mhinz/vim-signify'                                   " VCS sign column
+Plug 'rhysd/git-messenger.vim'                             " Commit messages: <leader>gm
+Plug 'junegunn/gv.vim'                                     " Commit browser: :GV[!?]
+Plug 'junegunn/vim-github-dashboard'                       " GitHub events: :GHA!, :GHD!
 
 " Lang
-Plug 'w0rp/ale'                                        " Lint engine
-if executable('node')
-  Plug 'neoclide/coc.nvim', { 'branch': 'release' }    " Intellisense engine
-endif
-Plug 'mattn/emmet-vim'                                 " Expand HTML/XML/CSS
-Plug 'junegunn/vim-emoji'                              " :smiley:
-" Plug 'rrethy/vim-hexokinase', {'do':'make hexokinase'} " Preview colors
-Plug 'sheerun/vim-polyglot'                            " Language packs
-Plug 'sirver/ultisnips'                                " Common snippets
-Plug 'honza/vim-snippets'                              " Complete snippets
-Plug 'styled-components/vim-styled-components'         " JSX
+Plug 'w0rp/ale'                                            " Lint engine
+Plug 'neoclide/coc.nvim',
+  \ Cond(executable('node'), { 'branch': 'release' })      " Intellisense engine
+Plug 'mattn/emmet-vim'                                     " Expand HTML/XML/CSS: <C-y>
+Plug 'junegunn/vim-emoji'                                  " :smiley:
+" Plug 'rrethy/vim-hexokinase', {'do':'make hexokinase'}     " Preview colors
+Plug 'sheerun/vim-polyglot'                                " Language packs
+Plug 'sirver/ultisnips'                                    " Common snippets
+Plug 'honza/vim-snippets'                                  " Complete snippets
+Plug 'styled-components/vim-styled-components'             " JSX
 
 " Browse
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } " File explorer
-Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }     " Ctags sidebar
-Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }     " Undo history visualizer
-Plug 'xuyuanp/nerdtree-git-plugin'                     " NERDTree git status
-Plug 'ryanoasis/vim-devicons'                          " Dev icons
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'         " NERDTree syntax highlighting
-Plug 'junegunn/vim-peekaboo'                           " Register sidebar
-" Plug 'tpope/vim-vinegar'                               " Enhances netrw
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }     " File explorer: <leader>n
+Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }         " Ctags sidebar: <leader>ta
+Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }         " Undo history visualizer: <leader>u
+Plug 'xuyuanp/nerdtree-git-plugin'                         " NERDTree git status
+Plug 'ryanoasis/vim-devicons'                              " Dev icons
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'             " NERDTree syntax highlighting
+Plug 'junegunn/vim-peekaboo'                               " Register sidebar
+" Plug 'tpope/vim-vinegar'                                   " Enhances netrw
 
 " Search
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }    " FZF plugin
-Plug 'junegunn/fzf.vim'                                " Fuzzy finder
-Plug 'romainl/vim-cool'                                " Automatic search highlighting
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }        " FZF plugin
+Plug 'junegunn/fzf.vim'                                    " Fuzzy finder
+Plug 'romainl/vim-cool'                                    " Automatic search highlighting
 
 " Tools
-Plug 'metakirby5/codi.vim'                             " Interactive scratchpad
-Plug 'tpope/vim-dispatch'                              " Test dispatcher
-Plug 'tpope/vim-eunuch'                                " UNIX helpers
-Plug 'tpope/vim-obsession'                             " Save sessions automatically
-Plug 'tpope/vim-rsi'                                   " Readline bindings
-Plug 'christoomey/vim-tmux-navigator'                  " Tmux navigation
-" Plug 'wakatime/vim-wakatime'                           " Automatic time tracking
-Plug 'puremourning/vimspector'                         " Graphical debugger
+Plug 'metakirby5/codi.vim'                                 " Interactive scratchpad
+Plug 'tpope/vim-dispatch'                                  " Test dispatcher
+Plug 'tpope/vim-eunuch'                                    " UNIX helpers
+Plug 'tpope/vim-obsession'                                 " Save sessions automatically
+Plug 'tpope/vim-rsi'                                       " Readline bindings
+Plug 'tpope/vim-scriptease'                                " Plugin debugger
+Plug 'tpope/vim-speeddating'                               " Increment date/time
+Plug 'christoomey/vim-tmux-navigator'                      " Tmux navigation
+" Plug 'wakatime/vim-wakatime'                               " Automatic time tracking
+Plug 'puremourning/vimspector'                             " Graphical debugger
 
 " Write
-Plug 'junegunn/goyo.vim'                               " Distraction-free mode
-Plug 'junegunn/limelight.vim'                          " Highlight current paragraph
-Plug 'lervag/vimtex'                                   " LaTeX files
-Plug 'vimwiki/vimwiki'                                 " Personal Wiki
-Plug 'michal-h21/vim-zettel'                           " Zettelkasten method
+Plug 'junegunn/goyo.vim'                                   " Distraction-free mode: <leader>G
+Plug 'junegunn/limelight.vim'                              " Highlight current paragraph
+Plug 'lervag/vimtex'                                       " LaTeX files
+Plug 'vimwiki/vimwiki'                                     " Personal Wiki: <leader>x[istw]
+Plug 'michal-h21/vim-zettel'                               " Zettelkasten method
 Plug 'iamcco/markdown-preview.nvim', {
   \ 'do': { -> mkdp#util#install() },
   \ 'for': ['markdown', 'vim-plug'],
   \ 'on': 'MarkdownPreview'
-  \ }                                                  " Preview markdown
+  \ }                                                      " Preview markdown
 
 let g:plug_url_format = 'git@github.com:%s.git'
 
-" Plug 'exshak/vim-autonohl'                             " Automatic nohlsearch
-" Plug 'exshak/vim-easypaste'                            " Easy auto paste mode
-" Plug 'exshak/vim-position'                             " Restore last position
+" Plug 'exshak/vim-autonohl'                                 " Automatic nohlsearch
+" Plug 'exshak/vim-easypaste'                                " Easy auto paste mode
+" Plug 'exshak/vim-position'                                 " Restore last position
 
 unlet! g:plug_url_format
 
@@ -402,7 +411,7 @@ iabbrev Licence License
 iabbrev xdate <C-r>=strftime('%x')<cr>
 iabbrev zdate <C-r>=strftime('%b %d, %Y')<cr>
 
-" #!! | Shebang
+" Shebang
 inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
 
 " Mapping: Buffer {{{2
@@ -488,10 +497,10 @@ nnoremap Y y$
 xnoremap p "_dp
 
 " Reselect last visual area.
-onoremap gv :<c-u>normal! gv<cr>
+onoremap gv :<C-u>normal! gv<cr>
 
 " Highlight last inserted text.
-nnoremap g. :<c-u>normal! `[v`]<cr><left>
+nnoremap g. :<C-u>normal! `[v`]<cr><left>
 
 " New line above or below.
 nnoremap <leader>o <C-o>o
@@ -543,8 +552,8 @@ function! s:go_indent(times, dir)
     execute 'normal! '. l .'G^'
   endfor
 endfunction
-nnoremap <silent> gi :<c-u>call <sid>go_indent(v:count1, 1)<cr>
-nnoremap <silent> gpi :<c-u>call <sid>go_indent(v:count1, -1)<cr>
+nnoremap <silent> gi :<C-u>call <sid>go_indent(v:count1, 1)<cr>
+nnoremap <silent> gpi :<C-u>call <sid>go_indent(v:count1, -1)<cr>
 
 " Mapping: General {{{2
 " Quick close current window.
@@ -576,7 +585,7 @@ nnoremap <C-p> <C-i>
 " Jump to tag directly when there is only one match.
 nnoremap <C-]> g<C-]>zt
 nnoremap g[ :pop<cr>
-nnoremap <bs> <c-t>
+nnoremap <bs> <C-t>
 
 " Mapping: Motion {{{2
 " Escape with jk.
@@ -742,8 +751,8 @@ call s:toggle_option('w', 'wrap')
 
 " Mapping: Window {{{2
 " Circular navigation.
-nnoremap <tab> <c-w>w
-nnoremap <S-tab> <c-w>W
+nnoremap <tab> <C-w>w
+nnoremap <S-tab> <C-w>W
 
 " Resize windows.
 nnoremap <S-Up> 2<C-w>+
@@ -759,8 +768,11 @@ nnoremap <leader>v :vsplit<cr>
 nnoremap <leader>z :Zoom<cr>
 inoremap <leader>z <esc>:Zoom<cr>a
 
+" Close quickfix/location window.
+nnoremap <leader>cq :cclose<bar>lclose<cr>
+
 " Terminal emulation.
-nnoremap <leader>sh :terminal<cr>
+nnoremap <leader>sh :vs +term<cr>
 tnoremap <esc> <C-\><C-n>
 
 " Navigate windows.
@@ -776,11 +788,11 @@ tnoremap <esc> <C-\><C-n>
 " nnoremap <C-L> <C-w>L
 
 " Text {} {{{1
-" ?ie | entire object
+" Entire object
 xnoremap <silent> ie gg0oG$
 onoremap <silent> ie :<C-u>execute "normal! m`"<bar>keepjumps normal! ggVG<cr>
 
-" ?il | inner line
+" Inner line
 xnoremap <silent> il <esc>^vg_
 onoremap <silent> il :<C-u>normal! ^vg_<cr>
 
@@ -823,6 +835,11 @@ if s:darwin
 endif
 
 augroup vimrc
+  if has('nvim')
+    " Switch to terminal & make it ready to type.
+    autocmd TermOpen,BufEnter term://* startinsert
+  endif
+
   " Close preview window.
   if exists('##CompleteDone')
     autocmd CompleteDone * pclose
@@ -942,7 +959,48 @@ function s:create_directory()
   endif
 endfunction
 
+" :Root
+function! s:root()
+  let root = systemlist('git rev-parse --show-toplevel')[0]
+  if v:shell_error
+    echo 'Not in git repo'
+  else
+    execute 'lcd' root
+    echo 'Changed directory to: '.root
+  endif
+endfunction
+command! Root call s:root()
+
 " Function: Edit {{{2
+" :CopyRTF
+function! s:copy_rtf(line1, line2, ...)
+  let [ft, cs, nu] = [&filetype, g:colors_name, &l:nu]
+  let lines = getline(1, '$')
+
+  tab new
+  setlocal buftype=nofile bufhidden=wipe nonumber
+  let &filetype = ft
+  call setline(1, lines)
+  doautocmd BufNewFile filetypedetect
+
+  execute 'colo' get(a:000, 0, 'dracula')
+  hi Normal ctermbg=NONE guibg=NONE
+
+  let lines = getline(a:line1, a:line2)
+  let indent = repeat(' ', min(map(filter(copy(lines), '!empty(v:val)'), 'len(matchstr(v:val, "^ *"))')))
+  call setline(a:line1, map(lines, 'substitute(v:val, indent, "", "")'))
+
+  call tohtml#Convert2HTML(a:line1, a:line2)
+  g/^\(pre\|body\) {/s/background-color: #[0-9]*; //
+  silent %write !textutil -convert rtf -textsizemultiplier 1.3 -stdin -stdout | ruby -e 'puts STDIN.read.sub(/\\\n}$/m, "\n}")' | pbcopy
+
+  bd!
+  tabclose
+
+  let &l:nu = nu
+  execute 'colorscheme' cs
+endfunction
+
 " Trim trailing whitespace characters from end of lines.
 function! s:trim_whitespace()
   let l:view = winsaveview()
@@ -1221,11 +1279,11 @@ inoremap <silent><expr> <tab>
   \ coc#refresh()
 inoremap <expr><S-tab> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-" Use <c-space> to trigger completion.
+" Use <C-space> to trigger completion.
 if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
+  inoremap <silent><expr> <C-space> coc#refresh()
 else
-  inoremap <silent><expr> <c-@> coc#refresh()
+  inoremap <silent><expr> <C-@> coc#refresh()
 endif
 
 " Make <cr> auto-select the first completion item and notify to format on enter.
@@ -1233,7 +1291,7 @@ endif
 " position. Coc only does snippet and additional edit on confirm.
 " <cr> could be remapped by other vim plugin, try `:verbose imap <cr>`.
 inoremap <silent><expr> <cr>
-  \ pumvisible() ? coc#_select_confirm() : "\<C-g>u\<cr>\<c-r>=coc#on_enter()\<cr>"
+  \ pumvisible() ? coc#_select_confirm() : "\<C-g>u\<cr>\<C-r>=coc#on_enter()\<cr>"
 
 " Add `:Format` command to format current buffer.
 command! -nargs=0 Format :call CocAction('format')
@@ -1289,7 +1347,9 @@ let g:coc_global_extensions = [
   \ 'coc-prettier',
   \ 'coc-python',
   \ 'coc-snippets',
+  \ 'coc-tabnine',
   \ 'coc-tsserver',
+  \ 'coc-vimlsp',
   \ 'coc-vimtex',
   \ 'coc-yaml',
   \ ]
@@ -1489,13 +1549,27 @@ let g:NERDTreeHighlightFoldersFullName = 1
 " let g:NERDTreeDirArrowExpandable = ''
 " let g:NERDTreeDirArrowCollapsible = ''
 
-" Plugin: provider {{{2
-if executable('python2')
-  let g:python_host_prog = exepath('python2')
-else
-  let g:loaded_python_provider = 0
+" Plugin: nvim-treesitter {{{2
+if has('nvim-0.5.0')
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = {
+    "comment",
+    "javascript",
+    "python",
+    "typescript",
+  },
+  highlight = {
+    enable = true
+  },
+  playground = {
+    enable = true
+  }
+}
+EOF
 endif
 
+" Plugin: provider {{{2
 if executable('python3')
   let g:python3_host_prog = exepath('python3')
 else
@@ -1504,6 +1578,7 @@ endif
 
 let g:loaded_node_provider = 0
 let g:loaded_perl_provider = 0
+let g:loaded_python_provider = 0
 let g:loaded_ruby_provider = 0
 
 " Plugin: splitjoin {{{2
@@ -1627,7 +1702,7 @@ endfunction
 function! s:scroll_preview(down)
   silent! wincmd P
   if &previewwindow
-    execute 'normal!' a:down ? "\<c-e>" : "\<c-y>"
+    execute 'normal!' a:down ? "\<C-e>" : "\<C-y>"
     wincmd p
   endif
 endfunction
@@ -1645,10 +1720,10 @@ function! s:setup_extra_keys()
   " PlugDiff
   nnoremap <silent> <buffer> J :call <sid>scroll_preview(1)<cr>
   nnoremap <silent> <buffer> K :call <sid>scroll_preview(0)<cr>
-  nnoremap <silent> <buffer> <c-n> :call search('^  \X*\zs\x')<cr>
-  nnoremap <silent> <buffer> <c-p> :call search('^  \X*\zs\x', 'b')<cr>
-  nmap <silent> <buffer> <c-j> <c-n>o
-  nmap <silent> <buffer> <c-k> <c-p>o
+  nnoremap <silent> <buffer> <C-n> :call search('^  \X*\zs\x')<cr>
+  nnoremap <silent> <buffer> <C-p> :call search('^  \X*\zs\x', 'b')<cr>
+  nmap <silent> <buffer> <C-j> <C-n>o
+  nmap <silent> <buffer> <C-k> <C-p>o
 
   " gx
   nnoremap <buffer> <silent> gx :call <sid>plug_gx()<cr>
@@ -1735,10 +1810,10 @@ ruby << EOF
   VIM::command("let cands = #{JSON.dump items}")
 EOF
   if !empty(cands)
-    inoremap <buffer> <c-v> <c-n>
+    inoremap <buffer> <C-v> <C-n>
     augroup _VimAwesomeComplete
       autocmd!
-      autocmd CursorMovedI,InsertLeave * iunmap <buffer> <c-v>
+      autocmd CursorMovedI,InsertLeave * iunmap <buffer> <C-v>
             \| autocmd! _VimAwesomeComplete
     augroup END
 
@@ -1747,7 +1822,7 @@ EOF
   return ''
 endfunction
 
-autocmd vimrc FileType vim inoremap <buffer> <c-x><c-v> <c-r>=VimAwesomeComplete()<cr>
+autocmd vimrc FileType vim inoremap <buffer> <C-x><C-v> <C-r>=VimAwesomeComplete()<cr>
 
 " Plugin: vimtex {{{2
 let g:tex_flavor = 'latex'
@@ -1765,6 +1840,7 @@ let g:vimwiki_list = [{
 " Filetype: * {{{2
 augroup vimrc
 
+  autocmd BufRead,BufNewFile *access.log setlocal filetype=httplog
   autocmd BufRead,BufNewFile *.applescript setlocal filetype=applescript
   autocmd BufRead,BufNewFile *.brewfile setlocal filetype=brewfile
   autocmd BufRead,BufNewFile *.git/config setlocal filetype=gitconfig

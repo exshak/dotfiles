@@ -238,8 +238,8 @@ else
   endif
 endif
 
-" highlight Comment gui=italic cterm=italic
-" highlight Keyword gui=italic cterm=italic
+highlight Comment gui=italic guifg=#6272a4 cterm=italic
+highlight Keyword gui=italic guifg=#ff79c6 cterm=italic
 
 highlight link EasyMotionIncSearch Search
 highlight link EasyMotionMoveHL Search
@@ -289,6 +289,10 @@ if has('patch-8.1.1564')
   set signcolumn=number " Recently vim can merge signcolumn and number column into one.
 else
   set signcolumn=auto " Always draw the sign column even if there is no sign in it.
+endif
+
+if has('nvim')
+  set inccommand=split " Show live substitution results as you type.
 endif
 
 " Option: Edit {{{2
@@ -936,7 +940,8 @@ function! LSD()
     let max = len(getline(l))
     while c < max
       let stride = 4 + reltime()[1] % 8
-      execute printf('syntax region lsd%s_%s start=/\%%%sl\%%%sc/ end=/\%%%sl\%%%sc/ contains=ALL', l, c, l, c, l, min([c + stride, max]))
+      execute printf('syntax region lsd%s_%s start=/\%%%sl\%%%sc/ end=/\%%%sl\%%%sc/ contains=ALL',
+        \ l, c, l, c, l, min([c + stride, max]))
       let rand = abs(reltime()[1] % (256 - 16))
       execute printf('hi def link lsd%s_%s LSD%s', l, c, rand)
       let c += stride
@@ -992,7 +997,8 @@ function! s:copy_rtf(line1, line2, ...)
 
   call tohtml#Convert2HTML(a:line1, a:line2)
   g/^\(pre\|body\) {/s/background-color: #[0-9]*; //
-  silent %write !textutil -convert rtf -textsizemultiplier 1.3 -stdin -stdout | ruby -e 'puts STDIN.read.sub(/\\\n}$/m, "\n}")' | pbcopy
+  silent %write !textutil -convert rtf -textsizemultiplier 1.3 -stdin -stdout
+    \| ruby -e 'puts STDIN.read.sub(/\\\n}$/m, "\n}")' | pbcopy
 
   bd!
   tabclose
@@ -1266,6 +1272,62 @@ nnoremap <silent><nowait> <leader>cr :<C-u>CocList -N mru -A<cr>
 
 nnoremap <silent><nowait> <leader>cw
   \ :execute 'CocList -A -I --normal --input='.expand('<cword>').' words -w'<cr>
+
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nnoremap <silent> [g <Plug>(coc-diagnostic-prev)
+nnoremap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nnoremap <silent> gd <Plug>(coc-definition)
+nnoremap <silent> gy <Plug>(coc-type-definition)
+nnoremap <silent> gi <Plug>(coc-implementation)
+nnoremap <silent> gr <Plug>(coc-references)
+
+" Symbol renaming.
+nnoremap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+nnoremap <leader>f <Plug>(coc-format-selected)
+xnoremap <leader>f <Plug>(coc-format-selected)
+
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+nnoremap <leader>a <Plug>(coc-codeaction-selected)
+xnoremap <leader>a <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying codeAction to the current buffer.
+nnoremap <leader>ac <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nnoremap <leader>af <Plug>(coc-fix-current)
+
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xnoremap if <Plug>(coc-funcobj-i)
+onoremap if <Plug>(coc-funcobj-i)
+xnoremap af <Plug>(coc-funcobj-a)
+onoremap af <Plug>(coc-funcobj-a)
+xnoremap ic <Plug>(coc-classobj-i)
+onoremap ic <Plug>(coc-classobj-i)
+xnoremap ac <Plug>(coc-classobj-a)
+onoremap ac <Plug>(coc-classobj-a)
+
+" Remap <C-f> and <C-b> for scroll float windows/popups.
+if has('nvim-0.4.0') || has('patch-8.2.0750')
+  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+  inoremap <silent><nowait><expr> <C-f>
+    \ coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+  inoremap <silent><nowait><expr> <C-b>
+    \ coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+endif
+
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/selectionRange' support of language server.
+nnoremap <silent> <C-s> <Plug>(coc-range-select)
+xnoremap <silent> <C-s> <Plug>(coc-range-select)
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <sid>show_documentation()<cr>
@@ -1655,10 +1717,10 @@ nnoremap <leader>ga :Gwrite<cr>
 nnoremap <leader>gb :Gblame<cr>
 nnoremap <leader>gc :Gcommit<cr>
 nnoremap <leader>gd :Gvdiff<cr>
-nnoremap <leader>gg :Gwrite<cr>:Gcommit -m 'updated'<cr>:Gpush<cr>
 nnoremap <leader>gh :Gbrowse<cr>
 nnoremap <leader>gl :Gpull<cr>
 nnoremap <leader>gp :Gpush<cr>
+nnoremap <leader>gq :Gwrite<cr>:Gcommit -m 'updated'<cr>:Gpush<cr>
 nnoremap <leader>gr :Gremove<cr>
 nnoremap <leader>gs :Gstatus<cr>
 

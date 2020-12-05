@@ -118,11 +118,21 @@ export HOMEBREW_INSTALL_BADGE='☕'
 export HOMEBREW_NO_ANALYTICS=1
 
 # Aliases {{{1
+# Alias: Common {{{2
 alias c='clear'
+alias h='history'
 alias lc='leetcode'
 alias n='neofetch'
 alias t='tmux'
 alias v='nvim'
+
+# Alias: Directory {{{2
+alias mkdir='mkdir -p'
+alias md='mkdir'
+alias rd='rmdir'
+
+# Alias: File {{{2
+alias cat='bat'
 
 # Alias: Git {{{2
 alias g='git'
@@ -177,7 +187,7 @@ alias speeds='speedtest --simple --server'
 bindkey -e
 
 # Functions {{{1
-function take() {
+function mc() {
   mkdir -p $@ && cd ${@:$#}
 }
 

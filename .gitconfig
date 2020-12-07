@@ -13,34 +13,63 @@
 [apply]
 	whitespace = fix
 [core]
+	editor = $EDITOR
 	excludesFile = ~/.gitignore
 	pager = diff-so-fancy | less --tabs=4 -RFX
 	trustctime = false
 	untrackedCache = true
 [color]
 	ui = true
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = red
+[color "diff"]
+	meta = 11 bold
+	frag = magenta bold
+	func = 146 bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	plain = 240
+	whitespace = red reverse
 [color "diff-highlight"]
 	oldNormal = red bold
 	oldHighlight = red bold 52
 	newNormal = green bold
 	newHighlight = green bold 22
-[color "diff"]
-	meta = 11
-	frag = magenta bold
-	commit = yellow bold
-	old = red bold
-	new = green bold
-	whitespace = red reverse
+[color "status"]
+	header = 240
+	branch = yellow
+	added = green
+	changed = red
+	untracked = blue
 [commit]
-	gpgsign = true
+	gpgSign = true
 [diff]
+	algorithm = patience
 	renames = copies
+	tool = nvimdiff
+[difftool "nvimdiff"]
+	cmd = nvim -d $LOCAL $REMOTE
 [help]
-	autocorrect = 1
+	autoCorrect = 1
+[interactive]
+	diffFilter = diff-so-fancy --patch
 [merge]
 	log = true
+	tool = nvimmerge
+[mergetool]
+	keepBackup = false
+[mergetool "nvimmerge"]
+	cmd = nvim -d $LOCAL $BASE $REMOTE $MERGED -c 'winc J | winc ='
+	trustExitCode = true
 [push]
 	followTags = true
+[url "git@github.com:"]
+	insteadOf = "g:"
+	pushInsteadOf = "g:"
+	insteadOf = "https://github.com/"
 [user]
 	name = exshak
 	email = sbijabhai@gmail.com

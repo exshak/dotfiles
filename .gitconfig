@@ -21,28 +21,28 @@
 [color]
 	ui = true
 [color "branch"]
-	current = yellow reverse
-	local = yellow
-	remote = red
+	current = cyan reverse
+	local = cyan
+	remote = 216
 [color "diff"]
 	meta = 11 bold
 	frag = magenta bold
 	func = 146 bold
 	commit = yellow bold
-	old = red bold
-	new = green bold
+	old = 216 bold
+	new = 114 bold
 	plain = 240
-	whitespace = red reverse
+	whitespace = 216 reverse
 [color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = red bold 52
-	newNormal = green bold
-	newHighlight = green bold 22
+	oldNormal = 216 bold
+	oldHighlight = 216 bold 52
+	newNormal = 114 bold
+	newHighlight = 114 bold 22
 [color "status"]
 	header = 240
-	branch = yellow
-	added = green
-	changed = red
+	branch = cyan
+	added = 114
+	changed = 216
 	untracked = blue
 [commit]
 	gpgSign = true

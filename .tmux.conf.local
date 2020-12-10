@@ -374,6 +374,9 @@ unbind C-b
 set -g prefix C-a
 bind C-a send-prefix
 
+# rebind clear screen
+bind C-l send-keys 'C-l'
+
 # move status line to top
 #set -g status-position top
 

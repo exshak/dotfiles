@@ -4,7 +4,8 @@
 	branches = branch -a
 	c = clone --recursive
 	contributors = shortlog --summary --numbered
-	l = log --oneline --graph -n 20
+	l = log --date=relative --graph --pretty=one
+	long = log --date=human --graph --pretty=two
 	p = pull --recurse-submodules
 	remotes = remote -v
 	s = status -s
@@ -52,6 +53,8 @@
 	tool = nvimdiff
 [difftool "nvimdiff"]
 	cmd = nvim -d $LOCAL $REMOTE
+[format]
+	pretty = one
 [help]
 	autoCorrect = 1
 [interactive]
@@ -64,6 +67,9 @@
 [mergetool "nvimmerge"]
 	cmd = nvim -d $LOCAL $BASE $REMOTE $MERGED -c 'winc J | winc ='
 	trustExitCode = true
+[pretty]
+	one = %C(240)%h %C(auto)%s %C(245)%an%C(240), %ad%C(auto)%d
+	two = %C(146)%h %C(140)%ad %C(240)(%ar)%C(auto)%d%n • %s %C(245)%an
 [push]
 	followTags = true
 [url "git@github.com:"]

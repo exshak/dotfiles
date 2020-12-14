@@ -28,7 +28,7 @@ zinit light-mode for \
   zinit-zsh/z-a-bin-gem-node
 # End of Zinit's installer chunk
 
-zinit wait lucid for \
+zinit light-mode for \
   OMZL::git.zsh \
   OMZP::git
 
@@ -48,7 +48,7 @@ zinit ice wait"0c" lucid reset \
     \${P}sed -i '/DIR/c\DIR 38;5;63;1' LS_COLORS; \
     \${P}dircolors -b LS_COLORS > c.zsh" \
   atpull'%atclone' pick"c.zsh" nocompile'!' \
-  atload'zstyle ":completion:*" list-colors “${(s.:.)LS_COLORS}”'
+  atload'zstyle ":completion:*" list-colors "${(s.:.)LS_COLORS}"'
 zinit light trapd00r/LS_COLORS
 # }}}
 
@@ -74,13 +74,15 @@ setopt pushd_ignore_dups # Don't push multiple copies of the same directory onto
 setopt pushd_minus # Exchanges the meanings of `+` and `-` for pushd.
 
 # Option: General {{{2
-typeset -g WORDCHARS='*?_-.[]~=&;!#$%^(){}<>' # List of characters considered part of a word.
+export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>' # List of characters considered part of a word.
 setopt no_beep # Don't beep on errors.
 
 # Option: History {{{2
-typeset -g HISTFILE=~/.zsh_history # Where history logs are stored.
-typeset -g HISTSIZE=100000000 # The maximum number of events stored in the internal history list.
-typeset -g SAVEHIST=$HISTSIZE # The maximum number of history events to save in the history file.
+export HISTFILE=~/.zsh_history # Where history logs are stored.
+export HISTORY_IGNORE='[bf]g|clear|exit|history|l[as]' # Don't record some commands.
+export HISTTIMEFORMAT='%F %T ' # Timestamp format of when the commands were executed.
+export HISTSIZE=100000000 # The maximum number of events stored in the internal history list.
+export SAVEHIST=$HISTSIZE # The maximum number of history events to save in the history file.
 setopt extended_history # Save each command's epoch timestamps and the duration in seconds.
 setopt hist_expire_dups_first # Expire duplicate entries first when trimming history.
 setopt hist_ignore_dups # Don't record an entry that was just recorded again.
@@ -136,6 +138,8 @@ alias cat='bat'
 
 # Alias: Git {{{2
 alias g='git'
+alias gl='git l'
+alias glo='git long'
 
 # Alias: List {{{2
 if _has gls; then
@@ -151,7 +155,6 @@ elif _has colorls; then
 fi
 
 # Alias: Navigate {{{2
-# Easier navigation: .., ..., ...., ....., ~ and -
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
@@ -195,17 +198,21 @@ function mc() {
 # Plugin: fzf {{{2
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# export FZF_TMUX=0
+# export FZF_TMUX_OPTS='-p80%,60%'
 export FZF_DEFAULT_OPTS='
   --info=inline
   --color=dark
   --color=fg:-1,bg:-1,hl:#5fff87,fg+:-1,bg+:-1,hl+:#ffaf5f
   --color=info:#af87ff,prompt:#5fff87,pointer:#ff87d7,marker:#ff87d7,spinner:#ff87d7
-  --bind ctrl-a:select-all,ctrl-d:deselect-all,tab:toggle+up,shift-tab:toggle+down
-'
+  --bind ctrl-a:select-all,ctrl-d:deselect-all,tab:toggle+up,shift-tab:toggle+down'
 
-# export FZF_TMUX=0
-# export FZF_TMUX_OPTS='-p80%,60%'
-export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview' --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort' --header 'Press CTRL-Y to copy command into clipboard'"
+export FZF_CTRL_R_OPTS="
+  --preview 'echo {}' --preview-window down:3:hidden:wrap
+  --bind 'ctrl-/:toggle-preview'
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+  --color header:italic
+  --header 'Press CTRL-Y to copy command into clipboard'"
 
 if command -v fd > /dev/null; then
   export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
@@ -215,7 +222,20 @@ fi
 
 command -v bat  > /dev/null && export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}'"
 command -v blsd > /dev/null && export FZF_ALT_C_COMMAND='blsd'
-command -v tree > /dev/null && export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
+command -v tree > /dev/null && export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
+
+_fzf_comprun() {
+  local command=$1
+  shift
+
+  case "$command" in
+    cd)           fzf "$@" --preview 'tree -C {}' ;;
+    export|unset) fzf "$@" --preview "eval 'echo \$'{}" ;;
+    ssh)          fzf "$@" --preview 'dig {}' ;;
+    tssh)         fzf "$@" --preview 'dig {}' --bind 'alt-a:select-all' --multi ;;
+    *)            fzf "$@" ;;
+  esac
+}
 
 # Local {{{1
 if [[ -f ~/.zshrc.local ]]; then

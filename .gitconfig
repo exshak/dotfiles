@@ -75,7 +75,7 @@
 [url "git@github.com:"]
 	insteadOf = "g:"
 	pushInsteadOf = "g:"
-	insteadOf = "https://github.com/"
+	; insteadOf = "https://github.com/"
 [user]
 	name = exshak
 	email = sbijabhai@gmail.com

@@ -118,7 +118,7 @@ cask 'visual-studio-code'
 cask 'vlc'
 
 # Fonts
-cask 'font-fira-code'
+cask 'font-fira-code-nerd-font'
 cask 'font-hack-nerd-font'
 
 # Mac App Store

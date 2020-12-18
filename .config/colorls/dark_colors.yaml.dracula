@@ -3,6 +3,7 @@
 # Main Colors
 unrecognized_file: '#ffb86c' # Orange
 recognized_file:   '#f8f8f2' # Foreground
+executable_file:   '#50fa7b' # Green
 dir:               '#bd93f9' # Purple
 
 # Link
@@ -10,9 +11,9 @@ dead_link: '#ff5555'         # Red
 link:      '#8be9fd'         # Cyan
 
 # Special Files
-socket:    '#50fa7b'         # Green
-blockdev:  '#50fa7b'         # Green
-chardev:   '#50fa7b'         # Green
+socket:   '#50fa7b'          # Green
+blockdev: '#50fa7b'          # Green
+chardev:  '#50fa7b'          # Green
 
 # Access Modes
 write:     '#ff79c6'         # Pink

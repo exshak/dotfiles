@@ -1,44 +1,45 @@
 # Main Colors
 unrecognized_file: slateblue
-recognized_file: snow
-dir: magenta
+recognized_file:   snow
+executable_file:   green
+dir:               magenta
 
 # Link
 dead_link: red
-link: cyan
+link:      cyan
 
 # special files
-socket: green
+socket:   green
 blockdev: green
-chardev: green
+chardev:  green
 
 # Access Modes
-write: cyan
-read: magenta
-exec: aqua
+write:     cyan
+read:      magenta
+exec:      aqua
 no_access: indianred
 
 # Age
-hour_old: snow
-day_old: lightgray
+hour_old:    snow
+day_old:     lightgray
 no_modifier: dimgray
 
 # File Size
-file_large: snow
+file_large:  snow
 file_medium: lightgray
-file_small: dimgray
+file_small:  dimgray
 
 # Random
 report: white
-user: cyan
-tree: cyan
-empty: aqua
-error: red
-normal: aqua
+user:   cyan
+tree:   cyan
+empty:  aqua
+error:  red
+normal: darkslategray
 
 # Git
-addition: chartreuse
+addition:     chartreuse
 modification: darkkhaki
-deletion: darkred
-untracked: darkorange
-unchanged: forestgreen
+deletion:     darkred
+untracked:    darkorange
+unchanged:    forestgreen

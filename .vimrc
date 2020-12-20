@@ -1002,6 +1002,27 @@ function! s:cmd_line(str)
   call feedkeys(a:str)
 endfunction
 
+" :Filter
+function! s:filter_lines(cmd) abort
+  let [ft, more] = [&filetype, &more]
+  set nomore
+  try
+    redir => lines
+    silent execute a:cmd
+  finally
+    redir END
+    let &more = more
+  endtry
+  noautocmd new
+  setlocal buftype=nofile bufhidden=hide nobuflisted noswapfile
+  let &filetype = ft
+  silent put =lines
+  g/^\s*$/d
+  1
+  nnoremap <buffer> q :q<cr>
+endfunction
+command! -nargs=1 -complete=command Filter call s:filter_lines(<f-args>)
+
 " Function: Directory {{{2
 " Create parent directory.
 function s:create_directory()
@@ -1769,7 +1790,7 @@ nnoremap <leader>gl :Gpull<cr>
 nnoremap <leader>gp :Gpush<cr>
 nnoremap <leader>gq :Gwrite<cr>:Gcommit -m 'updated'<cr>:Gpush<cr>
 nnoremap <leader>gr :Gremove<cr>
-nnoremap <leader>gs :Gstatus<cr>
+nnoremap <leader>gs :Git<cr>
 
 " Plugin: vim-gitgutter {{{2
 let g:gitgutter_sign_added = '│'

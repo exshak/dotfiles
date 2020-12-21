@@ -56,7 +56,7 @@ zinit light trapd00r/LS_COLORS
 
 # Returns whether the given command is executable or aliased.
 _has() {
-  return $(whence $1 >/dev/null)
+  return $(whence $1 &>/dev/null)
 }
 
 # Options {{{1
@@ -181,6 +181,7 @@ alias 8='cd -8'
 alias 9='cd -9'
 
 # Alias: Shortcut {{{2
+alias brewbu='brew bundle --file=~/.brewfile'
 alias brewup='brew update && brew upgrade && brew cleanup && brew doctor'
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias speeds='speedtest --simple --server'
@@ -190,8 +191,26 @@ alias speeds='speedtest --simple --server'
 bindkey -e
 
 # Functions {{{1
-function mc() {
+# Make a directory and cd into it
+mc() {
   mkdir -p $@ && cd ${@:$#}
+}
+
+# Stackoverflow favorites
+so() {
+  ~/.bin/stackoverflow-favorites |
+    fzf --ansi --reverse --with-nth ..-2 --tac --tiebreak index |
+    awk '{print $NF}' | while read -r line; do
+      open "$line"
+    done
+}
+
+# Switch tmux-sessions
+ts() {
+  local session
+  session=$(tmux list-sessions -F "#{session_name}" |
+    fzf --height 40% --reverse --query="$1" --select-1 --exit-0) &&
+  tmux switch-client -t "$session"
 }
 
 # Plugins {{{1

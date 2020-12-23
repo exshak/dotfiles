@@ -132,10 +132,7 @@ Plug 'lervag/vimtex'                                       " LaTeX files
 Plug 'vimwiki/vimwiki'                                     " Personal Wiki: <leader>x[istw]
 Plug 'michal-h21/vim-zettel'                               " Zettelkasten method
 Plug 'iamcco/markdown-preview.nvim', {
-  \ 'do': { -> mkdp#util#install() },
-  \ 'for': ['markdown', 'vim-plug'],
-  \ 'on': 'MarkdownPreview'
-  \ }                                                      " Preview markdown
+  \ 'do': 'cd app && yarn install' }                       " Preview markdown
 
 let g:plug_url_format = 'git@github.com:%s.git'
 
@@ -229,7 +226,7 @@ else
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
     set termguicolors " Enable True Color.
   endif
-  if exists('$ITERM_PROFILE') || $ITERM_PROFILE == 'Default'
+  if exists('$ITERM_PROFILE') || exists('$ALACRITTY_LOG')
     set background=dark " Choose dark colors if available.
     silent! colorscheme dracula " Set dracula as colorscheme.
   else
@@ -1709,7 +1706,7 @@ endif
 let g:loaded_node_provider = 0
 let g:loaded_perl_provider = 0
 let g:loaded_python_provider = 0
-let g:loaded_ruby_provider = 0
+" let g:loaded_ruby_provider = 0
 
 " Plugin: splitjoin {{{2
 let g:splitjoin_join_mapping = ''
@@ -1735,6 +1732,7 @@ let g:airline_right_sep = ''
 let g:airline_right_alt_sep = ''
 let g:airline_powerline_fonts = 1
 let g:airline_skip_empty_sections = 1
+let g:airline#extensions#branch#enabled = 0
 let g:airline#extensions#whitespace#enabled = 0
 " let g:airline_section_z = "%p%% %l/%L \ue0a1:%c"
 " let g:airline_symbols.branch = ''
@@ -1790,7 +1788,7 @@ nnoremap <leader>gl :Gpull<cr>
 nnoremap <leader>gp :Gpush<cr>
 nnoremap <leader>gq :Gwrite<cr>:Gcommit -m 'updated'<cr>:Gpush<cr>
 nnoremap <leader>gr :Gremove<cr>
-nnoremap <leader>gs :Git<cr>
+nnoremap <leader>gs :G<cr>
 
 " Plugin: vim-gitgutter {{{2
 let g:gitgutter_sign_added = '│'

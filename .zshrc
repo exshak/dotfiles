@@ -6,6 +6,8 @@
 # ╚══════════════════════════════════════════════╝
 
 # Plug {{{1
+eval $(/opt/homebrew/bin/brew shellenv)
+
 # Added by Zinit's installer
 if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
   print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
@@ -45,7 +47,7 @@ zinit light sindresorhus/pure
 
 zinit ice wait"0c" lucid reset \
   atclone"local P=${${(M)OSTYPE:#*darwin*}:+g}
-    \${P}sed -i '/DIR/c\DIR 38;5;63;1' LS_COLORS; \
+    \${P}sed -i '/DIR/c\DIR 38;5;6;1' LS_COLORS; \
     \${P}dircolors -b LS_COLORS > c.zsh" \
   atpull'%atclone' pick"c.zsh" nocompile'!' \
   atload'zstyle ":completion:*" list-colors "${(s.:.)LS_COLORS}"'
@@ -57,6 +59,11 @@ zinit light trapd00r/LS_COLORS
 # Returns whether the given command is executable or aliased.
 _has() {
   return $(whence $1 &>/dev/null)
+}
+
+# Returns whether the given statement executed cleanly.
+_try() {
+  return $(eval $* &>/dev/null)
 }
 
 # Options {{{1
@@ -79,7 +86,7 @@ setopt no_beep # Don't beep on errors.
 
 # Option: History {{{2
 export HISTFILE=~/.zsh_history # Where history logs are stored.
-export HISTORY_IGNORE='[bf]g|clear|exit|history|l[as]' # Don't record some commands.
+export HISTORY_IGNORE='[bf]g|clear|exit|history|l[adfls]' # Don't record some commands.
 export HISTTIMEFORMAT='%F %T ' # Timestamp format of when the commands were executed.
 export HISTSIZE=100000000 # The maximum number of events stored in the internal history list.
 export SAVEHIST=$HISTSIZE # The maximum number of history events to save in the history file.
@@ -119,6 +126,9 @@ fi
 export HOMEBREW_INSTALL_BADGE='☕'
 export HOMEBREW_NO_ANALYTICS=1
 
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+export PATH="/opt/homebrew/lib/ruby/gems/3.0.0/bin:$PATH"
+
 # Aliases {{{1
 # Alias: Common {{{2
 alias c='clear'
@@ -142,17 +152,20 @@ alias gl='git l'
 alias glo='git long'
 
 # Alias: List {{{2
-if _has gls; then
-  alias ls='gls -A --color --group-directories-first'
-  alias la='gls -lA --color --group-directories-first'
-  alias lsd='gls -ld --color --group-directories-first'
-  alias lsf='gls -lf --color --group-directories-first'
-elif _has colorls; then
-  alias ls='colorls -A --sd'
-  alias la='colorls -lA --sd'
-  alias lsd='colorls -ld --sd'
-  alias lsf='colorls -lf --sd'
+if _has colorls; then
+  alias ls='colorls -Ah --group-directories-first'
+elif _has gls; then
+  alias ls='gls -Ah --color --group-directories-first'
+elif _try ls --color; then
+  alias ls='ls -Ah --color --group-directories-first'
+elif _try ls -G; then
+  alias ls='ls -AGh'
 fi
+
+alias la='ls -lA'
+alias ld='ls -ld'
+alias lf='ls -lf'
+alias ll='ls -l1'
 
 # Alias: Navigate {{{2
 alias ..='cd ..'

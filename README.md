@@ -1,22 +1,80 @@
-# dotfiles
+<p align="center">
+  <a href="https://github.com/exshak/dotfiles">
+    <img src="./.github/assets/tree.svg" alt="dotfiles" width="20%" />
+  </a>
+</p>
 
-## Color Palette
+<p align="center">
+  <b>⎋ dotfiles by exshak ⎋</b>
+</p>
 
-Palette      | Hex       | RGB           | HSL             | ![Color Picker Boxes](https://draculatheme.com/static/img/color-boxes/eyedropper.png)
----          | ---       | ---           | ---             | ---
-Background   | `#282a36` | `40 42 54`    | `231° 15% 18%`  | ![Background Color](https://draculatheme.com/static/img/color-boxes/background.png)
-Current Line | `#44475a` | `68 71 90`    | `232° 14% 31%`  | ![Current Line Color](https://draculatheme.com/static/img/color-boxes/current_line.png)
-Selection    | `#44475a` | `68 71 90`    | `232° 14% 31%`  | ![Selection Color](https://draculatheme.com/static/img/color-boxes/selection.png)
-Foreground   | `#f8f8f2` | `248 248 242` | `60° 30% 96%`   | ![Foreground Color](https://draculatheme.com/static/img/color-boxes/foreground.png)
-Comment      | `#6272a4` | `98 114 164`  | `225° 27% 51%`  | ![Comment Color](https://draculatheme.com/static/img/color-boxes/comment.png)
-Cyan         | `#8be9fd` | `139 233 253` | `191° 97% 77%`  | ![Cyan Color](https://draculatheme.com/static/img/color-boxes/cyan.png)
-Green        | `#50fa7b` | `80 250 123`  | `135° 94% 65%`  | ![Green Color](https://draculatheme.com/static/img/color-boxes/green.png)
-Orange       | `#ffb86c` | `255 184 108` | `31° 100% 71%`  | ![Orange Color](https://draculatheme.com/static/img/color-boxes/orange.png)
-Pink         | `#ff79c6` | `255 121 198` | `326° 100% 74%` | ![Pink Color](https://draculatheme.com/static/img/color-boxes/pink.png)
-Purple       | `#bd93f9` | `189 147 249` | `265° 89% 78%`  | ![Purple Color](https://draculatheme.com/static/img/color-boxes/purple.png)
-Red          | `#ff5555` | `255 85 85`   | `0° 100% 67%`   | ![Red Color](https://draculatheme.com/static/img/color-boxes/red.png)
-Yellow       | `#f1fa8c` | `241 250 140` | `65° 92% 76%`   | ![Yellow Color](https://draculatheme.com/static/img/color-boxes/yellow.png)
+<p align="center">
+  <a href="#cherry_blossom-setup">
+    <img src="./.github/assets/setup.png" alt="setup" width="150"/>
+  </a>
+</p>
 
-## License
+### :octocat: Hi there, thanks for dropping by! <img src="https://badges.pufler.dev/visits/exshak/dotfiles?style=flat-square&logo=github&logoColor=white&label=&labelColor=373e4d&color=fa74b2" align="right" />
 
-[MIT](./LICENSE)
+<img src="./.github/assets/skyfall.png" align="right" width="400" />
+
+Quick setup: 🎯 \
+└ `curl -sL exshak.com/dotfiles | bash`
+
+This is my **personal configuration** for unix based operating systems (OS) and everyday applications.
+
+The [setup](#cherry_blossom-setup) section will guide you through the install.
+
+Here are some details about my setup:
+
+- **OS** • [macOS](https://en.wikipedia.org/wiki/MacOS) , [Arch Linux](https://wiki.archlinux.org) <img src="./.github/assets/archlinux.png" align="center" width="14" /> coming soon!
+- **Shell** • [Zsh](https://github.com/zsh-users/zsh) 🐚 with [zinit](https://github.com/zdharma/zinit) framework! <kbd>optional</kbd>
+- **Terminal** • [Alacritty](https://github.com/alacritty/alacritty), [iTerm2](https://github.com/gnachman/iTerm2), [Kitty](https://github.com/kovidgoyal/kitty) <kbd>available</kbd>
+- **Multiplexer** • [Tmux](https://github.com/tmux/tmux) with [.tmux](https://github.com/gpakosz/.tmux) and [tpm](https://github.com/tmux-plugins/tpm) plugins!
+- **Text Editor** • [Neovim](https://github.com/neovim/neovim) <img src="./.github/assets/neovim.png" align="center" width="14" /> with [plug](https://github.com/junegunn/vim-plug), [Doom Emacs](https://github.com/hlissner/doom-emacs)
+- **Graphical IDE** • [VSCode](https://github.com/microsoft/vscode) <img src="./.github/assets/vscode.png" align="center" width="14" /> with [neovim](https://github.com/asvetliakov/vscode-neovim), [Xcode](https://developer.apple.com/xcode)
+- **Window Manager** • [Yabai](https://github.com/koekeishiya/yabai) with [Übersicht](https://github.com/felixhageloh/uebersicht) widgets!
+- **Linux Environment** • [AWM](https://github.com/awesomeWM/awesome), [Dunst](https://github.com/dunst-project/dunst), [Picom](https://github.com/yshui/picom), [Polybar](https://github.com/polybar/polybar)
+- **Application Launcher** • [Alfred](https://www.alfredapp.com) 🧢, [Rofi](https://github.com/davatorium/rofi) 🔍, [sxhkd](https://github.com/baskerville/sxhkd)
+- **Other** • [fzf](https://github.com/junegunn/fzf), [neomutt](https://github.com/neomutt/neomutt), [nnn](https://github.com/jarun/nnn), [zathura](https://github.com/pwmt/zathura) and more! 🎒
+
+## 🌸 Setup <img src="https://img.shields.io/github/repo-size/exshak/dotfiles?style=flat-square&label=.files&labelColor=373e4d&color=cf8ef4" align="right" />
+
+1. Install the dotfiles into a [bare repo](https://www.atlassian.com/git/tutorials/dotfiles).
+
+   **macOS** • [Homebrew](https://brew.sh) and Xcode command line tools will be automatically installed.
+
+   ```shell
+   curl -sL exshak.com/dotfiles | bash
+   ```
+
+   Pre-existing dotfiles will be backed up.
+
+2. Install [dependencies]() and enable [services]().
+
+   - **macOS** • Edit the [`~/.brewfile`](./.brewfile) and choose which applications you want to install.
+
+     ```shell
+     brew bundle --file=~/.brewfile
+
+     # For Apple Silicon
+     sudo softwareupdate --install-rosetta --agree-to-license
+     ```
+
+   - **Arch Linux** • (and all Arch-based distributions)
+
+     <details> • Coming Soon! </details>
+
+3. Install system defaults and user configs.
+
+   **macOS** • Customize the [`~/.macos`](./.macos) file and adjust the settings to your preference.
+
+   ```shell
+   bash ~/.macos
+   ```
+
+   Restart for changes to take effect.
+
+## 🎉 Credits
+
+[Dotfiles](https://dotfiles.github.io)

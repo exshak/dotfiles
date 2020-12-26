@@ -22,7 +22,7 @@
       brew upgrade && brew update
     else
       # Homebrew will install Xcode command line tools and brew.
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
   fi
 

@@ -18,11 +18,9 @@
 
 <img src="./.github/assets/skyfall.png" align="right" width="400" />
 
-Quick setup: 🎯 \
-└ `curl -sL exshak.com/dotfiles | bash`
+🎯 `curl -sL exshak.com/dotfiles | bash`
 
-This is my **personal configuration** for unix based operating systems (OS) and everyday applications.
-
+This is my **personal configuration** for unix based operating systems (OS) and everyday applications. \
 The [setup](#cherry_blossom-setup) section will guide you through the install.
 
 Here are some details about my setup:
@@ -63,7 +61,9 @@ Here are some details about my setup:
 
    - **Arch Linux** • (and all Arch-based distributions)
 
-     <details> • Coming Soon! </details>
+     <details>
+     • Coming Soon!
+     </details>
 
 3. Install system defaults and user configs.
 

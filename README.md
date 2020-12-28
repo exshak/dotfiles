@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="#cherry_blossom-setup">
+  <a href="#-setup-">
     <img src="./.github/assets/setup.png" alt="setup" width="150"/>
   </a>
 </p>
@@ -21,7 +21,7 @@
 🎯 `curl -sL exshak.com/dotfiles | bash`
 
 This is my **personal configuration** for unix based operating systems (OS) and everyday applications. \
-The [setup](#cherry_blossom-setup) section will guide you through the install.
+The [setup](#-setup-) section will guide you through the install.
 
 Here are some details about my setup:
 

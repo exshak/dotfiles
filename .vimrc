@@ -235,6 +235,7 @@ else
   endif
 endif
 
+highlight Normal guibg=NONE ctermbg=NONE
 highlight Comment gui=italic guifg=#6272a4 cterm=italic
 highlight Keyword gui=italic guifg=#ff79c6 cterm=italic
 
@@ -1594,6 +1595,7 @@ function! s:goyo_leave()
     silent !tmux set status on
   endif
   Limelight!
+  highlight Normal guibg=NONE ctermbg=NONE
 endfunction
 
 autocmd! User GoyoEnter nested call <sid>goyo_enter()
@@ -1646,6 +1648,7 @@ let g:lightline = {
   \ }
 
 " Plugin: limelight {{{2
+let g:limelight_conceal_guifg = '#777777'
 let g:limelight_paragraph_span = 1
 let g:limelight_priority = -1
 
@@ -1954,6 +1957,7 @@ autocmd vimrc FileType vim inoremap <buffer> <C-x><C-v> <C-r>=VimAwesomeComplete
 
 " Plugin: vimtex {{{2
 let g:tex_flavor = 'latex'
+let g:vimtex_view_method = 'zathura'
 
 " Plugin: vimwiki {{{2
 let g:vimwiki_global_ext = 0

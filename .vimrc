@@ -148,8 +148,10 @@ call plug#end()
 " }}}
 
 " Init {{{1
+" Autocmd {{{2
 augroup vimrc
   autocmd!
+  autocmd ColorScheme * call s:highlight()
 augroup END
 
 " Backup {{{2
@@ -203,6 +205,26 @@ elseif exists('$DISPLAY') && executable('xclip')
 endif
 
 " Color {{{2
+" Custom highlighting.
+function! s:highlight()
+  highlight Normal guibg=NONE ctermbg=NONE
+  highlight Folded guibg=NONE ctermbg=NONE guifg=#6272a4
+  highlight Comment gui=italic cterm=italic guifg=#6272a4
+  highlight Keyword gui=italic cterm=italic guifg=#ff79c6
+
+  highlight clear VertSplit
+
+  highlight link EasyMotionIncSearch Search
+  highlight link EasyMotionMoveHL Search
+  highlight link EasyMotionShade Comment
+  highlight link EasyMotionTarget Function
+  highlight link EasyMotionTarget2First Function
+  highlight link EasyMotionTarget2Second Function
+
+  highlight Sneak guifg=black guibg=#f8f8f2 ctermfg=black ctermbg=red
+  highlight SneakScope guifg=black guibg=#ffb86c ctermfg=red ctermbg=yellow
+endfunction
+
 " Graphical user interface.
 if has('gui_running')
   set background=dark " Choose dark colors if available.
@@ -235,20 +257,6 @@ else
   endif
 endif
 
-highlight Normal guibg=NONE ctermbg=NONE
-highlight Comment gui=italic guifg=#6272a4 cterm=italic
-highlight Keyword gui=italic guifg=#ff79c6 cterm=italic
-
-highlight link EasyMotionIncSearch Search
-highlight link EasyMotionMoveHL Search
-highlight link EasyMotionShade Comment
-highlight link EasyMotionTarget Function
-highlight link EasyMotionTarget2First Function
-highlight link EasyMotionTarget2Second Function
-
-highlight Sneak guifg=black guibg=#f8f8f2 ctermfg=black ctermbg=red
-highlight SneakScope guifg=black guibg=#ffb86c ctermfg=red ctermbg=yellow
-
 " Options {{{1
 " Option: Buffer {{{2
 set autoread " Read file again if it's detected to have been changed outside of Vim.
@@ -267,7 +275,7 @@ set showcmd " Display key presses in the bottom right.
 " Option: Display {{{2
 set diffopt=filler,vertical,hiddenoff,foldcolumn:0 " Settings for diff mode.
 set display=lastline " As much as possible of the last line in a window will be displayed.
-set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:\ ,diff:\  " Characters used in UI elements.
+set fillchars=stl:\ ,stlnc:\ ,vert:\ ,fold:\ ,diff:\ ,eob:\  " Characters used in UI elements.
 set laststatus=2 " Always show the status line.
 set showmatch " When a bracket is inserted, briefly jump to the matching one.
 set synmaxcol=300 " Maximum column in which to search for syntax items.
@@ -1595,7 +1603,6 @@ function! s:goyo_leave()
     silent !tmux set status on
   endif
   Limelight!
-  highlight Normal guibg=NONE ctermbg=NONE
 endfunction
 
 autocmd! User GoyoEnter nested call <sid>goyo_enter()
@@ -1674,6 +1681,7 @@ augroup END
 let NERDTreeIgnore = ['.DS_Store$', '.pyc$', '__pycache__']
 let NERDTreeMinimalUI = 1
 let NERDTreeShowHidden = 1
+let g:NERDTreeHighlightCursorline = 0
 let g:NERDTreeHighlightFolders = 1
 let g:NERDTreeHighlightFoldersFullName = 1
 " let g:NERDTreeDirArrowExpandable = ''
@@ -1735,6 +1743,7 @@ let g:airline_powerline_fonts = 1
 let g:airline_skip_empty_sections = 1
 let g:airline_stl_path_style = 'short'
 let g:airline#extensions#branch#enabled = 0
+let g:airline#extensions#scrollbar#enabled = 0
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#wordcount#enabled = 0
 let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'

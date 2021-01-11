@@ -204,6 +204,28 @@ alias speeds='speedtest --simple --server'
 bindkey -e
 
 # Functions {{{1
+# Browse chrome history
+ch() {
+  local cols sep
+  export cols=$(( COLUMNS / 3 ))
+  export sep='{::}'
+
+  cp -f ~/Library/Application\ Support/Google/Chrome/Default/History /tmp/h
+  sqlite3 -separator $sep /tmp/h "select title, url from urls order by last_visit_time desc" |
+  ruby -ne '
+    cols = ENV["cols"].to_i
+    title, url = $_.split(ENV["sep"])
+    len = 0
+    puts "\x1b[36m" + title.each_char.take_while { |e|
+      if len < cols
+        len += e =~ /\p{Emoji_Presentation}/ ? 2 : 1
+        len -= e =~ /\p{Emoji_Modifier_Base}/ ? 1 : 0
+      end
+    }.join + " " * (2 + cols - len) + "\x1b[m" + url' |
+  fzf --ansi --multi --no-hscroll --tiebreak=index |
+  sed 's#.*\(https*://\)#\1#' | xargs open
+}
+
 # Make a directory and cd into it
 mc() {
   mkdir -p $@ && cd ${@:$#}

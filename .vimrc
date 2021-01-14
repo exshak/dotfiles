@@ -1748,10 +1748,10 @@ let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#wordcount#enabled = 0
 let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
 " let g:airline_section_z = "%p%% %l/%L \ue0a1:%c"
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
 " let g:airline_symbols.branch = ''
 " let g:airline_symbols.readonly = ''
 " let g:airline_symbols.linenr = '☰'
@@ -1899,15 +1899,44 @@ let g:sneak#prompt = '👟 '
 " Plugin: vim-startify {{{2
 nnoremap <leader>st :Startify<cr>
 
+" All modified files of the current git repo.
+function! s:gitModified()
+  let files = systemlist('git ls-files -m 2>/dev/null')
+  return map(files, "{'line': v:val, 'path': v:val}")[:9]
+endfunction
+
+" All untracked files, while honouring .gitignore.
+function! s:gitUntracked()
+  let files = systemlist('git ls-files -o --exclude-standard 2>/dev/null')
+  return map(files, "{'line': v:val, 'path': v:val}")[:9]
+endfunction
+
+" Show last 10 commit logs of the specified git repo.
+function! s:list_commits()
+  let git = 'git -C ~/.dotfiles'
+  let commits = systemlist(git .' log --oneline | head -n 10')
+  let git = 'G'. git[3:]
+  return map(commits, '{"line": matchstr(v:val, "\\s\\zs.*"),
+    \ "cmd": "'. git .' show ". matchstr(v:val, "^\\x\\+") }')[:9]
+endfunction
+
 let g:startify_change_to_dir       = 1
 let g:startify_custom_header       = 'startify#pad(startify#fortune#boxed())'
 let g:startify_enable_special      = 0
 let g:startify_fortune_use_unicode = 1
 let g:startify_update_oldfiles     = 1
 let g:startify_use_env             = 1
-let g:startify_bookmarks=[
+let g:startify_bookmarks = [
   \ '~/.vimrc',
   \ '~/.zshrc',
+  \ ]
+let g:startify_lists = [
+  \ { 'header': ['   MRU'],            'type': 'files' },
+  \ { 'header': ['   MRU '. getcwd()], 'type': 'dir' },
+  \ { 'header': ['   Modified'],       'type': function('s:gitModified') },
+  \ { 'header': ['   Sessions'],       'type': 'sessions' },
+  \ { 'header': ['   Bookmarks'],      'type': 'bookmarks' },
+  \ { 'header': ['   Commands'],       'type': 'commands' },
   \ ]
 
 " Plugin: vim-startuptime {{{2

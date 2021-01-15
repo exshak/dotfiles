@@ -1,0 +1,6 @@
+# bsp or float (default: bsp)
+yabai -m config layout bsp
+
+# Override default layout for space 2 only
+yabai -m config --space 2 layout float
+

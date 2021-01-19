@@ -51,7 +51,7 @@ Plug 'vim-airline/vim-airline-themes'                      " Statusline themes
 Plug 'mhinz/vim-startify'                                  " Start screen: <leader>st
 Plug 'dstein64/vim-startuptime'                            " Startup time: <leader>su
 Plug 'nvim-treesitter/nvim-treesitter',
-  \ Cond(has('nvim-0.5.0'), {'do': ':TSUpdate'})           " Treesitter highlighting
+  \ Cond(has('nvim-0.5.0'), { 'do': ':TSUpdate' })         " Treesitter highlighting
 Plug 'nvim-treesitter/playground', Cond(has('nvim-0.5.0')) " Treesitter playground
 
 " Edit
@@ -213,6 +213,7 @@ function! s:highlight()
   highlight Keyword gui=italic cterm=italic guifg=#ff79c6
 
   highlight clear VertSplit
+  highlight StatusLine guibg=NONE ctermbg=NONE
 
   highlight link EasyMotionIncSearch Search
   highlight link EasyMotionMoveHL Search
@@ -391,6 +392,7 @@ else
 endif
 
 " Mappings {{{1
+" Mapping: Leader {{{2
 " Set leader.
 let mapleader = ' '
 let g:mapleader = ' '
@@ -1678,7 +1680,7 @@ augroup nerd_loader
     \| endif
 augroup END
 
-let NERDTreeIgnore = ['.DS_Store$', '.pyc$', '__pycache__']
+let NERDTreeIgnore = ['.CFUser*', '.DS_Store', '.pyc', '__pycache__']
 let NERDTreeMinimalUI = 1
 let NERDTreeShowHidden = 1
 let g:NERDTreeHighlightCursorline = 0
@@ -1737,6 +1739,14 @@ nnoremap <leader>u :UndotreeToggle<cr>
 let g:undotree_WindowLayout = 2
 
 " Plugin: vim-airline {{{2
+function! AirlineInit()
+  call airline#parts#define('linecolnr', {
+    \ 'raw': '%l:%v %{g:airline_symbols.maxlinenr}',
+    \ 'accent': 'bold'})
+  let g:airline_section_z = airline#section#create(['linecolnr'])
+endfunction
+autocmd User AirlineAfterInit call AirlineInit()
+
 let g:airline_theme = 'dracula'
 let g:airline_detect_spell = 0
 let g:airline_powerline_fonts = 1
@@ -1746,6 +1756,8 @@ let g:airline#extensions#branch#enabled = 0
 let g:airline#extensions#scrollbar#enabled = 0
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#wordcount#enabled = 0
+let g:airline#extensions#nvimlsp#error_symbol = ' '
+let g:airline#extensions#nvimlsp#warning_symbol = ' '
 let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
 " let g:airline_section_z = "%p%% %l/%L \ue0a1:%c"
 let g:airline_left_sep = ''

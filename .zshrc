@@ -137,6 +137,7 @@ alias lc='leetcode'
 alias n='neomutt'
 alias t='tmux'
 alias v='nvim'
+alias za='zathura'
 
 # Alias: Directory {{{2
 alias mkdir='mkdir -p'

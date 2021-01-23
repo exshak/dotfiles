@@ -109,7 +109,7 @@ Plug 'junegunn/vim-peekaboo'                               " Register sidebar
 " Plug 'tpope/vim-vinegar'                                   " Enhances netrw
 
 " Search
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }        " FZF plugin
+Plug 'junegunn/fzf'                                        " FZF plugin
 Plug 'junegunn/fzf.vim'                                    " Fuzzy finder
 Plug 'romainl/vim-cool'                                    " Automatic search highlighting
 
@@ -1909,7 +1909,7 @@ let g:sneak#label = 1
 let g:sneak#prompt = '👟 '
 
 " Plugin: vim-startify {{{2
-nnoremap <leader>st :Startify<cr>
+nnoremap <silent> <leader>st :Startify<cr>
 
 " All modified files of the current git repo.
 function! s:gitModified()
@@ -1934,6 +1934,7 @@ endfunction
 
 let g:startify_change_to_dir       = 1
 let g:startify_custom_header       = 'startify#pad(startify#fortune#boxed())'
+let g:startify_disable_at_vimenter = 1
 let g:startify_enable_special      = 0
 let g:startify_fortune_use_unicode = 1
 let g:startify_update_oldfiles     = 1
@@ -2028,6 +2029,7 @@ let g:vimwiki_list = [{
 augroup vimrc
 
   autocmd BufRead,BufNewFile *access.log setlocal filetype=httplog
+  autocmd BufRead,BufNewFile *mutt/*/*mail.* setlocal filetype=muttrc
   autocmd BufRead,BufNewFile *vimtips.txt setlocal filetype=help
   autocmd BufRead,BufNewFile *.applescript setlocal filetype=applescript
   autocmd BufRead,BufNewFile *.brewfile setlocal filetype=brewfile
@@ -2036,6 +2038,11 @@ augroup vimrc
   autocmd BufRead,BufNewFile *.tmux.conf.local setlocal filetype=tmux
   autocmd FileType,ColorScheme * call <sid>file_type_handler()
   autocmd FileType * set formatoptions=tcrqnj
+
+" Filetype: C {{{2
+  autocmd BufLeave *.{c,cpp} mark C
+  autocmd BufLeave *.h       mark H
+  autocmd FileType c,cpp setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/
 
 " Filetype: Git {{{2
   autocmd FileType gitcommit call setpos('.', [0, 1, 1, 0])

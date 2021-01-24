@@ -132,6 +132,7 @@ export PATH="/opt/homebrew/lib/ruby/gems/3.0.0/bin:$PATH"
 # Aliases {{{1
 # Alias: Common {{{2
 alias c='clear'
+alias e='emacs'
 alias h='history'
 alias lc='leetcode'
 alias n='neomutt'

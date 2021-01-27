@@ -49,6 +49,7 @@ Plug 'arzg/vim-colors-xcode'
 Plug 'vim-airline/vim-airline'                             " Statusline
 Plug 'vim-airline/vim-airline-themes'                      " Statusline themes
 Plug 'mhinz/vim-startify'                                  " Start screen: <leader>st
+Plug 'segeljakt/vim-silicon', Cond(executable('silicon'))  " Source code to image
 Plug 'dstein64/vim-startuptime'                            " Startup time: <leader>su
 Plug 'nvim-treesitter/nvim-treesitter',
   \ Cond(has('nvim-0.5.0'), { 'do': ':TSUpdate' })         " Treesitter highlighting
@@ -87,12 +88,12 @@ Plug 'junegunn/gv.vim'                                     " Commit browser: :GV
 Plug 'junegunn/vim-github-dashboard'                       " GitHub events: :GHA!, :GHD!
 
 " Lang
-Plug 'w0rp/ale'                                            " Lint engine
+" Plug 'w0rp/ale'                                            " Lint engine
 Plug 'neoclide/coc.nvim',
   \ Cond(executable('node'), { 'branch': 'release' })      " Intellisense engine
 Plug 'mattn/emmet-vim'                                     " Expand HTML/XML/CSS: <C-y>
 Plug 'junegunn/vim-emoji'                                  " :smiley:
-" Plug 'rrethy/vim-hexokinase', {'do':'make hexokinase'}     " Preview colors
+Plug 'norcalli/nvim-colorizer.lua', Cond(has('nvim-0.5.0')) " Preview colors
 Plug 'sheerun/vim-polyglot'                                " Language packs
 Plug 'sirver/ultisnips'                                    " Common snippets
 Plug 'honza/vim-snippets'                                  " Complete snippets
@@ -1903,6 +1904,24 @@ let g:signify_sign_change       = '│'
 let g:signify_sign_changedelete = '│'
 let g:signify_skip_filetype = { 'journal': 1 }
 let g:signify_vcs_list = ['git']
+
+" Plugin: vim-silicon {{{2
+let g:silicon = {
+  \ 'theme':              'Dracula',
+  \ 'font':                  'Hack',
+  \ 'background':         '#AAAAFF',
+  \ 'shadow-color':       '#555555',
+  \ 'line-pad':                   2,
+  \ 'pad-horiz':                 80,
+  \ 'pad-vert':                 100,
+  \ 'shadow-blur-radius':         0,
+  \ 'shadow-offset-x':            0,
+  \ 'shadow-offset-y':            0,
+  \ 'line-number':          v:false,
+  \ 'round-corner':          v:true,
+  \ 'window-controls':       v:true,
+  \ 'output':'~/Dropbox/Code/images/silicon-{time:%Y-%m-%d-%H%M%S}.png'
+  \ }
 
 " Plugin: vim-sneak {{{2
 let g:sneak#label = 1

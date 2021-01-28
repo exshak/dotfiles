@@ -134,6 +134,7 @@ export PATH="/opt/homebrew/lib/ruby/gems/3.0.0/bin:$PATH"
 alias c='clear'
 alias e='emacs'
 alias h='history'
+alias j='jobs'
 alias lc='leetcode'
 alias n='neomutt'
 alias t='tmux'

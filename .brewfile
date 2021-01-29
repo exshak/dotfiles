@@ -83,6 +83,7 @@ brew 'speedtest-cli'
 brew 'streamlink'
 brew 'task'
 brew 'tree'
+brew 'wallpaper'
 brew 'youtube-dl'
 
 # Applications

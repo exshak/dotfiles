@@ -48,6 +48,7 @@ Plug 'arzg/vim-colors-xcode'
 " Display
 Plug 'vim-airline/vim-airline'                             " Statusline
 Plug 'vim-airline/vim-airline-themes'                      " Statusline themes
+Plug 'glepnir/dashboard-nvim', Cond(has('nvim-0.5.0'))     " Dash screen: <leader>da
 Plug 'mhinz/vim-startify'                                  " Start screen: <leader>st
 Plug 'segeljakt/vim-silicon', Cond(executable('silicon'))  " Source code to image
 Plug 'dstein64/vim-startuptime'                            " Startup time: <leader>su
@@ -215,6 +216,7 @@ function! s:highlight()
 
   highlight clear VertSplit
   highlight StatusLine guibg=NONE ctermbg=NONE
+  highlight StatusLineNC guibg=NONE ctermbg=NONE
 
   highlight link EasyMotionIncSearch Search
   highlight link EasyMotionMoveHL Search
@@ -271,7 +273,7 @@ set switchbuf=useopen,usetab,newtab " Jump to first open window that contains th
 " Option: Command {{{2
 set cmdheight=1 " Number of screen lines to use for the command-line.
 set noshowmode " Disable native mode indicator.
-set ruler " Show line and column numbers in command-line.
+set noruler " Disable line and column numbers in command-line.
 set showcmd " Display key presses in the bottom right.
 
 " Option: Display {{{2
@@ -1500,6 +1502,15 @@ let g:coc_global_extensions = [
 
 endif
 
+" Plugin: dashboard {{{2
+nnoremap <silent> <leader>da :Dashboard<cr>
+
+let g:dashboard_default_executive = 'fzf'
+let g:dashboard_preview_command = 'bunnyfetch'
+let g:dashboard_preview_file = ' '
+let g:dashboard_preview_file_height = 25
+let g:dashboard_preview_file_width = 50
+
 " Plugin: editorconfig {{{2
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 
@@ -1629,7 +1640,7 @@ autocmd! FileType GV nnoremap <buffer> <silent> + :call <sid>gv_expand()<cr>
 autocmd! User indentLine doautocmd indentLine Syntax
 
 let g:indentLine_bufTypeExclude = ['help', 'nofile', 'terminal']
-let g:indentLine_fileTypeExclude = ['markdown', 'nerdtree', 'startify']
+let g:indentLine_fileTypeExclude = ['dashboard', 'markdown', 'nerdtree', 'startify']
 " let g:indentLine_char = '¦'
 " let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 " let g:indentLine_color_term = 239
@@ -1760,7 +1771,8 @@ let g:airline#extensions#wordcount#enabled = 0
 let g:airline#extensions#nvimlsp#error_symbol = ' '
 let g:airline#extensions#nvimlsp#warning_symbol = ' '
 let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
-" let g:airline_section_z = "%p%% %l/%L \ue0a1:%c"
+let g:airline_exclude_filenames = ['term://']
+let g:airline_exclude_filetypes = ['dashboard']
 let g:airline_left_sep = ''
 let g:airline_left_alt_sep = ''
 let g:airline_right_sep = ''

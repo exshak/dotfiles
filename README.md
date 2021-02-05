@@ -50,10 +50,10 @@ Here are some details about my setup:
 
 2. Install [dependencies]() and enable [services]().
 
-   - **macOS** • Edit the [`~/.brewfile`](./.brewfile) and choose which applications you want to install.
+   - **macOS** • Edit the [`~/Brewfile`](./Brewfile) and choose which applications you want to install.
 
      ```shell
-     brew bundle --file=~/.brewfile
+     brew bundle --file=~/Brewfile
 
      # For Apple Silicon
      sudo softwareupdate --install-rosetta --agree-to-license

@@ -198,7 +198,7 @@ alias 8='cd -8'
 alias 9='cd -9'
 
 # Alias: Shortcut {{{2
-alias brewbu='brew bundle --file=~/.brewfile'
+alias brewbu='brew bundle --file=~/Brewfile'
 alias brewup='brew update && brew upgrade && brew cleanup && brew doctor'
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias speeds='speedtest --simple --server'

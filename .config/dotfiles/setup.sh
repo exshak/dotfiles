@@ -1,5 +1,5 @@
 #!/bin/bash
-# brew bundle --file=~/.brewfile
+# brew bundle --file=~/Brewfile
 # sudo xcodebuild -license accept
 # compaudit | xargs chmod g-w,o-w
 # sudo gem install colorls

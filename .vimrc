@@ -124,7 +124,7 @@ Plug 'tpope/vim-rsi'                                       " Readline bindings
 Plug 'tpope/vim-scriptease'                                " Plugin debugger
 Plug 'tpope/vim-speeddating'                               " Increment date/time
 Plug 'christoomey/vim-tmux-navigator'                      " Tmux navigation
-" Plug 'wakatime/vim-wakatime'                               " Automatic time tracking
+Plug 'wakatime/vim-wakatime'                               " Automatic time tracking
 Plug 'puremourning/vimspector'                             " Graphical debugger
 
 " Write
@@ -217,6 +217,8 @@ function! s:highlight()
   highlight clear VertSplit
   highlight StatusLine guibg=NONE ctermbg=NONE
   highlight StatusLineNC guibg=NONE ctermbg=NONE
+
+  highlight DashboardFooter guifg=#6272a4
 
   highlight link EasyMotionIncSearch Search
   highlight link EasyMotionMoveHL Search
@@ -433,7 +435,7 @@ inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype
 " Close all buffers.
 nnoremap <leader>ba :bufdo bd<cr>
 " Close the current buffer.
-nnoremap <leader>bd :Bclose<cr>
+nnoremap <leader>bc :Bclose<cr>
 
 " Navigate buffers.
 nnoremap <leader>bf :bfirst<cr>
@@ -518,8 +520,8 @@ onoremap gv :<C-u>normal! gv<cr>
 nnoremap g. :<C-u>normal! `[v`]<cr><left>
 
 " New line above or below.
-nnoremap <leader>o <C-o>o
-nnoremap <leader>O <C-o>O
+inoremap <leader>o <C-o>o
+inoremap <leader>O <C-o>O
 
 " Mapping: File {{{2
 " Toggle between last buffer.
@@ -1510,6 +1512,8 @@ let g:dashboard_preview_command = 'bunnyfetch'
 let g:dashboard_preview_file = ' '
 let g:dashboard_preview_file_height = 25
 let g:dashboard_preview_file_width = 50
+let g:dashboard_custom_footer =
+  \ [' 🐬 Neovim loaded ' . len(keys(g:plugs)) . ' plugins in ' . join(readfile($v.'/startuptime'))]
 
 " Plugin: editorconfig {{{2
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
@@ -1796,10 +1800,10 @@ let g:easy_align_delimiters = {
   \ }
 
 " Plugin: vim-easymotion {{{2
-map <leader>h <Plug>(easymotion-linebackward)
+" map <leader>h <Plug>(easymotion-linebackward)
 map <leader>j <Plug>(easymotion-j)
 map <leader>k <Plug>(easymotion-k)
-map <leader>l <Plug>(easymotion-lineforward)
+" map <leader>l <Plug>(easymotion-lineforward)
 " nmap <leader>s <Plug>(easymotion-s2)
 " nmap <leader>s <Plug>(easymotion-overwin-f2)
 

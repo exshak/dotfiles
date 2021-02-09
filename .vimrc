@@ -218,6 +218,7 @@ function! s:highlight()
   highlight StatusLine guibg=NONE ctermbg=NONE
   highlight StatusLineNC guibg=NONE ctermbg=NONE
 
+  highlight DashboardCenter guifg=#bd93f9
   highlight DashboardFooter guifg=#6272a4
 
   highlight link EasyMotionIncSearch Search
@@ -901,7 +902,7 @@ endif
 augroup vimrc
   if has('nvim')
     " Switch to terminal & make it ready to type.
-    autocmd TermOpen,BufEnter term://* startinsert
+    " autocmd TermOpen,BufEnter term://* startinsert
   endif
 
   " Close preview window.
@@ -1507,13 +1508,22 @@ endif
 " Plugin: dashboard {{{2
 nnoremap <silent> <leader>da :Dashboard<cr>
 
-let g:dashboard_default_executive = 'fzf'
+let g:dashboard_default_executive = 'telescope'
 let g:dashboard_preview_command = 'bunnyfetch'
 let g:dashboard_preview_file = ' '
 let g:dashboard_preview_file_height = 25
 let g:dashboard_preview_file_width = 50
 let g:dashboard_custom_footer =
   \ [' 🐬 Neovim loaded ' . len(keys(g:plugs)) . ' plugins in ' . join(readfile($v.'/startuptime'))]
+let g:dashboard_custom_section = {
+  \ 'd': {'description': ['   Open dotfiles config                  spc f d '], 'command': 'Telescope git_files'},
+  \ 'f': {'description': ['   Browse all files                      spc f f '], 'command': function('dashboard#handler#find_file')},
+  \ 'h': {'description': ['   Recently opened                       spc f h '], 'command': function('dashboard#handler#find_history')},
+  \ 'm': {'description': ['   Jump to bookmark                      spc f m '], 'command': function('dashboard#handler#book_marks')},
+  \ 'o': {'description': [' ﱮ  Explore directory                     spc f o '], 'command': 'Telescope file_browser'},
+  \ 'p': {'description': ['   Open documentation                    spc f p '], 'command': 'Telescope help_tags'},
+  \ 's': {'description': ['   Reload last session                   spc f s '], 'command': function('dashboard#handler#last_session')},
+  \ }
 
 " Plugin: editorconfig {{{2
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
@@ -2068,6 +2078,7 @@ augroup vimrc
   autocmd BufRead,BufNewFile *vimtips.txt setlocal filetype=help
   autocmd BufRead,BufNewFile *.applescript setlocal filetype=applescript
   autocmd BufRead,BufNewFile *.brewfile setlocal filetype=brewfile
+  autocmd BufRead,BufNewFile *.cls setlocal filetype=tex
   autocmd BufRead,BufNewFile *.git/config setlocal filetype=gitconfig
   autocmd BufRead,BufNewFile *.{markdown,md} setlocal filetype=markdown
   autocmd BufRead,BufNewFile *.tmux.conf.local setlocal filetype=tmux

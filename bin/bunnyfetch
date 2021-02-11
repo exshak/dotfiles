@@ -1,0 +1,30 @@
+#!/bin/bash
+# Tiny colored fetch script
+
+for i in {0..7}; do
+  printf -v "c${i}" '%b' "\e[3${i}m"
+done
+r=$'\e[1m'
+t=$'\e[0m'
+v=$'\e[7m'
+
+n=
+k=
+d=
+s=
+w=
+name=$(echo 侘寂)
+kernel=$(uname -r | cut -d '-' -f1)
+display=$(system_profiler SPDisplaysDataType | awk '/Resolution:/ {printf $2"x"$4}')
+shell=$(basename $SHELL)
+wifi=$(/System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -I | awk -F' SSID: ' '/ SSID: / {print $2}')
+
+tput clear
+cat << EOF
+
+
+  (\ /)    $c5$n  $t$name
+  ( $r. .$t)   $c6$k  $t$kernel
+  c($c1"$t)($c1"$t)  $c4$d  $t$display
+
+EOF

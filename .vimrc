@@ -1715,26 +1715,6 @@ let g:NERDTreeHighlightFoldersFullName = 1
 " let g:NERDTreeDirArrowExpandable = ''
 " let g:NERDTreeDirArrowCollapsible = ''
 
-" Plugin: nvim-treesitter {{{2
-if has('nvim-0.5.0')
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = {
-    "comment",
-    "javascript",
-    "python",
-    "typescript",
-  },
-  highlight = {
-    enable = true
-  },
-  playground = {
-    enable = true
-  }
-}
-EOF
-endif
-
 " Plugin: provider {{{2
 if executable('python3')
   let g:python3_host_prog = exepath('python3')
@@ -1979,7 +1959,7 @@ endfunction
 
 let g:startify_change_to_dir       = 1
 let g:startify_custom_header       = 'startify#pad(startify#fortune#boxed())'
-let g:startify_disable_at_vimenter = 1
+let g:startify_disable_at_vimenter = has('nvim') ? 1 : 0
 let g:startify_enable_special      = 0
 let g:startify_fortune_use_unicode = 1
 let g:startify_update_oldfiles     = 1

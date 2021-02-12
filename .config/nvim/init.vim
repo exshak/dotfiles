@@ -12,4 +12,5 @@ if exists('g:vscode')
   source ~/.vimrc.vsc
 else
   source ~/.vimrc
+  lua require 'config'
 endif

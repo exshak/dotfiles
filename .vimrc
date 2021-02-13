@@ -114,6 +114,10 @@ Plug 'junegunn/vim-peekaboo'                               " Register sidebar
 Plug 'junegunn/fzf'                                        " FZF plugin
 Plug 'junegunn/fzf.vim'                                    " Fuzzy finder
 Plug 'romainl/vim-cool'                                    " Automatic search highlighting
+Plug 'nvim-lua/popup.nvim', Cond(has('nvim-0.5.0'))        " Popup API from vim in neovim
+Plug 'nvim-lua/plenary.nvim', Cond(has('nvim-0.5.0'))      " Collection of lua functions
+Plug 'kyazdani42/nvim-web-devicons', Cond(has('nvim-0.5.0')) " Web dev icons lua fork
+Plug 'nvim-telescope/telescope.nvim', Cond(has('nvim-0.5.0')) " Fuzzy finder: <leader>f
 
 " Tools
 Plug 'metakirby5/codi.vim'                                 " Interactive scratchpad
@@ -521,8 +525,8 @@ onoremap gv :<C-u>normal! gv<cr>
 nnoremap g. :<C-u>normal! `[v`]<cr><left>
 
 " New line above or below.
-inoremap <leader>o <C-o>o
-inoremap <leader>O <C-o>O
+" inoremap <leader>o <C-o>o
+" inoremap <leader>O <C-o>O
 
 " Mapping: File {{{2
 " Toggle between last buffer.
@@ -1738,6 +1742,12 @@ let g:tagbar_autoclose = 0
 let g:tagbar_autofocus = 1
 let g:tagbar_compact   = 1
 let g:tagbar_sort      = 0
+
+" Plugin: telescope {{{2
+nnoremap <leader>fb :Telescope buffers<cr>
+nnoremap <leader>fc :Telescope commands<cr>
+nnoremap <leader>ff :Telescope find_files<cr>
+nnoremap <leader>fg :Telescope git_files<cr>
 
 " Plugin: undotree {{{2
 nnoremap <leader>u :UndotreeToggle<cr>

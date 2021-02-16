@@ -455,6 +455,10 @@ nnoremap <leader>bs :cex []<bar>bufdo vimgrepadd @@g %<bar>cw<s-left><s-left><ri
 " Repeat last command.
 nnoremap <leader>. :<C-p><cr>
 
+" Command-line history.
+cnoremap <expr> <C-n> wildmenumode() ? "\<C-n>" : "\<down>"
+cnoremap <expr> <C-p> wildmenumode() ? "\<C-p>" : "\<up>"
+
 " Smart command paths.
 cnoremap $c e <C-\>e"e ".expand("%:p:h")."/"<cr>
 cnoremap $d e ~/Dropbox/
@@ -795,7 +799,7 @@ nnoremap <leader>cq :cclose<bar>lclose<cr>
 
 " Terminal emulation.
 nnoremap <leader>sh :vs +term<cr>
-tnoremap <esc> <C-\><C-n>
+tnoremap <expr> <esc> (&filetype == "fzf") ? "<esc>" : "<C-\><C-n>"
 
 " Navigate windows.
 " nnoremap <C-h> <C-w>h
@@ -1512,6 +1516,10 @@ endif
 " Plugin: dashboard {{{2
 nnoremap <silent> <leader>da :Dashboard<cr>
 
+command! Dashclose call dashboard#close_preview()
+autocmd User Dashboard nnoremap <buffer> <silent> q :Bclose<bar>Dashclose<cr>
+autocmd User Dashboard nnoremap <buffer> <silent> s :Startify<bar>Dashclose<cr>
+
 let g:dashboard_default_executive = 'telescope'
 let g:dashboard_preview_command = 'bunnyfetch'
 let g:dashboard_preview_file = ' '
@@ -1578,7 +1586,7 @@ function! s:plug_help_sink(line)
     if len(match)
       execute 'tabedit' match
       nnoremap <buffer> q :q<cr>
-      set syntax=help
+      setlocal filetype=help nobuflisted
       return
     endif
   endfor
@@ -1946,6 +1954,8 @@ let g:sneak#prompt = '👟 '
 " Plugin: vim-startify {{{2
 nnoremap <silent> <leader>st :Startify<cr>
 
+autocmd User Startified nnoremap <buffer> <silent> d :Dashboard<cr>
+
 " All modified files of the current git repo.
 function! s:gitModified()
   let files = systemlist('git ls-files -m 2>/dev/null')
@@ -1975,8 +1985,11 @@ let g:startify_fortune_use_unicode = 1
 let g:startify_update_oldfiles     = 1
 let g:startify_use_env             = 1
 let g:startify_bookmarks = [
-  \ '~/.vimrc',
-  \ '~/.zshrc',
+  \ { 'v': '~/.vimrc' },
+  \ { 'z': '~/.zshrc' },
+  \ ]
+let g:startify_skiplist = [
+  \ 'COMMIT_EDITMSG',
   \ ]
 let g:startify_lists = [
   \ { 'header': ['   MRU'],            'type': 'files' },

@@ -1334,6 +1334,39 @@ endfunction
 command! Zoom call <sid>zoom()
 
 " Plugins {{{1
+" Plugin: airline {{{2
+function! AirlineInit()
+  call airline#parts#define('linecolnr', {
+    \ 'raw': '%l:%v %{g:airline_symbols.maxlinenr}',
+    \ 'accent': 'bold'})
+  let g:airline_section_z = airline#section#create(['linecolnr'])
+endfunction
+autocmd User AirlineAfterInit call AirlineInit()
+
+let g:airline_theme = 'dracula'
+let g:airline_detect_spell = 0
+let g:airline_powerline_fonts = 1
+let g:airline_skip_empty_sections = 1
+let g:airline_stl_path_style = 'short'
+let g:airline#extensions#branch#enabled = 0
+let g:airline#extensions#scrollbar#enabled = 0
+let g:airline#extensions#whitespace#enabled = 0
+let g:airline#extensions#wordcount#enabled = 0
+let g:airline#extensions#nvimlsp#error_symbol = ' '
+let g:airline#extensions#nvimlsp#warning_symbol = ' '
+let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
+let g:airline_exclude_filenames = ['term://']
+let g:airline_exclude_filetypes = ['dashboard']
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+" let g:airline_symbols.branch = ''
+" let g:airline_symbols.readonly = ''
+" let g:airline_symbols.linenr = '☰'
+" let g:airline_symbols.maxlinenr = ''
+" let g:airline_symbols.dirty = '⚡'
+
 " Plugin: ale {{{2
 
 " Plugin: coc {{{2
@@ -1513,6 +1546,10 @@ let g:coc_global_extensions = [
 
 endif
 
+" Plugin: commentary {{{2
+map  gc  <Plug>Commentary
+nmap gcc <Plug>CommentaryLine
+
 " Plugin: dashboard {{{2
 nnoremap <silent> <leader>da :Dashboard<cr>
 
@@ -1537,12 +1574,57 @@ let g:dashboard_custom_section = {
   \ 's': {'description': ['   Reload last session                   spc f s '], 'command': function('dashboard#handler#last_session')},
   \ }
 
+" Plugin: easy-align {{{2
+nmap ga <Plug>(EasyAlign)
+xmap ga <Plug>(EasyAlign)
+
+let g:easy_align_delimiters = {
+  \ '"': { 'pattern': '"', 'ignore_groups': [] }
+  \ }
+
+" Plugin: easymotion {{{2
+" map <leader>h <Plug>(easymotion-linebackward)
+map <leader>j <Plug>(easymotion-j)
+map <leader>k <Plug>(easymotion-k)
+" map <leader>l <Plug>(easymotion-lineforward)
+" nmap <leader>s <Plug>(easymotion-s2)
+" nmap <leader>s <Plug>(easymotion-overwin-f2)
+
+let g:EasyMotion_do_mapping        = 0
+let g:EasyMotion_do_shade          = 1
+let g:EasyMotion_inc_highlight     = 0
+let g:EasyMotion_landing_highlight = 0
+let g:EasyMotion_off_screen_search = 0
+let g:EasyMotion_smartcase         = 0
+let g:EasyMotion_startofline       = 0
+let g:EasyMotion_use_smartsign_us  = 1
+let g:EasyMotion_use_upper         = 0
+let g:EasyMotion_skipfoldedline    = 0
+
 " Plugin: editorconfig {{{2
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 
 " Plugin: emmet {{{2
 " let g:user_emmet_leader_key = '<C-y>'
 " let g:user_emmet_mode = 'a'
+
+" Plugin: endwise {{{2
+let g:endwise_no_mappings = 1
+
+" Plugin: exchange {{{2
+" let g:exchange_no_mappings = 1
+
+" Plugin: fugitive {{{2
+nnoremap <leader>ga :Gwrite<cr>
+nnoremap <leader>gb :Gblame<cr>
+nnoremap <leader>gc :Gcommit<cr>
+nnoremap <leader>gd :Gvdiff<cr>
+nnoremap <leader>gh :Gbrowse<cr>
+nnoremap <leader>gl :Gpull<cr>
+nnoremap <leader>gp :Gpush<cr>
+nnoremap <leader>gq :Gwrite<cr>:Gcommit -m 'updated'<cr>:Gpush<cr>
+nnoremap <leader>gr :Gremove<cr>
+nnoremap <leader>gs :G<cr>
 
 " Plugin: fzf {{{2
 nnoremap <expr> <leader><leader> (expand('%') =~ 'NERD_tree' ? "\<C-w>\<C-w>" : '').":Files\<cr>"
@@ -1618,6 +1700,17 @@ endif
 "   \ 'header':  ['fg', 'Comment']
 "   \ }
 
+" Plugin: gitgutter {{{2
+let g:gitgutter_sign_added = '│'
+let g:gitgutter_sign_modified = '│'
+let g:gitgutter_sign_modified_removed = '│'
+let g:gitgutter_sign_removed = '│'
+let g:gitgutter_sign_removed_above_and_below = '│'
+let g:gitgutter_sign_removed_first_line = '│'
+
+" Plugin: github-dashboard {{{2
+let g:github_dashboard = { 'username': 'exshak' }
+
 " Plugin: goyo {{{2
 nnoremap <leader>G :Goyo<cr>
 
@@ -1652,6 +1745,9 @@ autocmd! User GoyoLeave nested call <sid>goyo_leave()
 " let g:goyo_margin_top = 2
 " let g:goyo_width=100
 
+" Plugin: gtfo {{{2
+let g:gtfo#terminals = { 'mac': 'iterm' }
+
 " Plugin: gv {{{2
 function! s:gv_expand()
   let line = getline('.')
@@ -1661,6 +1757,12 @@ function! s:gv_expand()
 endfunction
 
 autocmd! FileType GV nnoremap <buffer> <silent> + :call <sid>gv_expand()<cr>
+
+" Plugin: hexokinase {{{2
+let g:Hexokinase_highlighters = [ 'backgroundfull' ]
+
+" Plugin: highlightedyank {{{2
+let g:highlightedyank_highlight_duration = 100
 
 " Plugin: indentline {{{2
 autocmd! User indentLine doautocmd indentLine Syntax
@@ -1727,144 +1829,7 @@ let g:NERDTreeHighlightFoldersFullName = 1
 " let g:NERDTreeDirArrowExpandable = ''
 " let g:NERDTreeDirArrowCollapsible = ''
 
-" Plugin: provider {{{2
-if executable('python3')
-  let g:python3_host_prog = exepath('python3')
-else
-  let g:loaded_python3_provider = 0
-endif
-
-let g:loaded_node_provider = 0
-let g:loaded_perl_provider = 0
-let g:loaded_python_provider = 0
-" let g:loaded_ruby_provider = 0
-
-" Plugin: splitjoin {{{2
-let g:splitjoin_join_mapping = ''
-let g:splitjoin_split_mapping = ''
-
-" Plugin: tagbar {{{2
-nnoremap <leader>ta :TagbarToggle<cr>
-
-let g:tagbar_autoclose = 0
-let g:tagbar_autofocus = 1
-let g:tagbar_compact   = 1
-let g:tagbar_sort      = 0
-
-" Plugin: telescope {{{2
-nnoremap <leader>fb :Telescope buffers<cr>
-nnoremap <leader>fc :Telescope commands<cr>
-nnoremap <leader>ff :Telescope find_files<cr>
-nnoremap <leader>fg :Telescope git_files<cr>
-
-" Plugin: undotree {{{2
-nnoremap <leader>u :UndotreeToggle<cr>
-
-let g:undotree_WindowLayout = 2
-
-" Plugin: vim-airline {{{2
-function! AirlineInit()
-  call airline#parts#define('linecolnr', {
-    \ 'raw': '%l:%v %{g:airline_symbols.maxlinenr}',
-    \ 'accent': 'bold'})
-  let g:airline_section_z = airline#section#create(['linecolnr'])
-endfunction
-autocmd User AirlineAfterInit call AirlineInit()
-
-let g:airline_theme = 'dracula'
-let g:airline_detect_spell = 0
-let g:airline_powerline_fonts = 1
-let g:airline_skip_empty_sections = 1
-let g:airline_stl_path_style = 'short'
-let g:airline#extensions#branch#enabled = 0
-let g:airline#extensions#scrollbar#enabled = 0
-let g:airline#extensions#whitespace#enabled = 0
-let g:airline#extensions#wordcount#enabled = 0
-let g:airline#extensions#nvimlsp#error_symbol = ' '
-let g:airline#extensions#nvimlsp#warning_symbol = ' '
-let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
-let g:airline_exclude_filenames = ['term://']
-let g:airline_exclude_filetypes = ['dashboard']
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-" let g:airline_symbols.branch = ''
-" let g:airline_symbols.readonly = ''
-" let g:airline_symbols.linenr = '☰'
-" let g:airline_symbols.maxlinenr = ''
-" let g:airline_symbols.dirty = '⚡'
-
-" Plugin: vim-commentary {{{2
-map  gc  <Plug>Commentary
-nmap gcc <Plug>CommentaryLine
-
-" Plugin: vim-easy-align {{{2
-nmap ga <Plug>(EasyAlign)
-xmap ga <Plug>(EasyAlign)
-
-let g:easy_align_delimiters = {
-  \ '"': { 'pattern': '"', 'ignore_groups': [] }
-  \ }
-
-" Plugin: vim-easymotion {{{2
-" map <leader>h <Plug>(easymotion-linebackward)
-map <leader>j <Plug>(easymotion-j)
-map <leader>k <Plug>(easymotion-k)
-" map <leader>l <Plug>(easymotion-lineforward)
-" nmap <leader>s <Plug>(easymotion-s2)
-" nmap <leader>s <Plug>(easymotion-overwin-f2)
-
-let g:EasyMotion_do_mapping        = 0
-let g:EasyMotion_do_shade          = 1
-let g:EasyMotion_inc_highlight     = 0
-let g:EasyMotion_landing_highlight = 0
-let g:EasyMotion_off_screen_search = 0
-let g:EasyMotion_smartcase         = 0
-let g:EasyMotion_startofline       = 0
-let g:EasyMotion_use_smartsign_us  = 1
-let g:EasyMotion_use_upper         = 0
-let g:EasyMotion_skipfoldedline    = 0
-
-" Plugin: vim-endwise {{{2
-let g:endwise_no_mappings = 1
-
-" Plugin: vim-exchange {{{2
-" let g:exchange_no_mappings = 1
-
-" Plugin: vim-fugitive {{{2
-nnoremap <leader>ga :Gwrite<cr>
-nnoremap <leader>gb :Gblame<cr>
-nnoremap <leader>gc :Gcommit<cr>
-nnoremap <leader>gd :Gvdiff<cr>
-nnoremap <leader>gh :Gbrowse<cr>
-nnoremap <leader>gl :Gpull<cr>
-nnoremap <leader>gp :Gpush<cr>
-nnoremap <leader>gq :Gwrite<cr>:Gcommit -m 'updated'<cr>:Gpush<cr>
-nnoremap <leader>gr :Gremove<cr>
-nnoremap <leader>gs :G<cr>
-
-" Plugin: vim-gitgutter {{{2
-let g:gitgutter_sign_added = '│'
-let g:gitgutter_sign_modified = '│'
-let g:gitgutter_sign_modified_removed = '│'
-let g:gitgutter_sign_removed = '│'
-let g:gitgutter_sign_removed_above_and_below = '│'
-let g:gitgutter_sign_removed_first_line = '│'
-
-" Plugin: vim-github-dashboard {{{2
-let g:github_dashboard = { 'username': 'exshak' }
-
-" Plugin: vim-gtfo {{{2
-let g:gtfo#terminals = { 'mac': 'iterm' }
-
-" Plugin: vim-hexokinase {{{2
-let g:Hexokinase_highlighters = [ 'backgroundfull' ]
-
-" Plugin: vim-highlightedyank {{{2
-let g:highlightedyank_highlight_duration = 100
-
-" Plugin: vim-plug {{{2
+" Plugin: plug {{{2
 " vim-plug extension.
 function! s:plug_gx()
   let line = getline('.')
@@ -1916,10 +1881,22 @@ endfunction
 
 autocmd vimrc FileType vim-plug call s:setup_extra_keys()
 
-" Plugin: vim-polyglot {{{2
+" Plugin: polyglot {{{2
 " let g:polyglot_disabled = ['python']
 
-" Plugin: vim-signify {{{2
+" Plugin: provider {{{2
+if executable('python3')
+  let g:python3_host_prog = exepath('python3')
+else
+  let g:loaded_python3_provider = 0
+endif
+
+let g:loaded_node_provider = 0
+let g:loaded_perl_provider = 0
+let g:loaded_python_provider = 0
+" let g:loaded_ruby_provider = 0
+
+" Plugin: signify {{{2
 " Update Git signs every time the text is changed.
 " autocmd vimrc TextChanged,TextChangedI * call sy#start()
 
@@ -1929,7 +1906,7 @@ let g:signify_sign_changedelete = '│'
 let g:signify_skip_filetype = { 'journal': 1 }
 let g:signify_vcs_list = ['git']
 
-" Plugin: vim-silicon {{{2
+" Plugin: silicon {{{2
 let g:silicon = {
   \ 'theme':              'Dracula',
   \ 'font':                  'Hack',
@@ -1947,11 +1924,15 @@ let g:silicon = {
   \ 'output':'~/Dropbox/Code/images/silicon-{time:%Y-%m-%d-%H%M%S}.png'
   \ }
 
-" Plugin: vim-sneak {{{2
+" Plugin: sneak {{{2
 let g:sneak#label = 1
 let g:sneak#prompt = '👟 '
 
-" Plugin: vim-startify {{{2
+" Plugin: splitjoin {{{2
+let g:splitjoin_join_mapping = ''
+let g:splitjoin_split_mapping = ''
+
+" Plugin: startify {{{2
 nnoremap <silent> <leader>st :Startify<cr>
 
 autocmd User Startified nnoremap <buffer> <silent> d :Dashboard<cr>
@@ -2000,21 +1981,34 @@ let g:startify_lists = [
   \ { 'header': ['   Commands'],       'type': 'commands' },
   \ ]
 
-" Plugin: vim-startuptime {{{2
+" Plugin: startuptime {{{2
 nnoremap <leader>su :vertical StartupTime<cr>
 
-" Plugin: vim-surround {{{2
+" Plugin: surround {{{2
 vnoremap Si S(i_<esc>f)
 
 autocmd FileType mako vnoremap Si S"i${ _(<esc>2f"a) }<esc>
 
 let g:surround_indent = 1
 
-" Plugin: vim-zettel {{{2
-let g:zettel_options = [{
-  \ 'front_matter' : [['tags', ''], ['type','note']],
-  \ 'template' :  '~/Dropbox/Documents/zettel.tpl'
-  \ }]
+" Plugin: tagbar {{{2
+nnoremap <leader>ta :TagbarToggle<cr>
+
+let g:tagbar_autoclose = 0
+let g:tagbar_autofocus = 1
+let g:tagbar_compact   = 1
+let g:tagbar_sort      = 0
+
+" Plugin: telescope {{{2
+nnoremap <leader>fb :Telescope buffers<cr>
+nnoremap <leader>fc :Telescope commands<cr>
+nnoremap <leader>ff :Telescope find_files<cr>
+nnoremap <leader>fg :Telescope git_files<cr>
+
+" Plugin: undotree {{{2
+nnoremap <leader>u :UndotreeToggle<cr>
+
+let g:undotree_WindowLayout = 2
 
 " Plugin: vimawesome {{{2
 " vimawesome.com
@@ -2070,6 +2064,12 @@ let g:vimwiki_list = [{
   \ 'auto_tags': 1,
   \ 'auto_toc': 1,
   \ 'path': '~/Dropbox/Documents',
+  \ }]
+
+" Plugin: zettel {{{2
+let g:zettel_options = [{
+  \ 'front_matter' : [['tags', ''], ['type','note']],
+  \ 'template' :  '~/Dropbox/Documents/zettel.tpl'
   \ }]
 
 " Filetypes {{{1

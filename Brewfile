@@ -89,6 +89,7 @@ brew 'xdotool'
 brew 'youtube-dl'
 
 # Applications
+cask 'adobe-creative-cloud'
 cask 'alacritty'
 cask 'alfred'
 cask 'bartender'

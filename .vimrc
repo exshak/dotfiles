@@ -52,6 +52,7 @@ Plug 'glepnir/dashboard-nvim', Cond(has('nvim-0.5.0'))     " Dash screen: <leade
 Plug 'mhinz/vim-startify'                                  " Start screen: <leader>st
 Plug 'segeljakt/vim-silicon', Cond(executable('silicon'))  " Source code to image
 Plug 'dstein64/vim-startuptime'                            " Startup time: <leader>su
+Plug 'folke/which-key.nvim', Cond(has('nvim-0.5.0'))       " Keybindings popup
 Plug 'nvim-treesitter/nvim-treesitter',
   \ Cond(has('nvim-0.5.0'), { 'do': ':TSUpdate' })         " Treesitter highlighting
 Plug 'nvim-treesitter/playground', Cond(has('nvim-0.5.0')) " Treesitter playground
@@ -792,7 +793,7 @@ nnoremap <leader>v :vsplit<cr>
 
 " Zoom/Restore window.
 nnoremap <leader>z :Zoom<cr>
-inoremap <leader>z <esc>:Zoom<cr>a
+" inoremap <leader>z <esc>:Zoom<cr>a
 
 " Close quickfix/location window.
 nnoremap <leader>cq :cclose<bar>lclose<cr>
@@ -2001,9 +2002,13 @@ let g:tagbar_sort      = 0
 
 " Plugin: telescope {{{2
 nnoremap <leader>fb :Telescope buffers<cr>
-nnoremap <leader>fc :Telescope commands<cr>
+nnoremap <leader>fc :Telescope git_commits<cr>
 nnoremap <leader>ff :Telescope find_files<cr>
 nnoremap <leader>fg :Telescope git_files<cr>
+nnoremap <leader>fr :Telescope live_grep<cr>
+nnoremap <leader>ft :Telescope tags<cr>
+nnoremap <leader>f: :Telescope command_history<cr>
+nnoremap <leader>f/ :Telescope search_history<cr>
 
 " Plugin: undotree {{{2
 nnoremap <leader>u :UndotreeToggle<cr>

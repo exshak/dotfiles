@@ -1,3 +1,6 @@
+-- colorizer {{{1
+require('colorizer').setup()
+
 -- telescope {{{1
 local actions = require('telescope.actions')
 require('telescope').setup {
@@ -24,5 +27,10 @@ require('nvim-treesitter.configs').setup {
   playground = {
     enable = true
   }
+}
+
+-- which-key {{{1
+require('which-key').setup {
+  show_help = false
 }
 -- }}}

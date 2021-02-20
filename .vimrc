@@ -91,8 +91,9 @@ Plug 'junegunn/vim-github-dashboard'                       " GitHub events: :GHA
 
 " Lang
 " Plug 'w0rp/ale'                                            " Lint engine
-Plug 'neoclide/coc.nvim',
-  \ Cond(executable('node'), { 'branch': 'release' })      " Intellisense engine
+" Plug 'neoclide/coc.nvim',
+"   \ Cond(executable('node'), { 'branch': 'release' })      " Intellisense engine
+Plug 'neovim/nvim-lspconfig', Cond(has('nvim-0.5.0'))      " Language Server Protocol
 Plug 'mattn/emmet-vim'                                     " Expand HTML/XML/CSS: <C-y>
 Plug 'junegunn/vim-emoji'                                  " :smiley:
 Plug 'norcalli/nvim-colorizer.lua', Cond(has('nvim-0.5.0')) " Preview colors
@@ -737,7 +738,7 @@ endfunction
 
 function! s:tmux_map(key, dest)
   execute printf('nnoremap <silent> %s "tyy:call <SID>tmux_send(@t, "%s")<cr>', a:key, a:dest)
-  execute printf('xnoremap <silent> %s "ty:call <SID>tmux_send(@t, "%s")<cr>gv', a:key, a:dest)
+  execute printf('xnoremap <silent> %s "ty:call <SID>tmux_send(@t, "%s")<cr>', a:key, a:dest)
 endfunction
 
 call s:tmux_map('<leader>tt', '')
@@ -1372,7 +1373,7 @@ let g:airline_right_alt_sep = ''
 
 " Plugin: coc {{{2
 
-if executable('node')
+if executable('node') && has_key(g:plugs, 'coc.nvim')
 
 " Mappings for CoCList
 " Show all diagnostics.

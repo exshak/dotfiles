@@ -143,6 +143,7 @@ alias n='neomutt'
 alias o='open'
 alias t='tmux'
 alias v='nvim'
+alias y='yarn'
 alias za='zathura'
 
 # Alias: Directory {{{2

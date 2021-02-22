@@ -162,6 +162,31 @@ augroup vimrc
   autocmd ColorScheme * call s:highlight()
 augroup END
 
+" Custom highlighting.
+function! s:highlight()
+  highlight Normal guibg=NONE ctermbg=NONE
+  highlight Folded guibg=NONE ctermbg=NONE guifg=#6272a4
+  highlight Comment gui=italic cterm=italic guifg=#6272a4
+  highlight Keyword gui=italic cterm=italic guifg=#ff79c6
+
+  highlight clear VertSplit
+  highlight StatusLine guibg=NONE ctermbg=NONE
+  highlight StatusLineNC guibg=NONE ctermbg=NONE
+
+  highlight DashboardCenter guifg=#bd93f9
+  highlight DashboardFooter guifg=#6272a4
+
+  highlight link EasyMotionIncSearch Search
+  highlight link EasyMotionMoveHL Search
+  highlight link EasyMotionShade Comment
+  highlight link EasyMotionTarget Function
+  highlight link EasyMotionTarget2First Function
+  highlight link EasyMotionTarget2Second Function
+
+  highlight Sneak guifg=black guibg=#50fa7b
+  highlight SneakScope guifg=black guibg=#ffb86c
+endfunction
+
 " Backup {{{2
 filetype plugin indent on " Enable loading {ftdetect,ftplugin,indent}/*.vim files.
 syntax on " Enable loading syntax/*.vim files.
@@ -213,31 +238,6 @@ elseif exists('$DISPLAY') && executable('xclip')
 endif
 
 " Color {{{2
-" Custom highlighting.
-function! s:highlight()
-  highlight Normal guibg=NONE ctermbg=NONE
-  highlight Folded guibg=NONE ctermbg=NONE guifg=#6272a4
-  highlight Comment gui=italic cterm=italic guifg=#6272a4
-  highlight Keyword gui=italic cterm=italic guifg=#ff79c6
-
-  highlight clear VertSplit
-  highlight StatusLine guibg=NONE ctermbg=NONE
-  highlight StatusLineNC guibg=NONE ctermbg=NONE
-
-  highlight DashboardCenter guifg=#bd93f9
-  highlight DashboardFooter guifg=#6272a4
-
-  highlight link EasyMotionIncSearch Search
-  highlight link EasyMotionMoveHL Search
-  highlight link EasyMotionShade Comment
-  highlight link EasyMotionTarget Function
-  highlight link EasyMotionTarget2First Function
-  highlight link EasyMotionTarget2Second Function
-
-  highlight Sneak guifg=black guibg=#f8f8f2 ctermfg=black ctermbg=red
-  highlight SneakScope guifg=black guibg=#ffb86c ctermfg=red ctermbg=yellow
-endfunction
-
 " Graphical user interface.
 if has('gui_running')
   set background=dark " Choose dark colors if available.

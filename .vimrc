@@ -94,6 +94,7 @@ Plug 'junegunn/vim-github-dashboard'                       " GitHub events: :GHA
 " Plug 'neoclide/coc.nvim',
 "   \ Cond(executable('node'), { 'branch': 'release' })      " Intellisense engine
 Plug 'neovim/nvim-lspconfig', Cond(has('nvim-0.5.0'))      " Language Server Protocol
+Plug 'hrsh7th/nvim-compe', Cond(has('nvim-0.5.0'))         " Automatic completion (lua)
 Plug 'mattn/emmet-vim'                                     " Expand HTML/XML/CSS: <C-y>
 Plug 'junegunn/vim-emoji'                                  " :smiley:
 Plug 'norcalli/nvim-colorizer.lua', Cond(has('nvim-0.5.0')) " Preview colors
@@ -318,7 +319,7 @@ endif
 set backspace=indent,eol,start " Allow backspacing over anything in insert mode.
 set clipboard^=unnamed,unnamedplus " Sync system clipboard with vim registers.
 set complete-=i " Options for keyword completion.
-set completeopt=menuone,preview,longest " Options for insert mode completion.
+set completeopt=menuone,preview,longest,noselect " Options for insert mode completion.
 set nojoinspaces " Disable inserting two spaces after '.', '?', '!' with join command.
 
 " Option: Error {{{2
@@ -2069,13 +2070,13 @@ let g:vimwiki_map_prefix = '<leader>x'
 let g:vimwiki_list = [{
   \ 'auto_tags': 1,
   \ 'auto_toc': 1,
-  \ 'path': '~/Dropbox/Documents',
+  \ 'path': '~/Dropbox/Vimwiki',
   \ }]
 
 " Plugin: zettel {{{2
 let g:zettel_options = [{
   \ 'front_matter' : [['tags', ''], ['type','note']],
-  \ 'template' :  '~/Dropbox/Documents/zettel.tpl'
+  \ 'template' :  '~/Dropbox/Vimwiki/zettel.tpl'
   \ }]
 
 " Filetypes {{{1

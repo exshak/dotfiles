@@ -131,7 +131,7 @@ Plug 'tpope/vim-rsi'                                       " Readline bindings
 Plug 'tpope/vim-scriptease'                                " Plugin debugger
 Plug 'tpope/vim-speeddating'                               " Increment date/time
 Plug 'christoomey/vim-tmux-navigator'                      " Tmux navigation
-Plug 'wakatime/vim-wakatime'                               " Automatic time tracking
+" Plug 'wakatime/vim-wakatime'                               " Automatic time tracking
 Plug 'puremourning/vimspector'                             " Graphical debugger
 
 " Write
@@ -319,7 +319,7 @@ endif
 set backspace=indent,eol,start " Allow backspacing over anything in insert mode.
 set clipboard^=unnamed,unnamedplus " Sync system clipboard with vim registers.
 set complete-=i " Options for keyword completion.
-set completeopt=menuone,preview,longest,noselect " Options for insert mode completion.
+set completeopt=menuone,noselect " Options for insert mode completion.
 set nojoinspaces " Disable inserting two spaces after '.', '?', '!' with join command.
 
 " Option: Error {{{2
@@ -912,8 +912,9 @@ endif
 
 augroup vimrc
   if has('nvim')
+    autocmd TermOpen * IndentLinesDisable
     " Switch to terminal & make it ready to type.
-    " autocmd TermOpen,BufEnter term://* startinsert
+    autocmd TermOpen,BufEnter term://* startinsert
   endif
 
   " Close preview window.
@@ -1553,12 +1554,21 @@ endif
 map  gc  <Plug>Commentary
 nmap gcc <Plug>CommentaryLine
 
+" Plugin: compe {{{2
+inoremap <silent><expr> <C-space> compe#complete()
+inoremap <silent><expr> <cr>  compe#confirm('<cr>')
+inoremap <silent><expr> <C-e> compe#close('<C-e>')
+inoremap <silent><expr> <C-f> compe#scroll({'delta': +4})
+inoremap <silent><expr> <C-d> compe#scroll({'delta': -4})
+
 " Plugin: dashboard {{{2
 nnoremap <silent> <leader>da :Dashboard<cr>
 
 command! Dashclose call dashboard#close_preview()
 autocmd User Dashboard nnoremap <buffer> <silent> q :Bclose<bar>Dashclose<cr>
 autocmd User Dashboard nnoremap <buffer> <silent> s :Startify<bar>Dashclose<cr>
+autocmd User Dashboard nnoremap <buffer> <silent> v :e ~/.vimrc<bar>Dashclose<cr>
+autocmd User Dashboard nnoremap <buffer> <silent> w :VimwikiIndex<bar>Dashclose<cr>
 
 let g:dashboard_default_executive = 'telescope'
 let g:dashboard_preview_command = 'bunnyfetch'
@@ -1939,6 +1949,7 @@ let g:splitjoin_split_mapping = ''
 nnoremap <silent> <leader>st :Startify<cr>
 
 autocmd User Startified nnoremap <buffer> <silent> d :Dashboard<cr>
+autocmd User Startified nnoremap <buffer> <silent> w :VimwikiIndex<cr>
 
 " All modified files of the current git repo.
 function! s:gitModified()

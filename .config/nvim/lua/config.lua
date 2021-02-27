@@ -7,7 +7,7 @@ require('compe').setup {
   autocomplete = true;
   debug = false;
   min_length = 1;
-  preselect = 'enable';
+  preselect = 'always';
   throttle_time = 80;
   source_timeout = 200;
   incomplete_delay = 400;
@@ -34,6 +34,25 @@ local servers = { 'pyright', 'tsserver', 'vimls' }
 for _, server in pairs(servers) do
   lspconfig[server].setup {}
 end
+
+-- lspsaga {{{1
+local saga = require('lspsaga')
+
+saga.init_lsp_saga {
+  code_action_icon = '💡',
+  code_action_prompt = {
+    enable = true,
+    sign = true,
+    sign_priority = 20,
+    virtual_text = false,
+  },
+  code_action_keys = {
+    quit = { 'q', '<esc>' }, exec = '<cr>'
+  },
+  rename_action_keys = {
+    quit = { '<C-c>', '<esc>' }, exec = '<cr>'
+  },
+}
 
 -- telescope {{{1
 local actions = require('telescope.actions')

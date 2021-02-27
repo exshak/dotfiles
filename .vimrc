@@ -94,6 +94,7 @@ Plug 'junegunn/vim-github-dashboard'                       " GitHub events: :GHA
 " Plug 'neoclide/coc.nvim',
 "   \ Cond(executable('node'), { 'branch': 'release' })      " Intellisense engine
 Plug 'neovim/nvim-lspconfig', Cond(has('nvim-0.5.0'))      " Language Server Protocol
+Plug 'glepnir/lspsaga.nvim', Cond(has('nvim-0.5.0'))       " LSP user interface plugin
 Plug 'hrsh7th/nvim-compe', Cond(has('nvim-0.5.0'))         " Automatic completion (lua)
 Plug 'mattn/emmet-vim'                                     " Expand HTML/XML/CSS: <C-y>
 Plug 'junegunn/vim-emoji'                                  " :smiley:

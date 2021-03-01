@@ -7,11 +7,14 @@ m4a:              audio
 mp3:              audio
 ogg:              audio
 wav:              audio
+brewfile:         coffee
 editorconfig:     conf
+local:            conf
 scss:             css
 docx:             doc
 gdoc:             doc
 dockerfile:       docker
+docker-compose:   docker
 mobi:             ebook
 eot:              font
 otf:              font
@@ -64,7 +67,9 @@ bash_profile:     shell
 bashrc:           shell
 fish:             shell
 sh:               shell
+zlogin:           shell
 zsh:              shell
+zsh_history:      shell
 zsh-theme:        shell
 zshrc:            shell
 stylus:           styl
@@ -76,6 +81,7 @@ mov:              video
 mp4:              video
 ogv:              video
 webm:             video
+vimrc:            vim
 bat:              windows
 exe:              windows
 ini:              windows

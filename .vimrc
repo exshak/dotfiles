@@ -47,7 +47,7 @@ Plug 'arzg/vim-colors-xcode'
 
 " Display
 Plug 'vim-airline/vim-airline'                             " Statusline
-Plug 'vim-airline/vim-airline-themes'                      " Statusline themes
+" Plug 'glepnir/galaxyline.nvim', Cond(has('nvim-0.5.0'))    " Statusline (lua)
 Plug 'glepnir/dashboard-nvim', Cond(has('nvim-0.5.0'))     " Dash screen: <leader>da
 Plug 'mhinz/vim-startify'                                  " Start screen: <leader>st
 Plug 'segeljakt/vim-silicon', Cond(executable('silicon'))  " Source code to image

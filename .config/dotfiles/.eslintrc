@@ -1,7 +1,13 @@
 ---
+env:
+  es2021: true
+parserOptions:
+  sourceType: module
+  ecmaFeatures:
+    jsx: true
 rules:
-  eqeqeq: off
-  curly: error
   quotes:
     - error
     - single
+    - avoidEscape: true
+      allowTemplateLiterals: false

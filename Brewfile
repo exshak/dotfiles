@@ -89,6 +89,8 @@ brew 'wallpaper'
 brew 'xdotool'
 brew 'youtube-dl'
 
+brew 'dbus'
+
 # Applications
 # cask 'adobe-creative-cloud'
 cask 'alacritty'
@@ -114,7 +116,7 @@ cask 'iterm2'
 cask 'karabiner-elements'
 cask 'keepassxc'
 cask 'little-snitch'
-# cask 'mactex'
+cask 'mactex'
 cask 'obs'
 cask 'rectangle'
 cask 'slack'

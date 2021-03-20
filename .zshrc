@@ -141,9 +141,6 @@ alias j='jobs'
 alias lc='leetcode'
 alias n='neomutt'
 alias o='open'
-alias t='tmux'
-alias v='nvim'
-alias y='yarn'
 alias za='zathura'
 
 # Alias: Directory {{{2
@@ -206,6 +203,37 @@ alias brewbu='brew bundle --file=~/Brewfile'
 alias brewup='brew update && brew upgrade && brew cleanup && brew doctor'
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias speeds='speedtest --simple --server'
+
+# Alias: Tmux {{{2
+alias t='tmux'
+alias ta='tmux attach -t'
+alias tl='tmux list-sessions'
+alias ts='tmux new-session -s'
+
+# Alias: Vim {{{2
+alias v='nvim'
+alias vs='nvim +StartupTime'
+alias vu='nvim +PU'
+alias vw='nvim +VimwikiIndex'
+
+# Alias: Yarn {{{2
+alias y='yarn'
+alias ya='yarn add'
+alias yb='yarn build'
+alias yc='yarn clean'
+alias yd='yarn dev'
+alias yf='yarn format'
+alias yh='yarn help'
+alias yi='yarn init'
+alias yl='yarn list'
+alias yo='yarn outdated'
+alias yp='yarn pack'
+alias yr='yarn remove'
+alias ys='yarn serve'
+alias yt='yarn test'
+alias yu='yarn upgrade'
+alias yv='yarn version'
+alias yw='yarn workspace'
 
 # Bindings {{{1
 # Use emacs key bindings.

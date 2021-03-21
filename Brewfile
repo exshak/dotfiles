@@ -90,6 +90,10 @@ brew 'xdotool'
 brew 'youtube-dl'
 
 brew 'dbus'
+# tap 'zegervdv/zathura'
+# brew 'girara', args: ['HEAD']
+# brew 'zathura', args: ['HEAD', 'with-synctex']
+# brew 'zathura-pdf-poppler'
 
 # Applications
 # cask 'adobe-creative-cloud'

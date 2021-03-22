@@ -57,6 +57,8 @@
 	pretty = one
 [help]
 	autoCorrect = 1
+[init]
+	templateDir = ~/.config/git/templates
 [interactive]
 	diffFilter = diff-so-fancy --patch
 [merge]

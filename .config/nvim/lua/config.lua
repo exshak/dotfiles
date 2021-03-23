@@ -31,11 +31,54 @@ require('compe').setup {
 local lspconfig = require('lspconfig')
 local lspinstall = require('lspinstall')
 
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  local opts = {noremap = true, silent = true}
+  buf_set_keymap('n', 'gd', '<cmd>Lspsaga preview_definition<cr>', opts)
+end
+
+local lua_settings = {
+  Lua = {
+    runtime = {
+      version = 'LuaJIT',
+      path = vim.split(package.path, ';')
+    },
+    diagnostics = {
+      globals = {'vim'}
+    },
+    workspace = {
+      library = {
+        [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+        [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true
+      }
+    }
+  }
+}
+
+local function make_config()
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
+  return {
+    capabilities = capabilities,
+    on_attach = on_attach
+  }
+end
+
 lspinstall.setup()
 
 local servers = lspinstall.installed_servers()
 for _, server in pairs(servers) do
-  lspconfig[server].setup()
+  local config = make_config()
+
+  if server == 'lua' then
+    config.settings = lua_settings
+  end
+
+  lspconfig[server].setup(config)
 end
 
 -- lspsaga {{{1

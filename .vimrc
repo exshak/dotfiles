@@ -951,7 +951,7 @@ augroup vimrc
   autocmd BufWritePre *.js,*.py,*.sh,*.txt,*.wiki call s:trim_whitespace()
 
   " Automatically load .vimrc source when saved.
-  autocmd BufWritePost .vimrc nested source $MYVIMRC
+  " autocmd BufWritePost .vimrc nested source $MYVIMRC
 
   " Update on buffer entry or focus change.
   autocmd BufEnter,FocusGained * checktime
@@ -1644,15 +1644,15 @@ nnoremap <leader>gs :G<cr>
 " Plugin: fzf {{{2
 nnoremap <expr> <leader><leader> (expand('%') =~ 'NERD_tree' ? "\<C-w>\<C-w>" : '').":Files\<cr>"
 nnoremap <leader><cr> :Buffers<cr>
-nnoremap <leader>B :BBuffers<cr>
-nnoremap <leader>C :Commands<cr>
-nnoremap <leader>F :GFiles<cr>
+nnoremap <leader>bb :BBuffers<cr>
+nnoremap <leader>cm :Commands<cr>
+nnoremap <leader>gf :GFiles<cr>
 nnoremap <leader>H :History<cr>
 nnoremap <leader>L :Lines<cr>
 nnoremap <leader>M :Maps<cr>
 nnoremap <leader>P :PlugHelp<cr>
-nnoremap <leader>R :Rg<cr>
-nnoremap <leader>T :Tags<cr>
+nnoremap <leader>rg :Rg<cr>
+nnoremap <leader>tg :Tags<cr>
 nnoremap <leader>` :Marks<cr>
 nnoremap q: :History:<cr>
 nnoremap q/ :History/<cr>

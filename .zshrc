@@ -133,7 +133,7 @@ export PATH="/opt/homebrew/lib/ruby/gems/3.0.0/bin:$PATH"
 export WAKATIME_HOME=$HOME/.config/wakatime
 
 # Aliases {{{1
-# Alias: Common {{{2
+# Alias: * {{{2
 alias c='clear'
 alias e='emacs'
 alias h='history'
@@ -143,12 +143,27 @@ alias n='neomutt'
 alias o='open'
 alias za='zathura'
 
+# Alias: Brew {{{2
+alias bb='brew bundle --file=~/Brewfile'
+alias bd='brew cleanup && brew doctor'
+alias bi='brew install'
+alias bl='brew list -1'
+alias bo='brew outdated'
+alias bs='brew search'
+alias bt='brew tap'
+alias bu='brew update && brew upgrade'
+
 # Alias: Directory {{{2
 alias mkdir='mkdir -p'
 alias md='mkdir'
 alias rd='rmdir'
 
+# Alias: Docker {{{2
+alias d='docker'
+alias dc='docker-compose'
+
 # Alias: File {{{2
+alias b='bat'
 alias cat='bat'
 
 # Alias: Git {{{2
@@ -171,6 +186,8 @@ alias la='ls -lA'
 alias ld='ls -ld'
 alias lf='ls -lf'
 alias ll='ls -l1'
+alias lr='ls -lr'
+alias lt='lr -lt'
 
 # Alias: Navigate {{{2
 alias ..='cd ..'
@@ -199,16 +216,19 @@ alias 8='cd -8'
 alias 9='cd -9'
 
 # Alias: Shortcut {{{2
-alias brewbu='brew bundle --file=~/Brewfile'
-alias brewup='brew update && brew upgrade && brew cleanup && brew doctor'
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-alias speeds='speedtest --simple --server'
+alias co='cd ~/Code'
+alias db='cd ~/Dropbox'
+alias dl='cd ~/Downloads'
+alias dm='cd ~/Documents'
+alias dt='cd ~/Desktop'
+alias sp='speedtest --simple --server'
 
 # Alias: Tmux {{{2
 alias t='tmux'
 alias ta='tmux attach -t'
 alias tl='tmux list-sessions'
-alias ts='tmux new-session -s'
+# alias ts='tmux new-session -s'
 
 # Alias: Vim {{{2
 alias v='nvim'
@@ -219,10 +239,18 @@ alias vw='nvim +VimwikiIndex'
 # Alias: Yarn {{{2
 alias y='yarn'
 alias ya='yarn add'
+alias yad='yarn add --dev'
+alias yap='yarn add --peer'
 alias yb='yarn build'
 alias yc='yarn clean'
 alias yd='yarn dev'
+alias ye='yarn exec'
 alias yf='yarn format'
+alias yg='yarn global'
+alias yga='yarn global add'
+alias ygl='yarn global list'
+alias ygr='yarn global remove'
+alias ygu='yarn global upgrade'
 alias yh='yarn help'
 alias yi='yarn init'
 alias yl='yarn list'
@@ -230,8 +258,11 @@ alias yo='yarn outdated'
 alias yp='yarn pack'
 alias yr='yarn remove'
 alias ys='yarn serve'
+alias yst='yarn start'
 alias yt='yarn test'
 alias yu='yarn upgrade'
+alias yui='yarn upgrade-interactive'
+alias yuil='yarn upgrade-interactive --latest'
 alias yv='yarn version'
 alias yw='yarn workspace'
 

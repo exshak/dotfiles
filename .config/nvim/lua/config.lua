@@ -39,7 +39,22 @@ local on_attach = function(client, bufnr)
 
   local opts = {noremap = true, silent = true}
   buf_set_keymap('n', 'gd', '<cmd>Lspsaga preview_definition<cr>', opts)
+  buf_set_keymap('n', 'gr', '<cmd>Lspsaga lsp_finder<cr>', opts)
+  buf_set_keymap('n', '[d', '<cmd>Lspsaga diagnostic_jump_prev<cr>', opts)
+  buf_set_keymap('n', ']d', '<cmd>Lspsaga diagnostic_jump_next<cr>', opts)
 end
+
+local luaformat = {
+  formatCommand = 'lua-format -i',
+  formatStdin = true
+}
+
+local efm_settings = {
+  rootMarkers = {'.git/'},
+  languages = {
+    lua = {luaformat}
+  }
+}
 
 local lua_settings = {
   Lua = {
@@ -73,6 +88,11 @@ lspinstall.setup()
 local servers = lspinstall.installed_servers()
 for _, server in pairs(servers) do
   local config = make_config()
+
+  if server == 'efm' then
+    config.init_options = {documentFormatting = true}
+    config.settings = efm_settings
+  end
 
   if server == 'lua' then
     config.settings = lua_settings

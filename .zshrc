@@ -68,8 +68,10 @@ _try() {
 
 # Options {{{1
 # Option: Completion {{{2
+zstyle ':completion:*' use-cache true
+zstyle ':completion:*' cache-path $ZSH_CACHE_DIR
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-setopt complete_aliases # Prevent aliases from being substituted before completion is attempted.
+# setopt complete_aliases # Prevent aliases from being substituted before completion is attempted.
 setopt complete_in_word # Attempt to start completion from both ends of a word.
 setopt list_packed # Try to make the completion list smaller by drawing smaller columns.
 setopt menu_complete # Instead of listing possibilities, select the first match immediately.
@@ -111,6 +113,14 @@ setopt long_list_jobs # Display PID when suspending processes as well.
 setopt prompt_subst # Expansions are performed in prompts.
 
 # Exports {{{1
+export PATH=~/bin:$PATH
+export PATH=$(brew --prefix ruby)/bin:$PATH
+export PATH=$(brew --prefix)/lib/ruby/gems/3.0.0/bin:$PATH
+
+export WAKATIME_HOME=~/.config/wakatime
+export XDG_RUNTIME_DIR=~/.config/xdg
+export ZINIT[ZCOMPDUMP_PATH]=~/.zinit/.zcompdump
+
 if _has less; then
   export MANPAGER='less -X' # Don’t clear the screen after quitting a manual page.
   export PAGER='less'
@@ -123,15 +133,6 @@ else
   export EDITOR='vim'
 fi
 
-export HOMEBREW_INSTALL_BADGE='☕'
-export HOMEBREW_NO_ANALYTICS=1
-
-export PATH="$HOME/bin:$PATH"
-export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
-export PATH="/opt/homebrew/lib/ruby/gems/3.0.0/bin:$PATH"
-
-export WAKATIME_HOME=$HOME/.config/wakatime
-
 # Aliases {{{1
 # Alias: * {{{2
 alias c='clear'
@@ -139,12 +140,14 @@ alias e='emacs'
 alias h='history'
 alias j='jobs'
 alias lc='leetcode'
+alias m='man'
 alias n='neomutt'
 alias o='open'
 alias za='zathura'
 
 # Alias: Brew {{{2
 alias bb='brew bundle --file=~/Brewfile'
+alias bcu='brew cu'
 alias bd='brew cleanup && brew doctor'
 alias bi='brew install'
 alias bl='brew list -1'
@@ -161,6 +164,14 @@ alias rd='rmdir'
 # Alias: Docker {{{2
 alias d='docker'
 alias dc='docker-compose'
+alias dcb='docker-compose build'
+alias dcd='docker-compose down'
+alias dce='docker-compose exec'
+alias dck='docker-compose kill'
+alias dcl='docker-compose logs'
+alias dcsp='docker-compose stop'
+alias dcst='docker-compose start'
+alias dcu='docker-compose up'
 
 # Alias: File {{{2
 alias b='bat'
@@ -170,6 +181,7 @@ alias cat='bat'
 alias g='git'
 alias gl='git l'
 alias glo='git long'
+alias lg='lazygit'
 
 # Alias: List {{{2
 if _has colorls; then
@@ -300,7 +312,7 @@ mc() {
 
 # Stackoverflow favorites
 so() {
-  ~/.bin/stackoverflow-favorites |
+  ~/bin/stackoverflow-favorites |
     fzf --ansi --reverse --with-nth ..-2 --tac --tiebreak index |
     awk '{print $NF}' | while read -r line; do
       open "$line"

@@ -87,6 +87,7 @@ brew 'streamlink'
 brew 'task'
 brew 'tree'
 brew 'wallpaper'
+brew 'weechat'
 brew 'xdotool'
 brew 'youtube-dl'
 

@@ -1647,13 +1647,13 @@ nnoremap <leader><cr> :Buffers<cr>
 nnoremap <leader>bb :BBuffers<cr>
 nnoremap <leader>cm :Commands<cr>
 nnoremap <leader>gf :GFiles<cr>
+nnoremap <leader>he :PlugHelp<cr>
 nnoremap <leader>hi :History<cr>
 nnoremap <leader>li :Lines<cr>
 nnoremap <leader>ma :Maps<cr>
-nnoremap <leader>P :PlugHelp<cr>
+nnoremap <leader>m' :Marks<cr>
 nnoremap <leader>rg :Rg<cr>
 nnoremap <leader>tg :Tags<cr>
-nnoremap <leader>` :Marks<cr>
 nnoremap q: :History:<cr>
 nnoremap q/ :History/<cr>
 

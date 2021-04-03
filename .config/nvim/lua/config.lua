@@ -42,7 +42,23 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gr', '<cmd>Lspsaga lsp_finder<cr>', opts)
   buf_set_keymap('n', '[d', '<cmd>Lspsaga diagnostic_jump_prev<cr>', opts)
   buf_set_keymap('n', ']d', '<cmd>Lspsaga diagnostic_jump_next<cr>', opts)
+  buf_set_keymap('n', '<leader>ca', '<cmd>Lspsaga code_action<cr>', opts)
+  buf_set_keymap('n', '<leader>ed', '<cmd>Lspsaga show_line_diagnostics<cr>', opts)
+  buf_set_keymap('n', '<leader>fa', '<cmd>lua vim.lsp.buf.formatting()<cr>', opts)
+  buf_set_keymap('n', '<leader>rn', '<cmd>Lspsaga rename<cr>', opts)
 end
+
+local eslint = {
+  lintCommand = 'eslint_d -f unix --stdin --stdin-filename ${INPUT}',
+  lintFormats = {'%f:%l:%c: %m'},
+  lintIgnoreExitCode = true,
+  lintStdin = true
+}
+
+local prettier = {
+  formatCommand = 'prettier --find-config-path --stdin-filepath ${INPUT}',
+  formatStdin = true
+}
 
 local luaformat = {
   formatCommand = 'lua-format -i',
@@ -52,6 +68,10 @@ local luaformat = {
 local efm_settings = {
   rootMarkers = {'.git/'},
   languages = {
+    javascript = {eslint, prettier},
+    typescript = {eslint, prettier},
+    javascriptreact = {eslint, prettier},
+    typescriptreact = {eslint, prettier},
     lua = {luaformat}
   }
 }
@@ -96,6 +116,13 @@ for _, server in pairs(servers) do
 
   if server == 'lua' then
     config.settings = lua_settings
+  end
+
+  if server == 'typescript' then
+    config.on_attach = function(client)
+      client.resolved_capabilities.document_formatting = false
+      on_attach(client)
+    end
   end
 
   lspconfig[server].setup(config)

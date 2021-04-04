@@ -117,6 +117,9 @@ export PATH=~/bin:$PATH
 export PATH=$(brew --prefix ruby)/bin:$PATH
 export PATH=$(brew --prefix)/lib/ruby/gems/3.0.0/bin:$PATH
 
+export GPG_TTY=$(tty)
+export HOMEBREW_INSTALL_BADGE=☕
+export HOMEBREW_NO_ANALYTICS=1
 export WAKATIME_HOME=~/.config/wakatime
 export XDG_RUNTIME_DIR=~/.config/xdg
 export ZINIT[ZCOMPDUMP_PATH]=~/.zinit/.zcompdump
@@ -163,12 +166,19 @@ alias rd='rmdir'
 
 # Alias: Docker {{{2
 alias d='docker'
+alias di='docker images'
+alias dk='docker kill'
+alias dp='docker ps'
+alias dr='docker rm'
+
 alias dc='docker-compose'
 alias dcb='docker-compose build'
 alias dcd='docker-compose down'
 alias dce='docker-compose exec'
 alias dck='docker-compose kill'
 alias dcl='docker-compose logs'
+alias dcp='docker-compose ps'
+alias dcr='docker-compose rm'
 alias dcsp='docker-compose stop'
 alias dcst='docker-compose start'
 alias dcu='docker-compose up'
@@ -260,6 +270,7 @@ alias ye='yarn exec'
 alias yf='yarn format'
 alias yg='yarn global'
 alias yga='yarn global add'
+alias ygb='yarn global bin'
 alias ygl='yarn global list'
 alias ygr='yarn global remove'
 alias ygu='yarn global upgrade'
@@ -303,6 +314,20 @@ ch() {
     }.join + " " * (2 + cols - len) + "\x1b[m" + url' |
   fzf --ansi --multi --no-hscroll --tiebreak=index |
   sed 's#.*\(https*://\)#\1#' | xargs open
+}
+
+# Display directory stack
+ds() {
+  if [[ -n $1 ]]; then
+    dirs "$@"
+  else
+    dirs -v | head -10
+  fi
+}
+
+# Show IP addresses
+ip() {
+  ifconfig | awk '$1 == "inet" {print $2}'
 }
 
 # Make a directory and cd into it

@@ -1,2 +1,1 @@
-# Aliases
 source $HOME/.aliases

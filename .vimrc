@@ -1577,8 +1577,9 @@ let g:dashboard_preview_command = 'bunnyfetch'
 let g:dashboard_preview_file = ' '
 let g:dashboard_preview_file_height = 25
 let g:dashboard_preview_file_width = 50
+let s:startuptime = filereadable($v.'/startuptime') ? join(readfile($v.'/startuptime')) : '???'
 let g:dashboard_custom_footer =
-  \ [' 🐬 Neovim loaded ' . len(keys(g:plugs)) . ' plugins in ' . join(readfile($v.'/startuptime'))]
+  \ ['🐬 Neovim loaded ' . len(keys(g:plugs)) . ' plugins in ' . s:startuptime]
 let g:dashboard_custom_section = {
   \ 'd': {'description': ['   Open dotfiles config                  spc f d '], 'command': 'Telescope git_files'},
   \ 'f': {'description': ['   Browse all files                      spc f f '], 'command': function('dashboard#handler#find_file')},

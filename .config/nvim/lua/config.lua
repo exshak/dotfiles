@@ -38,10 +38,12 @@ local on_attach = function(client, bufnr)
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   local opts = {noremap = true, silent = true}
+  buf_set_keymap('n', 'K', '<cmd>Lspsaga hover_doc<cr>', opts)
   buf_set_keymap('n', 'gd', '<cmd>Lspsaga preview_definition<cr>', opts)
   buf_set_keymap('n', 'gr', '<cmd>Lspsaga lsp_finder<cr>', opts)
   buf_set_keymap('n', '[d', '<cmd>Lspsaga diagnostic_jump_prev<cr>', opts)
   buf_set_keymap('n', ']d', '<cmd>Lspsaga diagnostic_jump_next<cr>', opts)
+  buf_set_keymap('n', '<C-k>', '<cmd>Lspsaga signature_help<cr>', opts)
   buf_set_keymap('n', '<leader>ca', '<cmd>Lspsaga code_action<cr>', opts)
   buf_set_keymap('n', '<leader>ed', '<cmd>Lspsaga show_line_diagnostics<cr>', opts)
   buf_set_keymap('n', '<leader>fa', '<cmd>lua vim.lsp.buf.formatting()<cr>', opts)
@@ -60,6 +62,21 @@ local prettier = {
   formatStdin = true
 }
 
+local shellcheck = {
+  lintCommand = 'shellcheck -f gcc -x',
+  lintSource = 'shellcheck',
+  lintFormats = {
+    '%f:%l:%c: %trror: %m',
+    '%f:%l:%c: %tarning: %m',
+    '%f:%l:%c: %tote: %m'
+  }
+}
+
+local shfmt = {
+  formatCommand = 'shfmt -ci -s -bn',
+  formatStdin = true
+}
+
 local luaformat = {
   formatCommand = 'lua-format -i',
   formatStdin = true
@@ -72,6 +89,7 @@ local efm_settings = {
     typescript = {eslint, prettier},
     javascriptreact = {eslint, prettier},
     typescriptreact = {eslint, prettier},
+    sh = {shellcheck, shfmt},
     lua = {luaformat}
   }
 }

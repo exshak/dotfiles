@@ -31,6 +31,7 @@ zinit light-mode for \
 # End of Zinit's installer chunk
 
 zinit light-mode for \
+  kazhala/dotbare \
   OMZL::git.zsh \
   OMZP::git
 
@@ -117,11 +118,34 @@ export PATH=~/bin:$PATH
 export PATH=$(brew --prefix ruby)/bin:$PATH
 export PATH=$(brew --prefix)/lib/ruby/gems/3.0.0/bin:$PATH
 
+export XDG_CACHE_HOME=~/.cache
+export XDG_CONFIG_HOME=~/.config
+export XDG_DATA_HOME=~/.local/share
+export XDG_RUNTIME_DIR=/run/user
+
+export DOTBARE_DIR=~/.dotfiles
+export DOTBARE_TREE=~
+export DOTBARE_BACKUP=~/.config/dotbare
+export DOTBARE_FZF_DEFAULT_OPTS='--reverse'
+
+export DBUS_SESSION_BUS_ADDRESS="unix:path=$DBUS_LAUNCHD_SESSION_BUS_SOCKET"
 export GPG_TTY=$(tty)
+
 export HOMEBREW_INSTALL_BADGE=☕
 export HOMEBREW_NO_ANALYTICS=1
+
+export NPM_CONFIG_CACHE=~/.cache/npm
+export NPM_CONFIG_USERCONFIG=~/.config/npm/npmrc
+
+export GOPATH=~/.local/share/go
+export CARGO_HOME=~/.local/share/cargo
+export RUSTUP_HOME=~/.local/share/rustup
+
+export TASKDATA=~/.config/task
+export TASKRC=~/.config/task/taskrc
 export WAKATIME_HOME=~/.config/wakatime
-export XDG_RUNTIME_DIR=~/.config/xdg
+
+export _Z_DATA=~/.config/dotfiles/.z
 export ZINIT[ZCOMPDUMP_PATH]=~/.zinit/.zcompdump
 
 if _has less; then

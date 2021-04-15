@@ -67,6 +67,9 @@ brew 'elasticsearch'
 brew 'diff-so-fancy'
 brew 'neovim', args: ['HEAD']
 
+brew 'shellcheck'
+brew 'shfmt'
+
 # Cli Tools
 brew 'awscli'
 brew 'broot'
@@ -81,6 +84,7 @@ brew 'navi'
 brew 'neofetch'
 brew 'neomutt'
 brew 'nnn'
+brew 'prettyping'
 brew 'pstree'
 brew 'silicon'
 brew 'speedtest-cli'

@@ -16,9 +16,9 @@ jobs:
         with:
           access_token: ${{ github.token }}
       - uses: actions/checkout@v2.3.3
-      - run: cd .github/docker
       - name: Docker setup
         run: docker-compose up -d
+        working-directory: .github/docker
       - name: Push to GitHub packages
         uses: docker/build-push-action@v2
         with:

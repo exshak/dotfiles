@@ -24,6 +24,7 @@ jobs:
         with:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+          file: .github/docker/Dockerfile
           registry: docker.pkg.github.com
           repository: exshak/dotfiles/archlinux
   macos:

@@ -79,9 +79,12 @@ background_opacity: 0.9
 live_config_reload: true
 
 key_bindings:
-  - { key: C, mods: Alt, chars: "\x1bc" }
-  - { key: J, mods: Alt, chars: "\x1bj" }
-  - { key: K, mods: Alt, chars: "\x1bk" }
+  - { key: C, mods: Alt,           chars: "\x1bc"    }
+  - { key: J, mods: Alt,           chars: "\x1bj"    }
+  - { key: K, mods: Alt,           chars: "\x1bk"    }
+  - { key: C, mods: Command,       chars: "\x01\x63" }
+  - { key: D, mods: Command,       chars: "\x01\x5f" }
+  - { key: D, mods: Command|Shift, chars: "\x01\x2d" }
 
 # Configuration for Alacritty, the GPU enhanced terminal emulator.
 

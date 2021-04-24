@@ -7,4 +7,3 @@ sudo softwareupdate --install-rosetta --agree-to-license
 gem install colorls
 $(brew --prefix)/opt/fzf/install
 bash ~/.macos
-echo "gitdir: $HOME/.dotfiles" > ~/.git

@@ -446,6 +446,8 @@ inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype
 nnoremap <leader>ba :bufdo bd<cr>
 " Close the current buffer.
 nnoremap <leader>bc :Bclose<cr>
+" Delete the current buffer.
+nnoremap <leader>bd :bdelete %<cr>
 
 " Navigate buffers.
 nnoremap <leader>bf :bfirst<cr>
@@ -1571,6 +1573,7 @@ autocmd User Dashboard nnoremap <buffer> <silent> q :Bclose<bar>Dashclose<cr>
 autocmd User Dashboard nnoremap <buffer> <silent> s :Startify<bar>Dashclose<cr>
 autocmd User Dashboard nnoremap <buffer> <silent> v :e ~/.vimrc<bar>Dashclose<cr>
 autocmd User Dashboard nnoremap <buffer> <silent> w :VimwikiIndex<bar>Dashclose<cr>
+autocmd User Dashboard nnoremap <buffer> <silent> z :e ~/.zshrc<bar>Dashclose<cr>
 
 let g:dashboard_default_executive = 'telescope'
 let g:dashboard_preview_command = 'bunnyfetch'

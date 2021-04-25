@@ -40,9 +40,13 @@ local on_attach = function(client, bufnr)
   local opts = {noremap = true, silent = true}
   buf_set_keymap('n', 'K', '<cmd>Lspsaga hover_doc<cr>', opts)
   buf_set_keymap('n', 'gd', '<cmd>Lspsaga preview_definition<cr>', opts)
+  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
   buf_set_keymap('n', 'gr', '<cmd>Lspsaga lsp_finder<cr>', opts)
+  buf_set_keymap('n', 'gy', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
   buf_set_keymap('n', '[d', '<cmd>Lspsaga diagnostic_jump_prev<cr>', opts)
   buf_set_keymap('n', ']d', '<cmd>Lspsaga diagnostic_jump_next<cr>', opts)
+  buf_set_keymap('n', '<C-b>', '<cmd>lua require("lspsaga.action").smart_scroll_with_saga(-1)<cr>', opts)
+  buf_set_keymap('n', '<C-f>', '<cmd>lua require("lspsaga.action").smart_scroll_with_saga(1)<cr>', opts)
   buf_set_keymap('n', '<C-k>', '<cmd>Lspsaga signature_help<cr>', opts)
   buf_set_keymap('n', '<leader>ca', '<cmd>Lspsaga code_action<cr>', opts)
   buf_set_keymap('n', '<leader>ed', '<cmd>Lspsaga show_line_diagnostics<cr>', opts)
@@ -62,6 +66,17 @@ local prettier = {
   formatStdin = true
 }
 
+local flake8 = {
+  lintCommand = 'flake8 --stdin-display-name ${INPUT} -',
+  lintFormats = {'%f:%l:%c: %m'},
+  lintStdin = true
+}
+
+local black = {
+  formatCommand = 'black --quiet -',
+  formatStdin = true
+}
+
 local shellcheck = {
   lintCommand = 'shellcheck -f gcc -x',
   lintSource = 'shellcheck',
@@ -73,7 +88,7 @@ local shellcheck = {
 }
 
 local shfmt = {
-  formatCommand = 'shfmt -ci -s -bn',
+  formatCommand = 'shfmt -i 2 -ci -s -bn -sr -kp',
   formatStdin = true
 }
 
@@ -89,6 +104,7 @@ local efm_settings = {
     typescript = {eslint, prettier},
     javascriptreact = {eslint, prettier},
     typescriptreact = {eslint, prettier},
+    python = {flake8, black},
     sh = {shellcheck, shfmt},
     lua = {luaformat}
   }

@@ -194,6 +194,7 @@ alias di='docker images'
 alias dk='docker kill'
 alias dp='docker ps'
 alias dr='docker rm'
+alias lk='lazydocker'
 
 alias dc='docker-compose'
 alias dcb='docker-compose build'
@@ -206,6 +207,10 @@ alias dcr='docker-compose rm'
 alias dcsp='docker-compose stop'
 alias dcst='docker-compose start'
 alias dcu='docker-compose up'
+
+# Alias: Dotfiles {{{2
+alias cfg='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias dot='dotbare'
 
 # Alias: File {{{2
 alias b='bat'
@@ -232,6 +237,7 @@ alias la='ls -lA'
 alias ld='ls -ld'
 alias lf='ls -lf'
 alias ll='ls -l1'
+alias lo='ls -lo'
 alias lr='ls -lr'
 alias lt='lr -lt'
 
@@ -262,7 +268,6 @@ alias 8='cd -8'
 alias 9='cd -9'
 
 # Alias: Shortcut {{{2
-alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias co='cd ~/Code'
 alias db='cd ~/Dropbox'
 alias dl='cd ~/Downloads'
@@ -270,8 +275,10 @@ alias dm='cd ~/Documents'
 alias dt='cd ~/Desktop'
 alias sp='speedtest --simple --server'
 
+# Alias: Task {{{2
+alias t='task'
+
 # Alias: Tmux {{{2
-alias t='tmux'
 alias ta='tmux attach -t'
 alias tl='tmux list-sessions'
 # alias ts='tmux new-session -s'
@@ -318,6 +325,18 @@ alias yw='yarn workspace'
 bindkey -e
 
 # Functions {{{1
+# fzf-down
+fzf-down() {
+  fzf --height 50% --min-height 20 --reverse --bind ctrl-/:toggle-preview "$@"
+}
+
+# Search aliases
+al() {
+  local aliases
+  aliases=$(alias | fzf-down | awk -F '=' '{print $1}') &&
+  eval "$aliases"
+}
+
 # Browse chrome history
 ch() {
   local cols sep
@@ -377,6 +396,11 @@ ts() {
 }
 
 # Plugins {{{1
+# Plugin: * {{{2
+source $(brew --prefix git-extras)/share/git-extras/git-extras-completion.zsh
+source $(brew --prefix)/etc/profile.d/z.sh
+source $(dirname $(gem which colorls))/tab_complete.sh
+
 # Plugin: fzf {{{2
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -424,5 +448,3 @@ if [[ -f ~/.zshrc.local ]]; then
   source ~/.zshrc.local
 fi
 # }}}
-
-source $(dirname $(gem which colorls))/tab_complete.sh

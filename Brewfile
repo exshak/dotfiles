@@ -67,6 +67,8 @@ brew 'elasticsearch'
 brew 'diff-so-fancy'
 brew 'neovim', args: ['HEAD']
 
+brew 'black'
+brew 'flake8'
 brew 'shellcheck'
 brew 'shfmt'
 

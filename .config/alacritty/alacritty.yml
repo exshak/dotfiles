@@ -79,12 +79,21 @@ background_opacity: 0.9
 live_config_reload: true
 
 key_bindings:
-  - { key: C, mods: Alt,           chars: "\x1bc"    }
-  - { key: J, mods: Alt,           chars: "\x1bj"    }
-  - { key: K, mods: Alt,           chars: "\x1bk"    }
-  - { key: C, mods: Command,       chars: "\x01\x63" }
-  - { key: D, mods: Command,       chars: "\x01\x5f" }
-  - { key: D, mods: Command|Shift, chars: "\x01\x2d" }
+  - { key: C,    mods: Alt,           chars: "\x1bc"    }
+  - { key: J,    mods: Alt,           chars: "\x1bj"    }
+  - { key: K,    mods: Alt,           chars: "\x1bk"    }
+  - { key: C,    mods: Command,       chars: "\x01\x63" }
+  - { key: D,    mods: Command,       chars: "\x01\x5f" }
+  - { key: D,    mods: Command|Shift, chars: "\x01\x2d" }
+  - { key: Key1, mods: Command,       chars: "\x01\x31" }
+  - { key: Key2, mods: Command,       chars: "\x01\x32" }
+  - { key: Key3, mods: Command,       chars: "\x01\x33" }
+  - { key: Key4, mods: Command,       chars: "\x01\x34" }
+  - { key: Key5, mods: Command,       chars: "\x01\x35" }
+  - { key: Key6, mods: Command,       chars: "\x01\x36" }
+  - { key: Key7, mods: Command,       chars: "\x01\x37" }
+  - { key: Key8, mods: Command,       chars: "\x01\x38" }
+  - { key: Key9, mods: Command,       chars: "\x01\x39" }
 
 # Configuration for Alacritty, the GPU enhanced terminal emulator.
 

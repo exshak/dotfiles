@@ -5,6 +5,7 @@
 .Trash:       ""
 .vscode:      ""
 config:       ""
+dropbox:      ""
 folder:       ""
 hidden:       ""
 lib:          ""

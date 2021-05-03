@@ -27,6 +27,36 @@ require('compe').setup {
   }
 }
 
+-- lspcompletion {{{1
+-- https://github.com/microsoft/vscode-codicons/blob/main/dist/codicon.ttf
+vim.lsp.protocol.CompletionItemKind = {
+  '  Text',
+  '  Method',
+  '  Function',
+  '  Constructor',
+  '  Field',
+  '  Variable',
+  '  Class',
+  '  Interface',
+  '  Module',
+  '  Property',
+  '  Unit',
+  '  Value',
+  '  Enum',
+  '  Keyword',
+  '  Snippet',
+  '  Color',
+  '  File',
+  '  Reference',
+  '  Folder',
+  '  EnumMember',
+  '  Constant',
+  '  Struct',
+  '  Event',
+  '  Operator',
+  '  TypeParameter'
+}
+
 -- lspconfig {{{1
 local lspconfig = require('lspconfig')
 local lspinstall = require('lspinstall')
@@ -67,7 +97,7 @@ local prettier = {
 }
 
 local flake8 = {
-  lintCommand = 'flake8 --stdin-display-name ${INPUT} -',
+  lintCommand = 'flake8 --config ~/.config/flake8/tox.ini --stdin-display-name ${INPUT} -',
   lintFormats = {'%f:%l:%c: %m'},
   lintStdin = true
 }
@@ -106,6 +136,10 @@ local efm_settings = {
     typescriptreact = {eslint, prettier},
     python = {flake8, black},
     sh = {shellcheck, shfmt},
+    css = {prettier},
+    html = {prettier},
+    json = {prettier},
+    yaml = {prettier},
     lua = {luaformat}
   }
 }

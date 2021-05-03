@@ -173,6 +173,8 @@ function! s:highlight()
   highlight Keyword gui=italic cterm=italic guifg=#ff79c6
 
   highlight clear VertSplit
+  highlight NormalFloat guibg=NONE ctermbg=NONE
+  highlight FloatBorder guibg=NONE ctermbg=NONE guifg=#44475a
   highlight StatusLine guibg=NONE ctermbg=NONE
   highlight StatusLineNC guibg=NONE ctermbg=NONE
 
@@ -188,6 +190,9 @@ function! s:highlight()
 
   highlight Sneak guifg=black guibg=#50fa7b
   highlight SneakScope guifg=black guibg=#ffb86c
+
+  highlight WhichKey guifg=#bd93f9
+  highlight WhichKeySeperator guifg=#6272a4
 endfunction
 
 " Backup {{{2

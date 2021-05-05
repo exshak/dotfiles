@@ -166,7 +166,6 @@ alias c='clear'
 alias e='emacs'
 alias h='history'
 alias j='jobs'
-alias lc='leetcode'
 alias m='man'
 alias n='neomutt'
 alias o='open'
@@ -218,9 +217,28 @@ alias cat='bat'
 
 # Alias: Git {{{2
 alias g='git'
+alias ga='git add'
+alias gb='git branch'
+alias gc='git commit -m'
+alias gd='git diff'
+alias ge='git extras'
+alias gf='git fetch'
+alias gg='git grep'
+alias gi='git init'
 alias gl='git l'
 alias glo='git long'
+alias gm='git merge'
+alias gn='git notes'
+alias gp='git push'
+alias gr='git remote'
+alias gs='git status -s'
+alias gt='git tags'
+alias gu='git undo'
+alias gw='git worktree'
 alias lg='lazygit'
+
+# Alias: Leetcode {{{2
+alias lc='leetcode'
 
 # Alias: List {{{2
 if _has colorls; then

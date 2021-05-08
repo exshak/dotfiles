@@ -97,6 +97,8 @@ Plug 'kabouzeid/nvim-lspinstall', Cond(has('nvim-0.5.0'))  " Language Server Ins
 Plug 'neovim/nvim-lspconfig', Cond(has('nvim-0.5.0'))      " Language Server Protocol
 Plug 'glepnir/lspsaga.nvim', Cond(has('nvim-0.5.0'))       " LSP user interface plugin
 Plug 'hrsh7th/nvim-compe', Cond(has('nvim-0.5.0'))         " Automatic completion (lua)
+Plug 'tzachar/compe-tabnine',
+  \ Cond(has('nvim-0.5.0'), { 'do': './install.sh' })      " TabNine source completion
 Plug 'mattn/emmet-vim'                                     " Expand HTML/XML/CSS: <C-y>
 Plug 'junegunn/vim-emoji'                                  " :smiley:
 Plug 'norcalli/nvim-colorizer.lua', Cond(has('nvim-0.5.0')) " Preview colors

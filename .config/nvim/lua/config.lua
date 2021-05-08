@@ -17,13 +17,14 @@ require('compe').setup {
   documentation = true,
 
   source = {
-    path = true,
     buffer = true,
     calc = true,
     nvim_lsp = true,
     nvim_lua = true,
-    vsnip = true,
-    ultisnips = true
+    path = true,
+    tabnine = true,
+    ultisnips = true,
+    vsnip = true
   }
 }
 
@@ -61,6 +62,14 @@ vim.lsp.protocol.CompletionItemKind = {
 local lspconfig = require('lspconfig')
 local lspinstall = require('lspinstall')
 
+_G.organize_imports = function()
+  local params = {
+    command = '_typescript.organizeImports',
+    arguments = {vim.api.nvim_buf_get_name(0)}
+  }
+  vim.lsp.buf.execute_command(params)
+end
+
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
@@ -81,6 +90,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<leader>ca', '<cmd>Lspsaga code_action<cr>', opts)
   buf_set_keymap('n', '<leader>ed', '<cmd>Lspsaga show_line_diagnostics<cr>', opts)
   buf_set_keymap('n', '<leader>fa', '<cmd>lua vim.lsp.buf.formatting()<cr>', opts)
+  buf_set_keymap('n', '<leader>fi', '<cmd>lua organize_imports()<cr>', opts)
   buf_set_keymap('n', '<leader>rn', '<cmd>Lspsaga rename<cr>', opts)
 end
 

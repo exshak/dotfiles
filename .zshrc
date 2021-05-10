@@ -169,7 +169,6 @@ alias j='jobs'
 alias m='man'
 alias n='neomutt'
 alias o='open'
-alias za='zathura'
 
 # Alias: Brew {{{2
 alias bb='brew bundle --file=~/Brewfile'
@@ -183,6 +182,14 @@ alias bt='brew tap'
 alias bu='brew update && brew upgrade'
 
 # Alias: Directory {{{2
+alias co='cd ~/Code'
+alias db='cd ~/Dropbox'
+alias dl='cd ~/Downloads'
+alias dm='cd ~/Documents'
+alias dt='cd ~/Desktop'
+
+alias df='df -h'
+alias du='du -h'
 alias mkdir='mkdir -p'
 alias md='mkdir'
 alias rd='rmdir'
@@ -286,12 +293,10 @@ alias 8='cd -8'
 alias 9='cd -9'
 
 # Alias: Shortcut {{{2
-alias co='cd ~/Code'
-alias db='cd ~/Dropbox'
-alias dl='cd ~/Downloads'
-alias dm='cd ~/Documents'
-alias dt='cd ~/Desktop'
+alias cf='caffeinate -id'
 alias sp='speedtest --simple --server'
+alias tt='tldr'
+alias za='zathura'
 
 # Alias: Task {{{2
 alias t='task'
@@ -303,6 +308,7 @@ alias tl='tmux list-sessions'
 
 # Alias: Vim {{{2
 alias v='nvim'
+alias vg='nvim +GV'
 alias vs='nvim +StartupTime'
 alias vu='nvim +PU'
 alias vw='nvim +VimwikiIndex'
@@ -397,8 +403,8 @@ mc() {
 }
 
 # Stackoverflow favorites
-so() {
-  ~/bin/stackoverflow-favorites |
+sf() {
+  ~/bin/stackoverflow |
     fzf --ansi --reverse --with-nth ..-2 --tac --tiebreak index |
     awk '{print $NF}' | while read -r line; do
       open "$line"

@@ -190,6 +190,24 @@ function! s:highlight()
   highlight link EasyMotionTarget2First Function
   highlight link EasyMotionTarget2Second Function
 
+  highlight LspSagaCodeActionBorder guifg=#b3deef
+  highlight LspSagaCodeActionContent guifg=#98be65 gui=bold
+  highlight LspSagaCodeActionTitle guifg=#da8548 gui=bold
+  highlight LspSagaCodeActionTruncateLine guifg=#44475a
+  highlight LspSagaDiagnosticBorder guifg=#7739e3
+  highlight LspSagaDiagnosticHeader guifg=#d8a657 gui=bold
+  highlight LspSagaDiagnosticTruncateLine guifg=#44475a
+  highlight LspSagaLspFinderBorder guifg=#51afef
+  highlight LspSagaFinderSelection guifg=#89d957 gui=bold
+  highlight LspSagaHoverBorder guifg=#80a0c2
+  highlight LspSagaDocTruncateLine guifg=#44475a
+  highlight LspSagaRenameBorder guifg=#3bb6c4
+  highlight LspSagaRenamePromptPrefix guifg=#98be65
+  highlight LspSagaSignatureHelpBorder guifg=#98be65
+  highlight LspSagaShTruncateLine guifg=#44475a
+  highlight LspSagaDefPreviewBorder guifg=#b3deef
+  highlight LspSagaAutoPreview guifg=#ecbe7b
+
   highlight Sneak guifg=black guibg=#50fa7b
   highlight SneakScope guifg=black guibg=#ffb86c
 

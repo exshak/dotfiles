@@ -258,6 +258,7 @@ elif _try ls -G; then
   alias ls='ls -AGh'
 fi
 
+alias l='ls -lAo'
 alias la='ls -lA'
 alias ld='ls -ld'
 alias lf='ls -lf'

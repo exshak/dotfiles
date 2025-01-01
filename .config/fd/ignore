@@ -1,0 +1,8 @@
+.Trash
+.cache
+.gnupg
+.local
+.ssh
+.vscode
+Library
+node_modules

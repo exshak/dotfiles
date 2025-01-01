@@ -1,0 +1,15 @@
+name: install
+on:
+  schedule: [{ cron: "0 0 * * 6" }]
+  workflow_dispatch:
+jobs:
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Bare setup
+        run: bash bin/install
+      - name: Install packages
+        run: brew install coreutils
+      - name: System defaults
+        run: bash bin/macos

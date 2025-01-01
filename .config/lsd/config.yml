@@ -1,0 +1,10 @@
+blocks:
+  - permission
+  - size
+  - date
+  - name
+color:
+  theme: custom
+date: +%b %e %R
+dereference: true
+literal: true

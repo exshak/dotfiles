@@ -1,0 +1,25 @@
+gui:
+  border: hidden
+  nerdFontsVersion: "3"
+  scrollPastBottom: false
+  showBottomLine: false
+  showCommandLog: false
+  showListFooter: false
+  showPanelJumps: false
+  theme:
+    activeBorderColor:
+      - "#80ffea"
+      - bold
+    inactiveBorderColor:
+      - "#424450"
+    selectedLineBgColor:
+      - "#44475a"
+git:
+  branchLogCmd: "git l {{branchName}} --"
+  pagers:
+    - pager: delta --dark --paging=never
+os:
+  editPreset: nvim-remote
+quitOnTopLevelReturn: true
+disableStartupPopups: true
+notARepository: skip

@@ -1,0 +1,56 @@
+[alias]
+  l = log --date=human --graph --pretty=one
+  long = log --date=human --graph --pretty=two
+[commit]
+  gpgSign = true
+[core]
+  editor = $EDITOR
+  pager = delta
+[delta]
+  navigate = true
+  syntax-theme = Dracula
+  hunk-header-style = omit
+  minus-emph-style = syntax "#17161d"
+  minus-non-emph-style = dim syntax "#3a273a"
+  minus-style = syntax "#3a273a"
+  plus-emph-style = syntax "#17161d"
+  plus-non-emph-style = dim syntax "#273849"
+  plus-style = syntax "#273849"
+  zero-style = dim syntax
+[diff]
+  algorithm = histogram
+  colorMoved = default
+  tool = nvimdiff
+[difftool]
+  prompt = false
+[format]
+  pretty = one
+[gpg]
+  format = ssh
+[help]
+  autoCorrect = 1
+[init]
+  defaultBranch = main
+[interactive]
+  diffFilter = delta --color-only
+[merge]
+  conflictStyle = zdiff3
+  tool = nvimdiff
+[mergetool]
+  keepBackup = false
+[pretty]
+  one = %C(240)%h %C(auto)%s %C(245)%an%C(240), %ad%C(auto)%d
+  two = %C(146)%h %C(140)%ad %C(240)(%ar)%C(auto)%d%n • %s %C(245)%an
+[pull]
+  rebase = true
+[push]
+  autoSetupRemote = true
+[rebase]
+  autoStash = true
+[url "git@github.com:"]
+  insteadOf = "g:"
+  pushInsteadOf = "g:"
+[user]
+  name = exshak
+  email = sbijabhai@gmail.com
+  signingKey = ~/.ssh/id_ed25519.pub

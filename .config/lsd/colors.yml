@@ -1,0 +1,15 @@
+permission:
+  read: 13
+  write: 14
+  exec: 51
+  no-access: 240
+date:
+  hour-old: 250
+  day-old: 245
+  older: 240
+size:
+  none: 240
+  small: 240
+  medium: 245
+  large: 250
+tree-edge: 240

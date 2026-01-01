@@ -1,0 +1,31 @@
+#!/bin/bash
+
+brew bundle --file=~/bin/Brewfile
+sudo softwareupdate --install-rosetta --agree-to-license
+rm "$(brew --prefix)"/share/zsh/site-functions/_git
+zinit creinstall -q "$(brew --prefix)"/share/zsh/site-functions
+bash ~/bin/macos
+
+echo "gitdir: $HOME/.dotfiles" >~/.git
+git config --local core.bare false
+git config --local core.worktree ~
+git remote set-url origin g:exshak/dotfiles
+gh auth login
+gh auth refresh -s write:public_key,write:gpg_key,admin:ssh_signing_key
+
+ssh-keygen -t ed25519 -C "sbijabhai@gmail.com" -f ~/.ssh/id_ed25519 -N ""
+eval "$(ssh-agent -s)"
+echo "Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519" >~/.ssh/config
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+gh ssh-key add ~/.ssh/id_ed25519.pub -t exshak --type authentication
+ssh -T git@github.com
+gh ssh-key add ~/.ssh/id_ed25519.pub -t exshak --type signing
+
+mkdir -p ~/code
+git clone g:exshak/dotfiles ~/code/dotfiles
+mv ~/.terminfo ~/.local/share/terminfo
+rm -rf ~/.zsh_sessions
+rm ~/.zcompdump

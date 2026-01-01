@@ -1,0 +1,50 @@
+# Brews
+brew "bat"
+brew "coreutils"
+brew "curl"
+brew "fd"
+brew "ffmpeg"
+brew "fzf"
+brew "gh"
+brew "git"
+brew "git-delta"
+brew "git-extras"
+brew "git-filter-repo"
+brew "gnu-sed"
+brew "grep"
+brew "lazygit"
+brew "lsd"
+brew "mas"
+brew "neovim" # , args: ["HEAD"]
+brew "node"
+brew "pnpm"
+brew "python"
+brew "ripgrep"
+brew "tmux"
+brew "vim"
+brew "wget"
+brew "zsh"
+
+# Casks
+cask "alacritty"
+cask "alfred"
+cask "discord"
+cask "dropbox"
+cask "firefox"
+cask "google-chrome"
+cask "google-drive"
+cask "iina"
+cask "karabiner-elements"
+cask "keepassxc"
+cask "obsidian"
+cask "rectangle"
+cask "stats"
+cask "transmission"
+cask "visual-studio-code"
+
+# Fonts
+cask "font-hack-nerd-font"
+
+# Store
+mas "Peek",  id: 1554235898
+mas "Xcode", id: 497799835

@@ -1,0 +1,50 @@
+#!/bin/bash
+
+{ # This ensures the entire script is downloaded.
+
+  basedir=$HOME/.dotfiles
+  repourl=https://github.com/exshak/dotfiles
+  savedir=(".config" ".github" "bin")
+  current=$(date +"%Y.%m.%d.%H.%M.%S")
+  backup=$HOME/.dotfiles_backup/$current
+
+  function config {
+    /usr/bin/git --git-dir="$HOME"/.dotfiles/ --work-tree="$HOME" "$@"
+  }
+
+  if [[ $(uname -s) == Darwin ]]; then
+    if [[ -x $(command -v brew) ]]; then
+      # Homebrew is already installed, check for updates.
+      brew upgrade && brew update
+    else
+      # Homebrew will install Xcode command line tools and brew.
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+  fi
+
+  if [[ ! -x $(command -v git) ]]; then
+    echo "Error: Git is not installed!"
+    exit 1
+  fi
+
+  if [[ -d $basedir ]]; then
+    config pull --quiet --rebase origin master || exit 1
+    echo "Updated dotfiles."
+  else
+    rm -rf "$basedir"
+    git clone --bare --quiet --depth=1 "$repourl" "$basedir"
+    config checkout 2>/dev/null
+    if [[ $? != 0 ]]; then
+      echo "Backing up pre-existing dotfiles to $current."
+      mkdir -p "$backup"
+      for d in "${savedir[@]}"; do
+        [[ -d $HOME/$d ]] && cp -R "$HOME/$d" "$backup"
+      done
+      config checkout 2>&1 | grep -E "\s+\." | awk "{print $1}" | xargs -I{} mv {} "$backup/"{}
+      config checkout -f
+    fi
+    echo "Checked out dotfiles."
+    config config --local status.showUntrackedFiles no
+  fi
+
+} # This ensures the entire script is downloaded.
